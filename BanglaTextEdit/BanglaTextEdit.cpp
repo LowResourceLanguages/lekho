@@ -112,6 +112,7 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
 	wordFound = false ;
 
 	cursorBlinkOn() ;
+
 }
 
 BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontSize )
@@ -1194,6 +1195,8 @@ void BanglaTextEdit::contentsMouseMoveEvent ( QMouseEvent *mausevent )
 
 	tempParacolSelEnd = paracol ;
 	setCorrectSelectionLimits();
+
+	ensureVisible ( mauspos.x(), mauspos.y(), 50, 50 );
 
 	hasSelText = true ;
 	viewport()->update();

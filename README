@@ -6,7 +6,7 @@ FEATURES
 THANKS
 
 NOTE** A detailed user manual in bangla is available in examples\help.txt
-A user manual in english is examples\help_en.txt. My bangla is rusty and help_en.txt may be more "pretty" as far as language goes. Thanks to Progga for going over the help.txt file and usggesting corrections.
+A user manual in english in examples\help_en.txt. My bangla is rusty and help_en.txt may be more "pretty" as far as language goes. Thanks to Progga for going over the help.txt file and suggesting corrections.
 
 INSTALLATION
 
@@ -43,7 +43,7 @@ You should now have
       lekho.exe
       .lekhorc
       .lekho\ (a start up files folder containing kar.txt, jukto.txt, shor.txt and adarshalipi.txt)
-      examples\ ( a folder containing some example utf-8 bangla files) and
+      examples\ ( a folder containing some example utf-8 bangla files)
 
 5. That's it ! By double clicking on lekho.exe you should be ready to go. Take a look at the help.txt in examples\ by opening it up in lekho. help.html will render correctly
 on ie6 if you have the usp10.dll (win98,2000,NT and XP) and James Kass' code2000 font.
@@ -56,7 +56,7 @@ Compiling the executable:
 
 http://www.trolltech.com
 
-3. Download the source tarball for the required version. The source tarball is the same for linux and windows and ocmes in the form of a gzip file.
+3. Download the source tarball for the required version. The source tarball is the same for linux and windows and comes in the form of a gzip file.
 
 4. Unzip the tarball using winzip to a directory. It should default to Lekho\v1.0\
 
@@ -87,14 +87,14 @@ Compiling and installing:
 6. Install the ttf fonts found in fnts.zip if they arn't on your system (If you use a recent window manager like KDE2, the system->configuration
       submenu should have tools do help you do this eg. kfontinst for KDE 2.
 
-The fonst are available at
+The fonts are available at
 http://prdownloads.sourceforge.net/lekho/adarshalipifonts.zip?download
 
 7. Goto the Lekho_v1.0/bin directory and type ./lekho and lekho should run
 
 8. Open up the help.txt file found in the examples folder, or take a look at help.html in a unicode enabled browser. If your browser can't show the page correctly, read help_lipi.html which should render correctly in you have the adarshalipi fonts installed.
 
-                                                    PERSONALISATION
+PERSONALISATION
 
 PERSONALISING THE LOOK
 
@@ -128,8 +128,8 @@ V1.0
  - remembers preferences like fonts, colours, position and directories
  - on start up if any input files are missing it creates defaults
  - Print 
- - export to html (inserts headersi, tabs and line breaks other tags upto user)
- - export to bangtex
+ - export to html (inserts headers, tabs and line breaks. Other tags responsibility of the user, as an example see help_lipi.html, thats generated straight from help.txt, by doing export)
+ - export to bangtex (look at examples\bangtex_example.tex)
 
 NOTE* 
 bangtex is a separate freely available macro package for LaTeX that enables one to have bangla in latex documents. Lekho will convert bangla text into the appropriate macros required by bangtex to "latex" bangla. See the example file bantex_example.tex under examples\
@@ -140,6 +140,6 @@ For feedback, moral support and various bits of information thanks are due to (i
 
 Taneem Ahmed
 Avijit Das (barda)
-Progga
+Abul Fazl (Progga)
 S Mazumdar
 Robin Upton

@@ -643,6 +643,10 @@ void ApplicationWindow::print()
 		}
 
 //		{
+
+		QString theMessage = "Printing page " + QString::number(startPage) ;
+		statusBar()->message( theMessage );
+
 			if(!e->print( &p , startPage - 1 , firstPrint, pageWidth, pageHeight,
 				leftMargin, rightMargin,
 				topMargin, bottomMargin))
@@ -650,12 +654,16 @@ void ApplicationWindow::print()
 
 			for(int i = startPage ; i < endPage ; i++)
 			{
+				theMessage = "Printing page " + QString::number(i+1) ;
+				statusBar()->message( theMessage );
+
 				printer->newPage();
 				if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
 					leftMargin, rightMargin,
 					topMargin, bottomMargin))
 					break ;
 			}
+		statusBar()->message( "Done printing..." );
 //		}
 /*
 		else

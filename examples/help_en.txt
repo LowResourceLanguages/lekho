@@ -52,4 +52,4 @@ This is kind of fun. If you copy a stretch of romanised bangla and paste this in
 
 9. Exporting the text
 You can export what you have typed into html or bangtex. When you export to html Lekho goes through the text and renders all the bangla parts in the current screen font. In addition Lekho adds some default headers html eg. <body> and <html>, some tags, and converts new lines to <br> symbols. So if you open up this file in a browser you can see it provided you have the Adarshalipi Fonts. help_lipi.hml is one such example.
-Exporting to bangtex converts all the bangla letters into bangtex format. An example of such a source file is bangtex_example.tex. If you export this as bangtex into a file can compile it with  latex (with the bangtex macro package installed).
+Exporting to bangtex converts all the bangla letters into bangtex format. An example of such a source file is bangtex_example.tex. If you export this as bangtex into a file you can compile it with  latex (with the bangtex macro package installed).
