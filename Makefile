@@ -58,6 +58,7 @@ HEADERS = Gui/application.h \
 		BanglaTextEdit/BanglaLineEdit.h \
 		BanglaSegment/BanglaSegment.h \
 		FontConverter/FontConverter.h \
+		FontConverter/LatexConverter.h \
 		CodeTreeElement/CodeTreeElement.h \
 		include/preferences.h \
 		include/lekhoprefs.h \
@@ -73,6 +74,7 @@ SOURCES = Gui/main.cpp \
 		BanglaTextEdit/BanglaLineEdit.cpp \
 		BanglaSegment/BanglaSegment.cpp \
 		FontConverter/FontConverter.cpp \
+		FontConverter/LatexConverter.cpp \
 		CodeTreeElement/CodeTreeElement.cpp \
 		include/preferences.cpp \
 		include/lekhoprefs.cpp \
@@ -88,6 +90,7 @@ OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/BanglaLineEdit.o \
 		$(OBJ_DIR)/BanglaSegment.o \
 		$(OBJ_DIR)/FontConverter.o \
+		$(OBJ_DIR)/LatexConverter.o \
 		$(OBJ_DIR)/CodeTreeElement.o \
 		$(OBJ_DIR)/preferences.o \
 		$(OBJ_DIR)/lekhoprefs.o \
@@ -204,6 +207,9 @@ $(OBJ_DIR)/BanglaSegment.o: BanglaSegment/BanglaSegment.cpp BanglaSegment/Bangla
 
 $(OBJ_DIR)/FontConverter.o: FontConverter/FontConverter.cpp FontConverter/FontConverter.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/FontConverter.o FontConverter/FontConverter.cpp
+
+$(OBJ_DIR)/LatexConverter.o: FontConverter/LatexConverter.cpp FontConverter/LatexConverter.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/LatexConverter.o FontConverter/LatexConverter.cpp
 
 $(OBJ_DIR)/CodeTreeElement.o: CodeTreeElement/CodeTreeElement.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/CodeTreeElement.o CodeTreeElement/CodeTreeElement.cpp

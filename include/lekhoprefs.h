@@ -65,6 +65,7 @@ struct LekhoPrefs
 		modifiableFileName,	//jukto/banjon
 		unmodifiableFileName,	//shoroborno
 		screenfontFileName,	//unicode->screenfont rules file
+		latexFileName,		//unicode->latex
 
 		workingDir,	//where we look for our text files
 		htmlDir,	//remember where we stored out html export

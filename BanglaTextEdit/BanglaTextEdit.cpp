@@ -35,7 +35,7 @@
 #include <BanglaSegment.h> //the function that takes a unicode stream and chops it up into bangla letters
 #include <BanglaLine.h>
 #include <FontConverter.h>
-
+#include <LatexConverter.h>
 
 #include <qrect.h>
 #include <qmessagebox.h>
@@ -187,6 +187,7 @@ BanglaTextEdit::~BanglaTextEdit()
 
     if(_wecreatedBangla) delete bangla ;
     if(_wecreatedLipi) delete lipi ;
+    delete bangtex ;
 }
 
 //set the tab size and recompute all tabs.
@@ -476,6 +477,22 @@ bool BanglaTextEdit::screenFontConverterInit(QTextStream &file)
 		return true;
 }
 
+//init latex from file
+bool BanglaTextEdit::latexConverterInit(QTextStream &file)
+{
+	bangtex = new LatexConverter ;
+	//_wecreatedLipi = true ;
+
+	if(!bangtex->initialiseConverter(file))
+	{
+		//emit screenFontInitialiseProblem();
+		return false;
+	}
+	else
+		return true;
+}
+
+
 //handle the loading of text into the document
 void BanglaTextEdit::setText(const QString &text)
 {
@@ -643,6 +660,68 @@ QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 
 	return(theScreenText);
 }
+
+QString BanglaTextEdit::getLatex()
+{
+	QPoint start(0,0),
+		end( theDoc.lettersInLine(theDoc.totalLines()-1)-1,
+			theDoc.totalLines()-1) ;
+	return(getLatex(start,end));
+}
+
+QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
+{
+	BanglaLetterList text;
+
+	theDoc.copy(start.y(), start.x(),
+			end.y(), end.x(),
+			text);
+
+	bool banglaMode = false ;
+	QString latex = "";
+	QString banglaFontStart = "{\\bng ",
+		fontFinish = "}" ;
+
+	//for(int i = 0 ; i < (int)text.count() ; i++)
+	BanglaLetterList::Iterator i ;
+	for(i = text.begin() ; i != text.end() ; ++i)
+	{
+		//bangla starts. Flush whatever was there before and switch to bangla
+		if( isBangla( (*i).unicode[0].unicode() )
+			&& ((*i).unicode[0].unicode() != 0x20)		//spaces
+			&& ((*i).unicode[0].unicode() != 0x09) )	//tabs
+		{
+			if(!banglaMode)
+			{
+			banglaMode = true ;
+			latex += banglaFontStart ;
+			}
+		}
+		else
+		{
+			if(banglaMode)
+			{
+			banglaMode = false ;
+			latex += fontFinish ;
+			}
+		}
+
+		if(banglaMode)
+			latex += bangtex->unicode2latex((*i).unicode) ;
+		else
+			latex += (*i).unicode ;
+
+		//if((*i).unicode[0].unicode() != 0x09)
+		//	theScreenText += (*i).screenFont ;
+		//else
+		//	//exception for tabs....
+		//	theScreenText += (*i).unicode[0];
+	}
+
+	return(latex);
+}
+
+
 
 
 //function::drawContents
@@ -976,18 +1055,20 @@ QString BanglaTextEdit::parseKeyHit(const QString &text)
 			}
 			insert(theCursor.paracol.y(), theCursor.paracol.x(), uc);
 			partialCodeInserted = true ;
-			keysHit += text[i] ;
+//			keysHit += text[i] ;
 		}
 
 		//something we can't parse, or spaces etc....
-		if(!validc)
+		if(!validc && (text[i] != 'x'))
 		{
+			//using x as break juktakkhor
 			cursorErase();
 			insert (theCursor.paracol.y(), theCursor.paracol.x(), text[i]);
 			theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 			cursorDraw();
 		}
-
+		else
+			keysHit += text[i] ;
 
 	}
 	return(keysHit) ;

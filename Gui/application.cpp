@@ -158,12 +158,13 @@ ApplicationWindow::ApplicationWindow()
 
     file->insertSeparator();
 
-
     id = file->insertItem( "Export screenfont &html", this, SLOT(HTMLexport()), CTRL+Key_H );
-    //file->setWhatsThis( id, htmlExportText );
-
     id = file->insertItem( "Export screenfont (choose name)...", this, SLOT(HTMLexportAs()) );
-    //file->setWhatsThis( id, htmlExportText );
+
+    file->insertSeparator();
+
+    id = file->insertItem( "Export &latex", this, SLOT(LaTeXexport()), CTRL+Key_L );
+    id = file->insertItem( "Export latex (choose name)...", this, SLOT(LaTeXexportAs()) );
 
     file->insertSeparator();
 
@@ -239,6 +240,7 @@ ApplicationWindow::ApplicationWindow()
 //    readPrefs();
     initialiseParser();
     initialiseScreenFontConverter();
+    initialiseLatexConverter();
 
     e->setFonts(thePref.banglaFont, thePref.englishFont);
     e->setColors(thePref.foreground, thePref.background);
@@ -316,7 +318,20 @@ void ApplicationWindow::initialiseScreenFontConverter()
 	QTextStream 	fontF( &fontFile) ;
 
 	if(!e->screenFontConverterInit(fontF))
-    		statusBar()->message( "Couldn't load screen font converter file", 20000 );
+    		statusBar()->message( "Couldn't load screen font converter file" );
+	fontFile.close();
+}
+
+void ApplicationWindow::initialiseLatexConverter()
+{
+	QFile fontFile(thePref.initDir + thePref.latexFileName) ;
+
+	//not a fatal error
+	if(!fontFile.open(IO_ReadOnly)) {Qcerr << "latex converter file problem" << endl ; };
+	QTextStream 	fontF( &fontFile) ;
+
+	if(!e->latexConverterInit(fontF))
+    		statusBar()->message( "Couldn't load latex converter file" );
 	fontFile.close();
 }
 
@@ -332,7 +347,7 @@ void ApplicationWindow::choose()
     if ( e->isModified() )
     {
     	switch( QMessageBox::information( this, "Lekho : Save changes ?",
-				      "Do you want to save the changes"
+				      "Do you want to save the changes "
 				      "before loading a new document ?",
 				      "Yes", "No", "Cancel",
 				      0, 1 ) )
@@ -465,15 +480,47 @@ void ApplicationWindow::HTMLexportAs()
     } else {
 	statusBar()->message( "Html export aborted", 2000 );
     }
-
 }
 
 void ApplicationWindow::LaTeXexport()
 {
+    if ( latexname.isEmpty() ) {
+	LaTeXexportAs();
+	return;
+    }
+
+    QString text = e->getLatex();
+
+    QFile f( latexname );
+    if ( !f.open( IO_WriteOnly ) ) {
+	statusBar()->message( QString("Could not export latex to %1").arg(latexname),
+			      2000 );
+	return;
+    }
+
+    QTextStream t( &f );
+
+    t << text;
+    f.close();
+
+    setCaption( filename );
+
+    statusBar()->message( QString( "File %1 exported" ).arg( latexname ), 2000 );
+
+    thePref.latexDir = stripFileName(latexname);	//not a robust function, gets rid of chars after last "/"
+
 }
 
 void ApplicationWindow::LaTeXexportAs()
 {
+    QString fn = QFileDialog::getSaveFileName( thePref.latexDir, QString::null,
+					       this );
+    if ( !fn.isEmpty() ) {
+	latexname = fn;
+	LaTeXexport();
+    } else {
+	statusBar()->message( "latex export aborted", 2000 );
+    }
 }
 
 void ApplicationWindow::print()

@@ -46,8 +46,9 @@
 #include <lekhostream.h>
 
 #include <BanglaDocument.h>
-//#include <bangla.h>
 #include <FontConverter.h>
+#include <LatexConverter.h>
+
 #include <parser.h>
 
 //small utility functions
@@ -77,7 +78,9 @@ protected:
 	bool wordFound ;	//has the word been found ? used for replace
 
 	BanglaDocument theDoc ;
-	FontConverter *lipi ;			//unicode->screen font
+	FontConverter	*lipi ;			//unicode->screen font
+	LatexConverter	*bangtex ;		//unicode->bangtex
+
 	Parser *bangla ;			//keystroke parser
 	bool _wecreatedBangla, _wecreatedLipi ;
 
@@ -128,6 +131,9 @@ public:
 	bool screenFontConverterInit(FontConverter *fc);
 	bool screenFontConverterInit(QTextStream &sF);
 
+	//need to initialise the latex converter
+	bool latexConverterInit(QTextStream &sF);
+
 	//set this as the whole text of the document. Erase any previous stuff
 	void setText(const QString &text);
 
@@ -150,6 +156,10 @@ public:
 	//return screen font version
 	QString screenFont();
 	QString screenFont(QPoint &start, QPoint &end);
+
+	//return latex (bangtex) version
+	QString getLatex();
+	QString getLatex(QPoint &start, QPoint &end);
 
 	//return the character reference (html , &#xxxx; ) version...
 	QString charRef();

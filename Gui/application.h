@@ -59,6 +59,7 @@ protected:
     void readPrefs();
     void initialiseParser();
     void initialiseScreenFontConverter();
+    void initialiseLatexConverter();
 
 protected:
     void closeEvent( QCloseEvent* );
@@ -83,7 +84,7 @@ private slots:
     void print();
 
     void find();
-    
+
     void setWordWrap(bool ww);
     void setCursorBlink(bool cb);
     void chooseEnglishFont();

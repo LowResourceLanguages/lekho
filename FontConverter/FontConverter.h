@@ -1,6 +1,6 @@
 /*
-*  Lekho v1.0 will be a simple editor for bangla in unicode that will export
-*  to bangtex
+*  Lekho v1.0 is simple editor for bangla in unicode that exports
+*  to html and bangtex
 *  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify

@@ -17,9 +17,10 @@
 *  along with this program; if not, write to the Free Software
 *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
 */
-#include <FontConverter.h>
+#include <LatexConverter.h>
 
-FontConverter::FontConverter()
+#include <iostream.h>
+LatexConverter::LatexConverter()
 {
 	ushort _ref[] = {0x09b0, 0x09cd};
 	ushort _jawphola[] = {0x09cd, 0x09df};
@@ -36,41 +37,37 @@ FontConverter::FontConverter()
 
 /*
  * input file format
- * <fontCandrabindu> <fontHashanto> <fontReph> <fontJawphola> <fontRawphola>
+ * <latexCandrabindu> <latexHashanto> <latexReph> <latexJawphola> <latexRawphola>
  * <akar> <hoshoi> <dirghoi> <hoshou> <dirghou> <rri> <ekar> <oikar> <righthalfofoukar>
  *
  * <number of codes> <unicode> <unicode>.... <#of screencodes> <code> <code> ..
  */
 
-bool FontConverter::initialiseConverter(QTextStream& file)
+bool LatexConverter::initialiseConverter(QTextStream& file)
 {
 	//loading the tables
 //	ifstream	file(fileName,ios::nocreate);
 
 	//if(!file) return(false);
 
-	ushort u[9] ;
+	file >> latexCandrabindu ;
 
-	file >> hex >> u[0] ;
-	fontCandrabindu.setUnicodeCodes(u,1);
+	file >> latexHashonto ;
 
-	file >> hex >> u[0] ;
-	fontHashonto.setUnicodeCodes(u,1);
+	//file >> latexReph ;
 
-	file >> hex >> u[0] ;
-	fontReph.setUnicodeCodes(u,1);
+	file >> latexJawphola ;
 
-	file >> hex >> u[0] ;
-	fontJawphola.setUnicodeCodes(u,1);
-
-	file >> hex >> u[0] ;
-	fontRawphola.setUnicodeCodes(u,1);
+	file >> latexRawphola ;
 
 	for(int i = 0 ; i < 9 ; i++)
 	{
-		file >> hex >> u[i] ;
+		QString temp ;
+		file >> temp ;
+
+		latexKar.append(temp) ;
 	}
-	fontKar.setUnicodeCodes(u,9);
+
 
 	//now load the juktakkhor
 	loadCodeFileLine(file) ;
@@ -87,10 +84,10 @@ bool FontConverter::initialiseConverter(QTextStream& file)
  * input file format
  * <number of codes> <unicode> <unicode>.... <#of screencodes> <code> <code> ..
  */
-bool FontConverter::loadCodeFileLine(QTextStream& file)
+bool LatexConverter::loadCodeFileLine(QTextStream& file)
 {
-	QString unicodeCode, screenCode ;
-	int lenUnicode, lenScreenCode ;
+	QString unicodeCode, latexCode ;
+	int lenUnicode  ;
 
 	//the unciode codes
 	file >> lenUnicode ;
@@ -104,31 +101,32 @@ bool FontConverter::loadCodeFileLine(QTextStream& file)
 	unicodeCode.setUnicodeCodes(u,lenUnicode);
 	delete[] u;
 
-	file >> lenScreenCode ;
-	if(file.eof()) return(false);
+	//file >> lenScreenCode ;
 
-	u = new ushort [lenScreenCode] ;
-	for(int j = 0 ; j < lenScreenCode; j++)
-	{
-		file >> hex >> u[j] ;
-	}
-	screenCode.setUnicodeCodes(u,lenScreenCode);
-	delete[] u;
+	//u = new ushort [lenScreenCode] ;
+	//for(int j = 0 ; j < lenScreenCode; j++)
+	//{
+	//	file >> hex >> u[j] ;
+	//}
+	file >> latexCode ;
 
-	CodeTreeElement::addToTree(convert, unicodeCode, screenCode);
+	//cout << latexCode << endl ;
+	//delete[] u;
+
+	CodeTreeElement::addToTree(convert, unicodeCode, latexCode);
 
 	return(true);
 }
 
 /*
-bool FontConverter::saveConverter(char fileName[])
+bool LatexConverter::saveConverter(char fileName[])
 {
 	return(true);
 }
 */
 
 //works on an already segmented letter
-QString FontConverter::unicode2screenFont(QString uc)
+QString LatexConverter::unicode2latex(QString uc)
 {
 	QString out;
 	QChar thisKar ;
@@ -138,9 +136,7 @@ QString FontConverter::unicode2screenFont(QString uc)
 	//find that if it exist
 	QString _temp = CodeTreeElement::getLeaf(convert, uc);
 	if(!_temp.isEmpty())
-	{
 		return(_temp) ;
-	}
 
 	//sigh ! we have to break it up and compose it...
 
@@ -183,6 +179,7 @@ QString FontConverter::unicode2screenFont(QString uc)
 		uc ="";
 	}
 	else
+
 	//take out rawfola
 	if(uc.right(2).find(rawphola) > -1)
 	{
@@ -190,6 +187,7 @@ QString FontConverter::unicode2screenFont(QString uc)
 		uc = uc.left(uc.length()-2);
 	}
 
+	/*
 	//take out the ref from the unicode string,
 	//insert adarshalipi equivalent in out
 	if(uc.left(2) == reph)
@@ -198,6 +196,7 @@ QString FontConverter::unicode2screenFont(QString uc)
 		uc = uc.right(uc.length()-2);
 		//out += fontReph;
 	}
+	*/
 
 	//if there is a zwnj at the end, take it out and add a hashanta at the end
 	//unless it has a special form eg. khondottha
@@ -217,8 +216,22 @@ QString FontConverter::unicode2screenFont(QString uc)
 		}
 	}
 
-	//the main juktakkhor
-	QString temp = CodeTreeElement::getLeaf(convert, uc);
+	//the main juktakkhor, for latex we handle it this...
+	//QString temp = CodeTreeElement::getLeaf(convert, uc);
+	for(int i = 0 ; i < (int)uc.length() ; i++)
+	{
+		if(uc[i].unicode() == 0x09cd)
+			out += "/";
+		else
+		{
+			QString temp = CodeTreeElement::getLeaf(convert, QString(uc[i]));
+			if(!temp.isEmpty())
+				out += temp ;
+			else
+				out += "Z" ;	//couldn't find it
+		}
+	}
+	/*
 	if(temp.isEmpty())
 	{
 		if(out.isEmpty())
@@ -228,36 +241,39 @@ QString FontConverter::unicode2screenFont(QString uc)
 	{
 		out += temp ;
 	}
+	*/
 
+	/*
 	//put in the reph
 	if(rephPresent)
 	{
-		out.append(fontReph);
+		out.append(latexReph);
 	}
+	*/
 
 	//put in candrabindu
 	if(candrabinduPresent)
 	{
-		out.append(fontCandrabindu);
+		out.append(latexCandrabindu);
 	}
 
 	//put in the rawphola
 	if(rawpholaPresent)
 	{
-		out.append(fontRawphola);
+		out.append(latexRawphola);
 	}
 
 
 	//put in the jawphola
 	if(jawpholaPresent)
 	{
-		out.append(fontJawphola);
+		out.append(latexJawphola);
 	}
 
 	//put in hashonto
 	if(hashontoPresent)
 	{
-		out.append(fontHashonto);
+		out.append(latexHashonto);
 	}
 
 	//put in the kar
@@ -266,36 +282,36 @@ QString FontConverter::unicode2screenFont(QString uc)
 		switch(thisKar.unicode())
 		{
 		case 0x09be://aa kar
-			out += fontKar[0];
+			out += latexKar[0];
 			break;
 		case 0x09bf://hoshoi
-			out.prepend(fontKar[1]);
+			out.prepend(latexKar[1]);
 			break;
 		case 0x09c0://dirghoi
-			out += fontKar[2];
+			out += latexKar[2];
 			break;
 		case 0x09c1://hoshou
-			out += fontKar[3];
+			out += latexKar[3];
 			break;
 		case 0x09c2://dirghou
-			out += fontKar[4];
+			out += latexKar[4];
 			break;
 		case 0x09c3://rri
-			out += fontKar[5];
+			out += latexKar[5];
 			break;
 		case 0x09c7://ekar
-			out.prepend(fontKar[6]);
+			out.prepend(latexKar[6]);
 			break;
 		case 0x09c8://oikar
-			out.prepend(fontKar[7]);
+			out.prepend(latexKar[7]);
 			break;
 		case 0x09cb://okar
-			out.prepend(fontKar[6]);//ekar
-			out += fontKar[0];//aa kar
+			out.prepend(latexKar[6]);//ekar
+			out += latexKar[0];//aa kar
 			break;
 		case 0x09cc://oukar
-			out.prepend(fontKar[6]);//ekar
-			out += fontKar[8];//right partof oukar
+			out.prepend(latexKar[6]);//ekar
+			out += latexKar[8];//right partof oukar
 			break;
 		default:
 			break;
