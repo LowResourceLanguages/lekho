@@ -857,52 +857,11 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 		}
 
 		(*documentLineAt(line1)).del(col1,-1,bll) ;
-		(*documentLineAt(line1+1)).del(0,col2,bll) ;
+		(*documentLineAt(line1+1)).del(0,col2 + 1,bll) ;
 		joinLine(line1);
 		return true ;
 	}
-/*
-	if(line2 > line1)
-	{
-		(*documentLineAt(line1)).del(col1,-1,bll) ;
-		joinLine(line1);
 
-		//do something to deal with line deleteion
-	}
-	else
-	{
-		//if(col2 < (int)documentLine[line2].letterCount())
-		if(col2 < (int)(*documentLineAt(line2)).letterCount())
-		{
-			//just delete on this para
-			(*documentLineAt(line1)).del(col1,col2 - col1 + 1,bll) ;
-			wrapParagraph(line1, linecol.y());
-			return true ;
-		}
-		else
-		{
-			//delete on this para, and join the next one
-			(*documentLineAt(line1)).del(col1,col2 - col1 + 1,bll) ;
-			joinLine(line1);
-			return true ;
-		}
-	}
-
-
-	int newline = wrapParagraph(line1, linecol.y()) + 1;
-
-	for(int line = line1 + 1 ; line < line2 ; line++)
-	{
-		documentLine.remove(documentLineAt(line1+1));
-		removeScreenLines(line, newline);
-	}
-
-	for(int i = newline ; i < (int)screenMapLine.count() ; i++)
-		(*screenMapLineAt(i)).para -= (line2 - line1 - 1);
-
-	(*documentLineAt(line2)).del(0,col2+1,bll);	//need to check this....
-	joinLine(line1);
-*/
 	return true ;
 }
 
@@ -914,30 +873,22 @@ bool BanglaDocument::copy(int line1, int col1, int line2, int col2, BanglaLetter
 	int totlines = (int)documentLine.count();
 	if(line1 >= totlines) return false ;
 	if(line2 >= totlines) return false ;
-	/*
-	if(col1 >= documentLine[line1].letterCount()) return false ;
-	if(col2 >= documentLine[line2].letterCount()) return false ;
-	*/
 	if(col1 >= (*documentLineAt(line1)).letterCount()) return false ;
 	if(col2 >= (*documentLineAt(line2)).letterCount()) return false ;
 
 	if(line2 > line1)
 	{
-		//documentLine[line1].copy(col1,-1,bll) ;
 		(*documentLineAt(line1)).copy(col1,-1,bll) ;
 	}
 	else
 	{
-		//documentLine[line1].copy(col1,col2 - col1 + 1,bll) ;
 		(*documentLineAt(line1)).copy(col1,col2 - col1 + 1,bll) ;
 		return true ;
 	}
 
 	for(int line = line1 + 1 ; line < line2 ; line++)
-		//documentLine[line].copy(0,-1,bll);
 		(*documentLineAt(line)).copy(0,-1,bll);
 
-	//documentLine[line2].copy(0,col2+1,bll);
 	(*documentLineAt(line2)).copy(0,col2+1,bll);
 	return true ;
 }
@@ -946,20 +897,6 @@ bool BanglaDocument::copy(int line1, int col1, int line2, int col2, BanglaLetter
 //copy out the whole scren line
 bool BanglaDocument::copyScreenLine(int line, BanglaLetterList &bll)
 {
-/*
-	if(wordWrap)
-	{
-		if( (line >= 0) & (line < (int)screenMapLine.count()) )
-			documentLine[ screenMapLine[ line ].para ].copy( screenMapLine[ line ].startCol,
-							 screenMapLine[ line ].endCol - screenMapLine[ line ].startCol + 1,
-							 bll);
-	}
-	else
-	{
-		if( (line >= 0) & (line < (int)documentLine.count()) )
-			documentLine[ line ].copy(0,-1, bll);
-	}
-*/
 	if(wordWrap)
 	{
 		if( (line >= 0) & (line < (int)screenMapLine.count()) )
@@ -1037,18 +974,6 @@ bool BanglaDocument::joinLine(int para)
 
 	QPoint paracol(0, para );
 	QPoint linecol = paragraph2line(paracol);
-
-/*
-	documentLine[para].joinLine(documentLine[para+1]);
-	documentLine.remove(documentLine.at(para+1));
-
-	int newline = wrapParagraph(para, linecol.y()) + 1;
-
-	removeScreenLines(para+1,newline);
-	//now update the paragraph identities
-	for(int i = newline ; i < (int)screenMapLine.count() ; i++)
-		screenMapLine[i].para--;
-*/
 
 	screenMapLineMemoryMoveTo( linecol.y() ) ;
 	documentLineMemoryMoveTo( para ) ;

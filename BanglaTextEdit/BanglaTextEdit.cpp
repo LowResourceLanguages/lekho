@@ -107,10 +107,9 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name, bool _readonly)
 	viewport()->update();
 
 	revealUnicode = true ;
-
 	modified = false ;
-
 	wordFound = false ;
+	hasSelText = false ;
 
 	cursorBlinkOn() ;
 
@@ -182,7 +181,8 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 	revealUnicode = bte->revealUnicode ;
 
 	modified = false ;
-
+	hasSelText = false ;
+	
 	cursorBlinkOn() ;
 }
 
@@ -345,7 +345,7 @@ void BanglaTextEdit::del(int para1, int col1, int para2, int col2 )
 {
 	if( readonly )
 		return ;
-		
+
 	//QPoint pc(col1, para1) ;
 	//QPoint linecol = theDoc.paragraph2line( pc );
 	//firstLineToDraw = linecol.y() ;

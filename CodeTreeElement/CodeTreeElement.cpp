@@ -37,7 +37,7 @@ CodeTreeElement::CodeTreeElement()	//when the man says do nuthin', do nothin'
 	childElement = NULL ;
 }
 
-CodeTreeElement::CodeTreeElement(QChar c, int d, 
+CodeTreeElement::CodeTreeElement(QChar c, int d,
 								 QString u="")
 {
 	letter = c ;
@@ -58,13 +58,16 @@ void CodeTreeElement::copy(CodeTreeElement &C)
 	depth = C.depth ;
 
 	code = C.code ;
-	
+
 	numChildren = C.numChildren ;
 
-	
+	//hack
+	if(childElement != NULL)
+		delete[] childElement ;
+
 	childElement = new CodeTreeElement [ numChildren ];
 	for(int i = 0 ; i < numChildren ; i++)
-		childElement[i].copy(C.getChild(i));		
+		childElement[i].copy(C.getChild(i));
 }
 
 CodeTreeElement::~CodeTreeElement()
@@ -77,7 +80,7 @@ void CodeTreeElement::addToTree(CodeTreeElement &C, QString letter, QString code
 	CodeTreeElement *temp = NULL;
 
 	int len = letter.length();
-	
+
 	int ch = C.validNextChar(letter[0]) ;
 	//letter exists
 	if(ch > -1)
@@ -90,7 +93,7 @@ void CodeTreeElement::addToTree(CodeTreeElement &C, QString letter, QString code
 		C.addChild(letter[0],"");	//dummy code goes in
 		temp = C.getChildPointer(C.howManyChildren() -1);
 	}
-	
+
 	for(int i = 1 ; i < len ; i++)
 	{
 		ch = temp->validNextChar(letter[i]);
@@ -154,7 +157,7 @@ QString CodeTreeElement::getLeaf(CodeTreeElement &C, QString in)
 }
 
 //return letter
-QChar CodeTreeElement::getLetter()				
+QChar CodeTreeElement::getLetter()
 {
 	return(letter);
 }
@@ -174,12 +177,16 @@ QString CodeTreeElement::getCode()
 //accessing the tree
 
 //add a child node
-void CodeTreeElement::addChild(QChar c, QString u)		
+void CodeTreeElement::addChild(QChar c, QString u)
 {
+	//shameless hack
+	bool flagDelete = false ;
+
 	CodeTreeElement* tempChild ;
 	//need to hold the previous children temporarily
 	if(numChildren > 0)
 	{
+		flagDelete = true ;
 		tempChild = new CodeTreeElement [ numChildren ];
 		for(int i = 0 ; i < numChildren ; i++)
 			tempChild[i].copy(childElement[i]);
@@ -198,6 +205,8 @@ void CodeTreeElement::addChild(QChar c, QString u)
 	childElement[ numChildren - 1 ].letter = c ;
 	childElement[ numChildren - 1 ].code = u ;
 
+	if( flagDelete )
+		delete[] tempChild ;
 }
 
 

@@ -82,6 +82,8 @@ struct LekhoPrefs
 	bool	cursorBlink,
 		wordWrap  ;
 
+	LekhoPrefs() { theFile = NULL ; }
+	
 	bool	load(const QString& );
 	bool	save(const QString& );
 };

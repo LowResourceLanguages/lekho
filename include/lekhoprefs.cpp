@@ -26,7 +26,7 @@ bool LekhoPrefs::load(const QString &filename)
 {
 	//if(theFile != NULL)
 	//delete theFile ;
-	theFile = new Preferences(filename,"lekho", "0.0");	//all verisons should use same file
+	theFile = new Preferences(filename,"lekho", "0.0");	//all versions should use same file
 
 	//start up stuff, including position and parser files...
 	theFile->setGroup("startup");
