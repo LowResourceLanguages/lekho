@@ -517,53 +517,12 @@ void BanglaTextEdit::setText(const QString &text)
 	if(hasSelText)
 		hasSelText = false ;
 
-	cout << "Segmenting text " << endl << flush ;
-	emit statusBarMessage( "Segmenting text" ) ;
-	viewport()->update();
+	ensureVisible(0, 0 , 10, 10) ;
+	theCursor.paracol = QPoint(0,0) ;
+	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 
-	//segment the unciode and load it into a bll
-	BanglaLetterList bll ;
-	//QValueList<QString> segmentedText = segment(text);
-	QValueList<QString> segmentedText ; segment(text, segmentedText);
-
-	QString screenFontText ;
-
-	cout << "Screen fonting text " << endl << flush ;
-	emit statusBarMessage( "Screen fonting text" ) ;
-	viewport()->update();
-
-	int width ;
-	//for(int i = 0 ; i < (int)segmentedText.count() ; i++)
-
-	// you won't believe how much faster using a iterator is compared to a index loop !
-	//QValueList<QString>::const_iterator i ;
-	QValueList<QString>::ConstIterator i ;
-	for(i = segmentedText.begin() ; i != segmentedText.end() ; ++i)
-	{
-		if( isBangla((*i).constref(0)) )
-		{
-			screenFontText = lipi->unicode2screenFont((*i));
-			width = QFontMetrics(banglaFont).width(screenFontText);
-		}
-		else
-		{
-			screenFontText = (*i);
-			if( isTab((*i).constref(0)) )
-			{
-				screenFontText = tab ;
-				width = QFontMetrics(englishFont).width(space) * tabWidth ;
-			}
-			else
-				width = QFontMetrics(englishFont).width(screenFontText);
-		}
-		bll += BanglaLetter((*i), screenFontText , width );
-	}
-
-	cout << "Setting text : " << QString::number(bll.count(),10) << " letters in document " << endl << flush ;
-	emit statusBarMessage("Setting text");
-	viewport()->update();
-
-	theDoc.setDocument(bll);
+	theDoc.clear();
+	insert(0,0,text);
 	theDoc.setLineHeight(QMAX( QFontMetrics(banglaFont).lineSpacing(),
 				   QFontMetrics(englishFont).lineSpacing() ));
 	theDoc.setLinesInPage((int)((float)visibleHeight()/(float)theDoc.getLineHeight()));
@@ -1496,16 +1455,18 @@ QRect BanglaTextEdit::calculateCursorRect()
 	else
 		width = theDoc.getLineHeight()/3;
 */
+	//width = 1 doesn't work on windows...
+
 	//kludge make cursor different if partialCodeInserted
 	if( partialCodeInserted )
 	{
 		theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
-		QRect crs(theCursor.xy.x(), theCursor.xy.y() , 1 , theDoc.getLineHeight());
+		QRect crs(theCursor.xy.x(), theCursor.xy.y() , 2 , theDoc.getLineHeight());
 		theDoc.moveCursor( Key_Left, theCursor.xy, theCursor.paracol);
 		return crs;
 	}
 	else
-		return QRect(theCursor.xy.x(), theCursor.xy.y() , 1 , theDoc.getLineHeight());
+		return QRect(theCursor.xy.x(), theCursor.xy.y() , 2 , theDoc.getLineHeight());
 }
 
 

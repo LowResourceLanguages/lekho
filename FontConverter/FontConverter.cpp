@@ -135,7 +135,8 @@ QString FontConverter::unicode2screenFont(QString uc)
 	QChar candrabindu(0x0981), zwnj(0x200c);
 
 	//sometimes the whole letter has a specific glyph (e.g. like ta+ra)
-	//find that if it exist
+	//or ra - hashanta
+	//find that if it exists
 	QString _temp = CodeTreeElement::getLeaf(convert, uc);
 	if(!_temp.isEmpty())
 	{

@@ -486,6 +486,7 @@ void ApplicationWindow::load( const QString &fileName )
     e->setText( ts.read() );
     e->setModified( FALSE );
     setCaption( fileName );
+    f.close();
 
     cout << "Done... " << endl << flush ;
     statusBar()->message( "Loaded document " + fileName, 2000 );

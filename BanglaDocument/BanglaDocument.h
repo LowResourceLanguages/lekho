@@ -89,7 +89,8 @@ public:
 
 	void setDocument(const BanglaDocument &bd);
 	void setDocument(const BanglaLetterList &bll);	//handles newlines
-
+	void clear();
+	
 	// some document parameters useful for displaying
 	void setLineHeight(int);
 	int getLineHeight();

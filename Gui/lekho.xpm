@@ -1,5 +1,5 @@
 /* XPM */
-static char *lekho[]={
+static const char *lekho[]={
 "34 34 7 1",
 "b c #303030",
 "# c #808080",

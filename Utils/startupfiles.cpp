@@ -2,7 +2,7 @@
 //reads the files shor.txt, jukto.txt, kar.txt, adarshalipi.txt and bangtex.txt
 //and outputs the file startup.cpp which is to be compiled into lekho
 //
-//compile with g++ startupfiles.cpp startup
+//compile with g++ startupfiles.cpp -o~/Lekho/bin/makestartupfiles
 
 /*
 #include <qstring.h>
@@ -20,7 +20,7 @@ void doover(istream &filein, ofstream &fileout);
 int main(int argc, char *argv[])
 {
 	ifstream filein ;
-	ofstream fileout("../include/startup.cpp");
+	ofstream fileout("~/Lekho/v1.0/include/startup.cpp");
 
 	fileout << "#include <qstring.h> " << endl
 		<< "#include \"startup.h\" " << endl
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 		<< "{" << endl
 		<< "a = \"" ;
 
-	filein.open("../.lekhorc");
+	filein.open("~/Lekho/v1.0/.lekhorc");
 	doover( filein, fileout);
 	fileout << "\\n\";" << endl
 		<< "}" << endl << endl ;
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 		<< "void makeKar(QString &a)" << endl
 		<< "{" << endl
 		<< "a = \"" ;
-	filein.open("../.lekho/kar.txt");
+	filein.open("~/Lekho/v1.0/.lekho/kar.txt");
 	doover( filein, fileout);
 	fileout << "\\n\";" << endl
 		<< "}" << endl << endl ;
@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 		<< "void makeJukto(QString &a)" << endl
 		<< "{" << endl
 		<< "a = \"" ;
-	filein.open("../.lekho/jukto.txt");
+	filein.open("~/Lekho/v1.0/.lekho/jukto.txt");
 	doover( filein, fileout);
 	fileout << "\\n\";" << endl
 		<< "}" << endl << endl ;
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 		<< "void makeShor(QString &a)" << endl
 		<< "{" << endl
 		<< "a = \"" ;
-	filein.open("../.lekho/shor.txt");
+	filein.open("~/Lekho/v1.0/.lekho/shor.txt");
 	doover( filein, fileout);
 	fileout << "\\n\";" << endl
 		<< "}" << endl << endl ;
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 		<< "void makeAdarshalipi(QString &a)" << endl
 		<< "{" << endl
 		<< "a = \"" ;
-	filein.open("../.lekho/adarshalipi.txt");
+	filein.open("~/Lekho/v1.0/.lekho/adarshalipi.txt");
 	doover( filein, fileout);
 	fileout << "\\n\";" << endl
 		<< "}" << endl << endl ;
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 		<< "void makeBangtex(QString &a)" << endl
 		<< "{" << endl
 		<< "a = \"" ;
-	filein.open("../.lekho/bangtex.txt");
+	filein.open("~/Lekho/v1.0/.lekho/bangtex.txt");
 	doover( filein, fileout);
 	fileout << "\\n\";" << endl
 		<< "}" << endl << endl ;

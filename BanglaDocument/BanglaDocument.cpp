@@ -70,9 +70,7 @@ BanglaDocument::~BanglaDocument()
 
 void BanglaDocument::setDocument(const BanglaDocument &bd)
 {
-	documentLine.clear();
-//	documentLineMemoryReset();
-
+	clear();
 	documentLine = bd.documentLine ;
 	screenMapLine = bd.screenMapLine ;
 
@@ -89,15 +87,23 @@ void BanglaDocument::setDocument(const BanglaLetterList &bll)
 	//safety
 	if (bll.isEmpty()) return ;
 
-	screenMapLine.clear();
-	documentLine.clear();
-	documentLine.append(BanglaLine());
-	documentLineMemoryReset();
-	screenMapLineMemoryReset();
-
+	clear();
 	insert(0,0,bll);
 }
 
+void BanglaDocument::clear()
+{
+
+	if( !documentLine.isEmpty() )
+	{
+		documentLine.clear();
+		documentLineMemoryReset();
+
+		documentLine.append(BanglaLine());
+	}
+
+	wrapWholeDocument();
+}
 
 void BanglaDocument::setLineHeight(int h)
 {
@@ -426,13 +432,13 @@ void BanglaDocument::screenMapLineMemoryMoveTo(int screenLine)
 void	BanglaDocument::documentLineMemoryReset()
 {
 	docLineIndex = 0 ;
-	docLineItr = documentLine.at(0);
+	docLineItr = documentLine.begin(); //documentLine.at(0);
 }
 
 void	BanglaDocument::screenMapLineMemoryReset()
 {
 	screenLineIndex = 0;
-	screenLineItr = screenMapLine.at(0) ;
+	screenLineItr = screenMapLine.begin(); //screenMapLine.at(0) ;
 }
 
 
@@ -785,13 +791,12 @@ bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll)
 		if((*i).unicode == "\n")
 		{
 			//use splitline to keep things watertight...
+
 			(*documentLineAt(currline)).insert(currcol , oneLine);
-
-			oneLine.clear();
-			splitLine(currline, (*documentLineAt(currline)).letterCount()) ;
-
+			splitLine(currline, currcol + oneLine.count());
 			currline++;
 			currcol = 0 ;
+			oneLine.clear();
 		}
 		else
 		{
