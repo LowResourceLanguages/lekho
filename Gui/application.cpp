@@ -557,6 +557,7 @@ void ApplicationWindow::load( const QString &fileName )
     ts.setEncoding(QTextStream::UnicodeUTF8);
 
     cout << "Reading text " << endl << flush ;
+    e->flushParser();
     e->setText( ts.read() );
     e->setModified( FALSE );
     setCaption( fileName );
@@ -577,6 +578,7 @@ void ApplicationWindow::save()
 	return;
     }
 
+    e->flushParser();
     QString text = e->unicode();
     QFile f( filename );
     if ( !f.open( IO_WriteOnly ) ) {
@@ -632,6 +634,7 @@ void ApplicationWindow::saveAsHTML()
 					       this );
     if ( !fn.isEmpty() )
     {
+    e->flushParser();
     QString text = e->unicode();
     QFile f( fn );
     if(f.exists() )
@@ -679,6 +682,7 @@ void ApplicationWindow::saveAsUTF16()
 					       this );
     if ( !fn.isEmpty() )
     {
+    e->flushParser();
     QString text = e->unicode();
     QFile f( fn );
 
@@ -726,6 +730,7 @@ void ApplicationWindow::HTMLexport()
 	return;
     }
 
+    e->flushParser();
     QString text = e->screenFont();
 
     if(fudgeHtmlOn)
@@ -795,6 +800,7 @@ void ApplicationWindow::LaTeXexport()
 	return;
     }
 
+    e->flushParser();
     QString text = e->getLatex();
 
     QFile f( latexname );
@@ -839,6 +845,7 @@ void ApplicationWindow::print()
 
 void ApplicationWindow::find()
 {
+	e->flushParser();
 	FindDialog *fd = new FindDialog(e, "Lekho : Find", this);
 	connect(fd, SIGNAL(find(const QString &)), e, SLOT(highlightWord(const QString &)) );
 	connect(fd, SIGNAL(replace(const QStringList &)), e, SLOT(replaceWord(const QStringList &)) );
@@ -848,6 +855,7 @@ void ApplicationWindow::find()
 
 void ApplicationWindow::spellCheck()
 {
+	e->flushParser();
 	SpellDialog *fd = new SpellDialog(e, "Lekho : Spell Check", this);
 	connect(fd, SIGNAL(findNext()), e, SLOT(findWrongWord()) );
 	connect(e, SIGNAL( foundWrongWord(const QString& ) ), fd , SLOT( wordFound(const QString &) ) );

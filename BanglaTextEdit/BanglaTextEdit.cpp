@@ -737,6 +737,8 @@ bool BanglaTextEdit::latexConverterInit(QTextStream &file)
 //handle the loading of text into the document
 void BanglaTextEdit::setText(const QString &text)
 {
+	keyPressEventFlushBangla();
+	
 	if(hasSelText)
 		hasSelText = false ;
 	history.clear();	//otherwise your document spends some time in the twilightzone...

@@ -1,0 +1,11 @@
+Bugs are put here, when they are squished they are removed and sent to CHANGES
+
+0. The bangla unicode specs are in lfux. Namely the coding specs for
+a)  a-jawphola-akar
+b)  ra-jawphola
+c)  khanda-ta and ta-y-hashanto
+are under debate.
+For case c) Lekho follows Andy White's proposal. For the other two Lekho goes by current Unicode specs.
+These should not normally pose a problem.
+
+1. typing NNG (onushor) but stopping halfway i.e. NN and the hitting arrow or backspace causes a screwup, this is due to flushBangla not working right with an empty partial code

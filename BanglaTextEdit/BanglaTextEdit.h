@@ -254,7 +254,6 @@ public slots:
 
 	void top();	//go to document start ;
 
-	//experimental stage...
 	//find ops
 	//looks for this word from the current cursor posititon
 	//and selects it
@@ -284,6 +283,10 @@ public slots:
 	void undo();
 	void redo();
 
+	//if an op interrupts your typing and may change cursor position
+	//call this to prevent foul ups with the keystroke parser
+	void flushParser() { keyPressEventFlushBangla(); }
+	
 signals:
 
 	void documentModified( bool );
