@@ -219,7 +219,8 @@ int BanglaTextEdit::insert (int para, int col, const QString &text)
 
     	setModified( true );
 	theDoc.insert(para, col, bll);
-	viewport()->update();
+
+	//viewport()->update();
 
 	return (bll.count());
 }

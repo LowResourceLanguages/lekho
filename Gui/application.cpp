@@ -204,7 +204,7 @@ ApplicationWindow::ApplicationWindow()
     action->addTo( advanced );
     action->setOn( thePref.cursorBlink );
 
-    options->insertItem( "&Advanced...", advanced);
+    options->insertItem( "&Advanced", advanced);
 
 
     //help

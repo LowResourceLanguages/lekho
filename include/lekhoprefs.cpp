@@ -24,8 +24,8 @@
 
 bool LekhoPrefs::load(const QString &filename)
 {
-	if(theFile != NULL)
-		delete theFile ;
+	//if(theFile != NULL)
+	//	delete theFile ;
 
 	theFile = new Preferences(filename,"lekho", "0.0");	//all verisons should use same file
 

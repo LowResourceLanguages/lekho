@@ -66,6 +66,7 @@ void segment(const QString &a, QValueList<QString> &out)
 				//a vowel always stands alone
 				if(vowel.find(a[i]) > -1)
 				{
+					out.append(temp);
 					out.append(QString(a[i]));
 					temp = "";
 				}
@@ -104,12 +105,13 @@ void segment(const QString &a, QValueList<QString> &out)
 							//is there a ligature ahead
 							if(i < (int)a.length() -1)
 							{
-								//OK, its part of a consonant conjunct, skip that
 								if(a[i+1] == ligature)
+								//OK, its part of a consonant conjunct, skip forward
 								{
 									i++;
 									temp += a[i];
-								}//if, not push ahead
+								}
+								
 							}
 							else
 							{

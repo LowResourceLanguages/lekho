@@ -24,6 +24,7 @@
 			transliteration when you do get consonants with a dangling ligature
 	2002.08.31	removed utterly careless bug that prevented ligatures with 0x099e (NYA)
 	2002.09.06	removed bug that prevented hashonto chars from being imple...
+	2002.09.21	removed bug that killed free consonants before a free vowel
  */
 #ifndef SEGMENT_H
 #define SEGMENT_H
