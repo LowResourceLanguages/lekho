@@ -235,13 +235,11 @@ void	SearchDictionary::removeDuplicatesFromMutantList(QStringList &mutantList)
 	QStringList  newList = mutantList ;
 	mutantList.clear();
 
-	QStringList::ConstIterator 	k ; //= newList.begin() ;
-	//for( ; k != newList.end() ; k++)
 	while( !newList.isEmpty() )
 	{
-		k = newList.begin() ;
-		mutantList.append( *k ) ;
-		newList.remove( *k ) ;
+		QString k = newList.first() ;
+		mutantList.append( k ) ;
+		newList.remove( k ) ;
 	}
 
 }
