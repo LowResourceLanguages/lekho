@@ -1,7 +1,6 @@
 /*
-*  Lekho v1.0 will be a simple editor for bangla in unicode that will export
-*  to bangtex
-*  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
+*  Lekho is a plain text editor for bangla in unicode
+*  Copyright (C) 2001,2002,2003 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -132,7 +131,7 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     QToolButton * redo
 	= new QToolButton( redoIcon, "Redo", QString::null,
 			   this, SLOT(redo()), fileTools, "redo" );
-    redo->setEnabled( false ) ;			   
+    redo->setEnabled( false ) ;
     connect(e, SIGNAL( redoAvailable( bool ) ), redo, SLOT(setEnabled( bool )));
 
     findIcon = QPixmap( findinfile );
@@ -317,23 +316,40 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     setGeometry(thePref.pos);
 
+    //now parse the command line inputs
     if(sl.count() > 0)
     {
-    	//hack to show keymap file
+    	//exception : hack to show keymap file
 	if(sl[0] == "-keymap")
 	{
 		e->setKeyMapAsText();
 		setCaption("Lekho help : keymap");
 	}
 	else
-    		load(sl[0]);
-	if(sl.count() > 1)
 	{
-		QStringList fileList ;
-		for(int i = 1 ; i < (int)sl.count() ; i++)
-			fileList.append(sl[i]) ;
+		//exception, we are sending you text directly
+		//the next element of the string list i.e. sl[1] is the caption and
+		//sl[2] is the actual unicode text...
+		//the rest are ignored
+		if(sl[0] == "-text")
+		{
+			if(sl.count() >= 2)
+				e->setText(sl[2]) ;
+			if(sl.count() > 1)
+				setCaption(sl[1]);
+		}
+		else
+		{
+    			load(sl[0]);
+			if(sl.count() > 1)
+			{
+				QStringList fileList ;
+				for(int i = 1 ; i < (int)sl.count() ; i++)
+					fileList.append(sl[i]) ;
 
-		newDoc( fileList);
+				newDoc( fileList);
+			}
+		}
 	}
     }
     else

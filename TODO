@@ -1,8 +1,9 @@
+1. have a statistics popup - show the frequency of each letter in the document, words in the document etc.
 
 Stuff I'll do, some day. The further down an item is on the list the further that day is from today..
 
-spell check
-undo/redo 
+spell check [done]
+undo/redo   [done]
 invoke latex and compile latex docs
 have a latex/html toolbar for GUI inserts of such tags
 have a preview pane for latex/html

@@ -46,7 +46,7 @@ QTextStream debugStream ;				//dump all debug messages here
 
 void showLicense()
 {
-	Qcout	<< endl
+	cout	<< endl
 		<<	"-------------------------------------------------------------------------" << endl
 		<<	"| Lekho version 1.15, Copyright (C) 2002,2003 Kaushik Ghose             |" << endl
 		<<	"| Spell checker wordlist from Dr. Avijit Das(adrab@users.sf.net)	|" << endl
@@ -55,6 +55,15 @@ void showLicense()
     		<<	"| under certain conditions; for details see the GNU GPL.                |" << endl
 		<<	"| Comments welcome : send to kghose@users.sourceforge.net               |" << endl
 		<<	"-------------------------------------------------------------------------" << endl ;
+}
+
+void showArguments()
+{
+	cout	<< 	endl
+		<<	"Arguments :" << endl
+		<<	"-keymap				-	show keymap " << endl
+		<<	"-text <caption> <\"text\">	-	start lekho showing \"text\" with window caption \"caption\" " << endl
+		<< 	endl ;
 }
 
 int main( int argc, char ** argv )
@@ -72,6 +81,7 @@ int main( int argc, char ** argv )
     a.connect( &a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()) );
 
     showLicense() ;
+    showArguments();
     int returnVal = a.exec();
 
     //clean up the mess you left when you went away

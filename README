@@ -95,11 +95,13 @@ When you are changing the romanisation rules you need to ensure that the first l
 same as that in another file like shor.txt. If you violate this rule, then the results will be unexpected.
 
 FEATURES
-V1.0
+V1.15
  - Copy and paste
       - copy utf8, utf16, screenfont, html character reference
       - paste utf8, utf16, romanised
  - Find and replace
+ - Bangla spell check
+ - Unlimited undo/redo (just limited by memory...)
  - Soft word wrap
  - remembers preferences like fonts, colours, position and directories
  - on start up if any input files are missing it creates defaults

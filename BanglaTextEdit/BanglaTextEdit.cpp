@@ -884,11 +884,16 @@ QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 			}
 		}
 		if( ((*i).unicode[0].unicode() != 0x09) & ((*i).unicode[0].unicode() != '\n') )
-			theScreenText += (*i).screenFont ;
+			//theScreenText += (*i).screenFont ;
+			for(int j = 0 ; j < (int)(*i).screenFont.length() ; j++)
+				theScreenText += "&#" + QString::number( (*i).screenFont[j].unicode(),10) + ";" ;
 		else
 			//exception for tabs and newlines....
 			theScreenText += (*i).unicode[0];
 	}
+
+	if(banglaMode)
+		theScreenText += fontFinish ;
 
 	return(theScreenText);
 }
@@ -2034,6 +2039,9 @@ void BanglaTextEdit::undo()
 	emit redoAvailable(history.redoAvailable());
 
 	setModified( !history.atSavePosition() );
+
+	if(hasSelText)
+		hasSelText = false ;
 }
 
 void BanglaTextEdit::redo()
@@ -2069,4 +2077,7 @@ void BanglaTextEdit::redo()
 	emit redoAvailable(history.redoAvailable());
 
 	setModified( !history.atSavePosition() );
+
+	if(hasSelText)
+		hasSelText = false ;
 }

@@ -43,7 +43,7 @@ struct LekhoRedoUndoUnit
 	LekhoRedoUndoUnit() { next = NULL; prev = NULL; }
 	~LekhoRedoUndoUnit()
 	{
-		//hopefully this will chain...
+		//This chains ok 
 		if( next != NULL)
 			delete next ;
 	}
