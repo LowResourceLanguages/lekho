@@ -222,7 +222,7 @@ ApplicationWindow::ApplicationWindow()
     resize( 450, 600 );
 
 
-    printDebug();
+    //printDebug();
 }
 
 
@@ -260,7 +260,7 @@ void ApplicationWindow::clipBoardOp(int id)
 
 void ApplicationWindow::printDebug()
 {
-	Qcout << thePref << endl ;
+	//Qcout << thePref << endl ;
 }
 
 //function::readPrefs()
@@ -290,7 +290,7 @@ void ApplicationWindow::readPrefs()
 	lekhorc >> thePref ;
 	in.close();
 	*/
-	thePref.load(".lekhorc",);
+	thePref.load(".lekhorc");
 }
 
 void ApplicationWindow::initialiseParser()

@@ -24,11 +24,13 @@
 
 //#include<iostream.h>
 
+#include<preferences.h>
+
 #include<qfont.h>
 #include<qtextstream.h>
 #include<qcolor.h>
 
-/*
+
 const char
 		INITFILE[]	= "[initfile]" ,
 		INITDIR[]	= "[initdir]" ,
@@ -47,10 +49,12 @@ const char
 		ENGLISHFONT[]	= "[englishfont]" ,
 		FOREGROUND[]	= "[foreground]" ,
 		BACKGROUND[]	= "[background]" ;
-*/
+
+
 //just a structure to encapsulate lekho directories, start up files etc. etc.
 struct LekhoPrefs
 {
+	Preferences *theFile ;
 
 	QString	initFile,	//generally .lekhorc
 		initDir,	//directory where our startup files are e.g. .lekho
@@ -75,7 +79,7 @@ struct LekhoPrefs
 	bool	save(const QString& );
 };
 
-//QTextStream& operator << (QTextStream& pipe , LekhoPrefs& thePref);
+QTextStream& operator << (QTextStream& pipe , LekhoPrefs& thePref);
 //QTextStream& operator >> (QTextStream& pipe , LekhoPrefs& thePref);
 
 //ostream& operator << (ostream& pipe , LekhoPrefs& thePref);
