@@ -1,0 +1,6 @@
+All changes referenced to v1.0
+
+v1.1
+1. save as html and save as utf16 added to file options. Utf16 is self explanatory, save as html basically adds on some html tags like <br> to line ends and some default headers, its useful for me because I can type up a bangla page in plain text and save it as a moderately passable webpage as is.
+
+2. in the export to screen font there is an option to not use automatic headers (see point 1). This means you can type up a webpage in bangla unicode (writing your own headers) and export it to screenfont and Lekho won't add an automatic header to the file if you tell it not to. 
