@@ -942,7 +942,7 @@ void ApplicationWindow::keyMapHelp()
 void ApplicationWindow::about()
 {
     QMessageBox::about( this, "Lekho : About",
-    			"Lekho v1.1\n"
+    			"Lekho v1.15\n"
 			"\n"
 			"This program is distributed in the hope that it will be useful,\n"
 			"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"

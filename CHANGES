@@ -1,4 +1,7 @@
 v1.15
+2002.12.24
+1. improved spell checker so that it now implements "grammatical normalisation"
+
 2002.12.15
 1. changed bangtex.txt such that onnushor now appears as {h} avoids complications with 't'
 

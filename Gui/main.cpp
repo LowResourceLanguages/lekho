@@ -48,7 +48,7 @@ void showLicense()
 {
 	Qcout	<< endl
 		<<	"-------------------------------------------------------------------------" << endl
-		<<	"| Lekho version 1.1, Copyright (C) 2002,2003 Kaushik Ghose              |" << endl
+		<<	"| Lekho version 1.15, Copyright (C) 2002,2003 Kaushik Ghose             |" << endl
 		<<	"| Spell checker wordlist from Dr. Avijit Das(adrab@users.sf.net)	|" << endl
     		<<	"| Lekho comes with ABSOLUTELY NO WARRANTY; for details see the GNU GPL  |" << endl
     		<<	"| This is free software, and you are welcome to redistribute it         |" << endl

@@ -94,17 +94,60 @@ bool	SearchDictionary::lookUpWord(const QString &wd) 	//basic search, will elabo
 
 	loadPage(wd[0].unicode());	//if page not loaded, load it
 
-	//QString theWord(wd);
+	//test the original and the normalized words
+	//if none match, try and find mutants...
 	if( !wordList->find( wd ))
+	{
+		//do the endings stuff
+		for(int i=0 ; i < (int)endings.count() ; i++)
+		{
+			QString theEnd = endings[i];
+			if(wd.right(theEnd.length()) == theEnd)
+			{
+				QString normalisedWd = wd.left(wd.length() - theEnd.length());
+				//a normalized one matched
+				if( wordList->find( normalisedWd ))
+					return true ;
+			}
+		}
+
+		//nothing matched
 		return false;
-	else
-		return true;
+	}
+
+	//the original matched
+	return true;
+
 }
 
 
 void	SearchDictionary::findValidMutants(const QString &wd, QStringList &mutantList)
 {
+	//the basic mutant search
 	findValidMutants_private(wd, mutantList);
+
+	//do the endings stuff
+	for(int i=0 ; i < (int)endings.count() ; i++)
+	{
+		QString theEnd = endings[i];
+		if(wd.right(theEnd.length()) == theEnd)
+		{
+			cout << "Ending found" << endl ;
+			QString normalisedWd = wd.left(wd.length() - theEnd.length());
+			QStringList endingsList ;
+			findValidMutants_private(normalisedWd, endingsList);
+
+			//remember to the put the end back !
+			QStringList::ConstIterator k = endingsList.begin() ;
+			for( ; k != endingsList.end() ; k++)
+			{
+				mutantList.append( *k + theEnd );
+			}
+		}
+	}
+
+	//hacky...
+	removeDuplicatesFromMutantList( mutantList ) ;
 }
 
 //mutate words and see if they are in dict, private fucnction
@@ -181,6 +224,27 @@ void	SearchDictionary::mutaGen(const QString &mutant, int mutaLevel, int mutaCou
 	}
 }
 
+//a bit of a hack
+//started to get duplicates when I implemented the "grammatical normalisation" algo
+//so just get rid of the dupes...
+void	SearchDictionary::removeDuplicatesFromMutantList(QStringList &mutantList)
+{
+	if( mutantList.isEmpty() )
+		return ;
+
+	QStringList  newList = mutantList ;
+	mutantList.clear();
+
+	QStringList::ConstIterator 	k ; //= newList.begin() ;
+	//for( ; k != newList.end() ; k++)
+	while( !newList.isEmpty() )
+	{
+		k = newList.begin() ;
+		mutantList.append( *k ) ;
+		newList.remove( *k ) ;
+	}
+
+}
 
 
 

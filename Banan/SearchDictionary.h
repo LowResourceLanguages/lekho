@@ -37,7 +37,8 @@ class SearchDictionary
 private:
 	QDict<char>	*wordList ;//( 40009, false) ;	//the basic dictionary, with a prime key
 	bool	loaded[128] ;			//flags telling us whats been loaded so far
-	QStringList soundex	;		//the soundex
+	QStringList 	soundex,		//the soundex
+			endings ;		//list of endings that need to be normalised
 
 	//stuff to manage the dicitonary loading
 	QString		dictDir ;	//base dictionary directory
@@ -50,6 +51,7 @@ private:
 public:
 	SearchDictionary()
 	{
+		//40009 is a big prime number...
 		wordList = new QDict<char>( 40009, false) ;
 		for(int i = 0 ; i < 128 ; i++)
 			loaded[ i ] = false ;
@@ -64,18 +66,20 @@ new rule to add - o and ya
 */
 
 		ushort 	ra[] = {0x09b0, 0x09dc},
-			ja[] = {0x099c, 0x09af},
+			ja[] = {0x099c, 0x09af, 0x099d},
 			ss[] = {0x09b7, 0x09b8, 0x09b6},
 			kkh[] = {0x0995, 0x0996},
 			ggh[] = {0x0997, 0x0998},
 			th[] = {0x09a4, 0x099f, 0x09a0},
 			ii[] = {0x09bf, 0x09c0},
-			uu[] = {0x09c1, 0x09c2} ;
+			uu[] = {0x09c1, 0x09c2},
+			nN[] ={0x09a8, 0x09a3},
+			cch[] = {0x099a, 0x099b} ;
 
 		soundexElement.setUnicodeCodes(ra,2);
 		soundex.append(soundexElement);
 
-		soundexElement.setUnicodeCodes(ja,2);
+		soundexElement.setUnicodeCodes(ja,3);
 		soundex.append(soundexElement);
 
 		soundexElement.setUnicodeCodes(ss, 3);
@@ -95,6 +99,60 @@ new rule to add - o and ya
 
 		soundexElement.setUnicodeCodes(uu,2);
 		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(nN,2);
+		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(cch,2);
+		soundex.append(soundexElement);
+
+		//endings...
+		ushort	e[] = {0x09c7},
+			r[] = {0x09b0},
+			er[] = {0x09c7, 0x09b0},
+			te[] = {0x09a4, 0x09c7},
+			Ta[] = {0x099f, 0x09be},
+			Ti[] = {0x099f, 0x09bf},
+			Tar[] = {0x099f, 0x09be, 0x09b0},
+			Tir[] = {0x099f, 0x09bf, 0x09b0},
+			ke[] = {0x0995, 0x09c7},
+			o[] = {0x0993},
+			na[] = {0x09a8, 0x09be};
+
+		soundexElement.setUnicodeCodes(e,1);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(r,1);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(er,2);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(te,2);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(Ta,2);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(Ti,2);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(Tar,3);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(Tir,3);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(ke,2);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(o,1);
+		endings.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(na,2);
+		endings.append(soundexElement);
+
+
 
 	}
 
@@ -144,13 +202,16 @@ new rule to add - o and ya
 	void	findValidMutants(const QString &wd, QStringList &mutantList) ;
 	void	mutaGen(const QString &mutant, int mutaLevel, int mutaCount,
 			uint *mutaSite, QString *alleleMatrix, QStringList &mutantList);
- ;
+
 
 private:
 	bool	loadPage(QChar lett);			//load this page
 	bool	loadWords(QTextStream &);		//loads word from dictinary file
 
-void	findValidMutants_private(const QString &wd, QStringList &mutantList) ;
+	void	findValidMutants_private(const QString &wd, QStringList &mutantList) ;
+
+	//a bit of a hack
+	void	removeDuplicatesFromMutantList(QStringList &mutantList);
 
 /*
 	int	lookUpWord(QString wd, QStringList &completions, QStringList &corrections);
