@@ -62,6 +62,9 @@
 #include "fileprint.xpm"
 #include "findinfile.xpm"
 #include "spell.xpm"
+#include "undoxpm.xpm"
+#include "redoxpm.xpm"
+
 
 #include<FindDialog.h>
 #include<SpellDialog.h>
@@ -90,7 +93,7 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     fudgeHtmlOn = false ;
 
-    QPixmap lekhoIcon, openIcon, saveIcon, printIcon, findIcon, spellIcon;
+    QPixmap lekhoIcon, openIcon, saveIcon, printIcon, findIcon, spellIcon, undoIcon, redoIcon;
     lekhoIcon = QPixmap( lekho );
     this->setIcon(lekhoIcon);
 
@@ -115,6 +118,16 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     QToolButton * fileSave
 	= new QToolButton( saveIcon, "Save File", QString::null,
 			   this, SLOT(save()), fileTools, "save file" );
+
+    undoIcon = QPixmap( undoxpm );
+    QToolButton * undo
+	= new QToolButton( undoIcon, "Undo", QString::null,
+			   this, SLOT(undo()), fileTools, "undo" );
+
+    redoIcon = QPixmap( redoxpm );
+    QToolButton * redo
+	= new QToolButton( redoIcon, "Redo", QString::null,
+			   this, SLOT(redo()), fileTools, "redo" );
 
     findIcon = QPixmap( findinfile );
     QToolButton * find
@@ -207,14 +220,19 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     //Edit
     QPopupMenu *edit = new QPopupMenu( this );
-    edit->insertItem( findIcon, "&Find", this, SLOT(find()), Key_F3 );
-    edit->insertItem( spellIcon, "&Spell", this, SLOT(spellCheck()), Key_F2 );
+    edit->insertItem( undoIcon, "&Undo", this, SLOT(undo()), CTRL+Key_U );
+    edit->insertItem( redoIcon, "&Redo", this, SLOT(redo()), CTRL+Key_R );
 
     edit->insertSeparator();
 
     edit->insertItem( "Copy", this, SLOT(copy()), CTRL+Key_C);		//utf-16 ops
     edit->insertItem( "Paste", this, SLOT(paste()), CTRL+Key_V );	//utf-16 ops
     edit->insertItem( "Cut", this, SLOT(cut()), CTRL+Key_X );	//utf-16 ops
+
+    //Tools
+    QPopupMenu *tools = new QPopupMenu( this );
+    tools->insertItem( findIcon, "&Find", this, SLOT(find()), Key_F3 );
+    tools->insertItem( spellIcon, "&Spell", this, SLOT(spellCheck()), Key_F2 );
 
     //Options
     QPopupMenu * options = new QPopupMenu( this );
@@ -261,6 +279,7 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     //insert the menus onto the menu bar in the order we want
     menuBar()->insertItem( "&File", file );
     menuBar()->insertItem( "&Edit", edit );
+    menuBar()->insertItem( "&Tools", tools);
     menuBar()->insertItem( "&Options", options);
     menuBar()->insertItem( "&Help", help );
 
@@ -831,6 +850,16 @@ void ApplicationWindow::paste()
 void ApplicationWindow::cut()
 {
 	e->cut();
+}
+
+void ApplicationWindow::undo()
+{
+	e->undo();
+}
+
+void ApplicationWindow::redo()
+{
+	e->redo();
 }
 
 void ApplicationWindow::setWordWrap(bool ww)

@@ -36,6 +36,7 @@ We sometimes add/modify the endings of words depending on the part of speech the
 \item {\lbng মা} $\rightarrow$ {\lbng মাকে}
 \item {\lbng মা} $\rightarrow$ {\lbng মাও}
 \item {\lbng চলে} $\rightarrow$ {\lbng চলেনা}
+\item {\lbng আমি} $\rightarrow$ {\lbng আমিই}
 \end{itemize}
 The checker has a list of endings which it checks against the ending of the word sent to it. If one of the endings match, the spellchecker removes the ending, checks it against the dictionary, generates mutants and adds on the removed ending to the suggestions. If it did not do this then, for example, the word {\bng চাবিটা} would be flagged as incorrect, even though it is correctly spelled.
 
@@ -54,6 +55,7 @@ The normalisation endings list is
 \item *কে
 \item *ও
 \item *না
+\item *ই
 \end{itemize}
 }
 where ``-'' stands for one letter and ``*'' stands for any group of letters

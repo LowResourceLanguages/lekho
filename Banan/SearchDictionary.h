@@ -117,7 +117,8 @@ new rule to add - o and ya
 			Tir[] = {0x099f, 0x09bf, 0x09b0},
 			ke[] = {0x0995, 0x09c7},
 			o[] = {0x0993},
-			na[] = {0x09a8, 0x09be};
+			na[] = {0x09a8, 0x09be},
+			i[] = {0x0987};
 
 		soundexElement.setUnicodeCodes(e,1);
 		endings.append(soundexElement);
@@ -152,6 +153,8 @@ new rule to add - o and ya
 		soundexElement.setUnicodeCodes(na,2);
 		endings.append(soundexElement);
 
+		soundexElement.setUnicodeCodes(i,1);
+		endings.append(soundexElement);
 
 
 	}

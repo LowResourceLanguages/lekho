@@ -60,6 +60,7 @@ HEADERS = Gui/application.h \
 		BanglaDocument/BanglaDocument.h \
 		BanglaTextEdit/BanglaTextEdit.h \
 		BanglaTextEdit/BanglaLineEdit.h \
+		BanglaTextEdit/LekhoRedoUndo.h \
 		BanglaSegment/BanglaSegment.h \
 		FontConverter/FontConverter.h \
 		FontConverter/LatexConverter.h \
@@ -80,6 +81,7 @@ SOURCES = Gui/main.cpp \
 		BanglaDocument/BanglaDocument.cpp \
 		BanglaTextEdit/BanglaTextEdit.cpp \
 		BanglaTextEdit/BanglaLineEdit.cpp \
+		BanglaTextEdit/LekhoRedoUndo.cpp \
 		BanglaSegment/BanglaSegment.cpp \
 		FontConverter/FontConverter.cpp \
 		FontConverter/LatexConverter.cpp \
@@ -100,6 +102,7 @@ OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/BanglaDocument.o \
 		$(OBJ_DIR)/BanglaTextEdit.o \
 		$(OBJ_DIR)/BanglaLineEdit.o \
+		$(OBJ_DIR)/LekhoRedoUndo.o \
 		$(OBJ_DIR)/BanglaSegment.o \
 		$(OBJ_DIR)/FontConverter.o \
 		$(OBJ_DIR)/LatexConverter.o \
@@ -203,7 +206,9 @@ $(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
 		Gui/fileopen.xpm \
 		Gui/fileprint.xpm \
 		Gui/findinfile.xpm \
-		Gui/spell.xpm
+		Gui/spell.xpm \
+		Gui/undoxpm.xpm \
+		Gui/redoxpm.xpm
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/application.o Gui/application.cpp
 
 $(OBJ_DIR)/FindDialog.o: Gui/FindDialog.cpp Gui/FindDialog.h 
@@ -224,11 +229,14 @@ $(OBJ_DIR)/BanglaLetter.o: BanglaLetter/BanglaLetter.cpp BanglaLetter/BanglaLett
 $(OBJ_DIR)/BanglaDocument.o: BanglaDocument/BanglaDocument.cpp BanglaDocument/BanglaDocument.h BanglaLine/BanglaLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaDocument.o BanglaDocument/BanglaDocument.cpp
 
-$(OBJ_DIR)/BanglaTextEdit.o: BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h include/bangla.h
+$(OBJ_DIR)/BanglaTextEdit.o: BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h BanglaTextEdit/LekhoRedoUndo.h include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaTextEdit.o BanglaTextEdit/BanglaTextEdit.cpp
 
 $(OBJ_DIR)/BanglaLineEdit.o: BanglaTextEdit/BanglaLineEdit.cpp BanglaTextEdit/BanglaLineEdit.h BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLineEdit.o BanglaTextEdit/BanglaLineEdit.cpp
+
+$(OBJ_DIR)/LekhoRedoUndo.o: BanglaTextEdit/LekhoRedoUndo.cpp BanglaTextEdit/LekhoRedoUndo.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/LekhoRedoUndo.o BanglaTextEdit/LekhoRedoUndo.cpp
 
 $(OBJ_DIR)/BanglaSegment.o: BanglaSegment/BanglaSegment.cpp BanglaSegment/BanglaSegment.h include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaSegment.o BanglaSegment/BanglaSegment.cpp

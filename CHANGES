@@ -1,4 +1,9 @@
 v1.15
+2002.12.26
+1. YEEEHAH ! Implemented redo/undo. Seems to work bug free (TM) but needs further testing(TM)
+2. Added "i" ending rule to the grammatical normalisation
+3. added flushBangla to the paste functions
+
 2002.12.25
 1. Spell checker now uses "compressed files" to speed up loading and economize on space
 2. Uses dummy files through out the bangla range to prevent "file not found messages" 

@@ -298,7 +298,18 @@ bool BanglaTextEdit::initialiseParser(QTextStream &kar, QTextStream &jukto, QTex
 //function::insert
 //the insert needs to be in unicode
 //return number of letters inserted...
-int BanglaTextEdit::insert (int para, int col, const QString &text)
+//historyOp is true if this is a call due to undo/redo
+int BanglaTextEdit::insert (int para, int col, const QString &text, bool historyOp)
+{
+ 	int paraEnd, colEnd ;
+	return(insert (para, col, text, historyOp, &paraEnd, &colEnd));
+}
+
+//function::insert
+//the insert needs to be in unicode
+//return number of letters inserted...
+//historyOp is true if this is a call due to undo/redo
+int BanglaTextEdit::insert (int para, int col, const QString &text, bool historyOp, int *paraEnd, int *colEnd)
 //, bool indent , bool checkNewLine , bool removeSelected)
 {
 
@@ -339,7 +350,7 @@ int BanglaTextEdit::insert (int para, int col, const QString &text)
 	}
 
     	setModified( true );
-	theDoc.insert(para, col, bll);
+	theDoc.insert(para, col, bll, paraEnd, colEnd);
 
 	viewport()->update();
 
@@ -348,11 +359,25 @@ int BanglaTextEdit::insert (int para, int col, const QString &text)
 
 	segmentedText.clear();
 
+	if( !historyOp)
+	{
+		QString theText ;
+		BanglaLetterList::ConstIterator i ;
+		for(i = bll.begin() ; i != bll.end() ; ++i)
+			theText += (*i).unicode ;
+		QPoint paracolStart(col,para), paracolEnd(*colEnd,*paraEnd) ;
+		history.setop( true, theText, paracolStart, paracolEnd );
+
+		emit undoAvailable(history.undoAvailable());
+		emit redoAvailable(history.redoAvailable());
+	}
+
 	return (bll.count());
 }
 
 //function::del
-void BanglaTextEdit::del(int para1, int col1, int para2, int col2 )
+//historyOp is true if this is a call due to undo/redo
+void BanglaTextEdit::del(int para1, int col1, int para2, int col2, bool historyOp )
 {
 	if( readonly )
 		return ;
@@ -365,6 +390,19 @@ void BanglaTextEdit::del(int para1, int col1, int para2, int col2 )
     	setModified( true );
 	theDoc.del(para1, col1, para2, col2, bll);
 	viewport()->update();
+
+	if(!historyOp)
+	{
+		QString theText ;
+		BanglaLetterList::ConstIterator i ;
+		for(i = bll.begin() ; i != bll.end() ; ++i)
+			theText += (*i).unicode ;
+		QPoint paracolStart(col1,para1), paracolEnd(col2,para2) ;
+		history.setop( false, theText, paracolStart, paracolEnd );
+
+		emit undoAvailable(history.undoAvailable());
+		emit redoAvailable(history.redoAvailable());
+	}
 }
 
 void BanglaTextEdit::splitLine(int para, int col)
@@ -707,7 +745,7 @@ void BanglaTextEdit::setText(const QString &text)
 	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 
 	theDoc.clear();
-	insert(0,0,text);
+	insert(0,0,text,true);
 	theDoc.setLineHeight(QMAX( QFontMetrics(banglaFont).lineSpacing(),
 				   QFontMetrics(englishFont).lineSpacing() ));
 	theDoc.setLinesInPage((int)((float)visibleHeight()/(float)theDoc.getLineHeight()));
@@ -1294,7 +1332,7 @@ QString BanglaTextEdit::parseKeyHit(const QString &text)
 				    theCursor.paracol.y(), theCursor.paracol.x());
 				partialCodeInserted = false ;
 			}
-			insert(theCursor.paracol.y(), theCursor.paracol.x(), uc);
+			insert(theCursor.paracol.y(), theCursor.paracol.x(), uc, false);
 			theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 			keysHit = "" ;
 		}
@@ -1318,7 +1356,7 @@ QString BanglaTextEdit::parseKeyHit(const QString &text)
 		{
 			//using x as break juktakkhor
 			cursorErase();
-			insert (theCursor.paracol.y(), theCursor.paracol.x(), text[i]);
+			insert (theCursor.paracol.y(), theCursor.paracol.x(), text[i], false);
 			theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 			cursorDraw();
 		}
@@ -1344,7 +1382,7 @@ void BanglaTextEdit::keyPressEventFlushBangla()
 			del(theCursor.paracol.y(), theCursor.paracol.x(),
 			    theCursor.paracol.y(), theCursor.paracol.x());
 		}
-		insert(theCursor.paracol.y(), theCursor.paracol.x(), uc);
+		insert(theCursor.paracol.y(), theCursor.paracol.x(), uc, false);
 		partialCodeInserted = false ;
 		theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 	}
@@ -1556,7 +1594,7 @@ void BanglaTextEdit::clipBoardOp(int id)
 	paracolSelEnd -= QPoint(1,0) ;	//a leetle hack
 
 	QClipboard *cb = QApplication::clipboard();
-	int i, len ;
+	int paraEnd, colEnd ;
 	QString text ;
 
 	switch(id)
@@ -1575,16 +1613,29 @@ void BanglaTextEdit::clipBoardOp(int id)
 		cb->setText( charRef(paracolSelStart,paracolSelEnd) );
 		break;
 	case PasteUtf8:
-		len = insert (theCursor.paracol.y(), theCursor.paracol.x(), QString::fromUtf8(cb->text()));
-		for(i = 0 ; i < len ; i++)
-			theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
+		//len = insert (theCursor.paracol.y(), theCursor.paracol.x(), QString::fromUtf8(cb->text()));
+		//for(i = 0 ; i < len ; i++)
+		//	theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
+		keyPressEventFlushBangla();
+		insert (theCursor.paracol.y(), theCursor.paracol.x(), QString::fromUtf8(cb->text()), false,
+			&paraEnd, &colEnd);
+		theCursor.paracol.setY(paraEnd);
+		theCursor.paracol.setX(colEnd);
+		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 		break;
 	case PasteUtf16:
-		len = insert (theCursor.paracol.y(), theCursor.paracol.x(), cb->text());
-		for(i = 0 ; i < len ; i++)
-			theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
+		//len = insert (theCursor.paracol.y(), theCursor.paracol.x(), cb->text());
+		//for(i = 0 ; i < len ; i++)
+		//	theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
+		keyPressEventFlushBangla();
+		insert (theCursor.paracol.y(), theCursor.paracol.x(), cb->text(), false,
+			&paraEnd, &colEnd);
+		theCursor.paracol.setY(paraEnd);
+		theCursor.paracol.setX(colEnd);
+		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 		break;
 	case PasteRomanised:
+		keyPressEventFlushBangla();
 		if(bangla->isBangla())
 		{
 			keyPressEventFlushBangla();
@@ -1926,4 +1977,63 @@ void BanglaTextEdit::cursorBlinkOn()
 void BanglaTextEdit::cursorBlinkOff()
 {
 	theCursor.blinkOn = false ;
+}
+
+//history (redo-undo) ops
+//the 'true' in the insert/del ops tell us not to register these in the history...
+void BanglaTextEdit::undo()
+{
+	keyPressEventFlushBangla();
+	if(history.undoAvailable())
+	{
+		int paraEnd, colEnd ;
+		LekhoRedoUndoOp undo_op = history.undo();
+		if( undo_op.isInsertOp )
+		{
+			insert( undo_op.paracolStart.y(), undo_op.paracolStart.x() , undo_op.theText, true,
+				&paraEnd, &colEnd);
+			theCursor.paracol.setY(paraEnd);
+			theCursor.paracol.setX(colEnd);
+		}
+		else
+		{
+			del( undo_op.paracolStart.y(), undo_op.paracolStart.x(),
+				undo_op.paracolEnd.y(), undo_op.paracolEnd.x(), true);
+			theCursor.paracol = undo_op.paracolStart ;
+		}
+		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+
+		if(!history.undoAvailable())
+			setModified( false ) ;
+	}
+
+	emit undoAvailable(history.undoAvailable());
+	emit redoAvailable(history.redoAvailable());
+}
+
+void BanglaTextEdit::redo()
+{
+	keyPressEventFlushBangla();
+	if(history.redoAvailable())
+	{
+		int paraEnd, colEnd ;
+		LekhoRedoUndoOp redo_op = history.redo();
+		if( redo_op.isInsertOp )
+		{
+			insert( redo_op.paracolStart.y(), redo_op.paracolStart.x() , redo_op.theText, true,
+			 	&paraEnd, &colEnd);
+			theCursor.paracol.setY(paraEnd);
+			theCursor.paracol.setX(colEnd);
+		}
+		else
+		{
+			del( redo_op.paracolStart.y(), redo_op.paracolStart.x(),
+				redo_op.paracolEnd.y(), redo_op.paracolEnd.x(), true);
+			theCursor.paracol = redo_op.paracolStart ;
+		}
+		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+	}
+
+	emit undoAvailable(history.undoAvailable());
+	emit redoAvailable(history.redoAvailable());
 }

@@ -86,6 +86,8 @@ private slots:
 	void copy();	//all utf-16 ops
 	void paste();
 	void cut();
+	void undo();
+	void redo();
 
 	void print();
 

@@ -150,7 +150,7 @@ public:
 
 	//inserts letters starting at a given line. If the line is 1+ the last line
 	//a new line is added
-	bool insert(int line, int col, const BanglaLetterList& bll);	//handles newlines
+	bool insert(int line, int col, const BanglaLetterList& bll, int *paraEnd = NULL, int *colEnd = NULL);	//handles newlines
 
 	//delete a part of the document
 	bool del(int line1, int col1, int line2, int col2, BanglaLetterList &bll);

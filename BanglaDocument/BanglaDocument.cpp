@@ -792,7 +792,7 @@ void BanglaDocument::findNextWord(QPoint &start, QPoint &end, QString &wd, const
 
 
 //inserts a lot of letters in a given line. Looks out for and handles newlines
-bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll)
+bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll, int *paraEnd, int *colEnd)
 {
 
 	int totlines = (int)documentLine.count();
@@ -838,6 +838,12 @@ bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll)
 		QPoint linecol = paragraph2line(paracol);
 
 		wrapParagraph(currline, linecol.y());
+	}
+
+	if( paraEnd != NULL )
+	{
+		(*colEnd) = currcol + oneLine.count() ;
+		(*paraEnd) = currline ;
 	}
 
 	return true ;

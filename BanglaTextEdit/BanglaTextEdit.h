@@ -50,7 +50,7 @@
 #include <BanglaDocument.h>
 #include <FontConverter.h>
 #include <LatexConverter.h>
-//#inlcude <LekhoUndoRedo.h>
+#include <LekhoRedoUndo.h>
 #include <SearchDictionary.h>
 
 #include <parser.h>
@@ -77,7 +77,7 @@ protected:
 //#ifdef _WS_WIN_
 	bool	lockRedrawDuringPrinting ;
 //#endif
-	
+
 	bool	readonly ;	//if true then we can't write or paste on the scrollview...
 
 	LekhoCursor theCursor ;
@@ -117,6 +117,7 @@ protected:
 	bool	revealUnicode ;		//if this is set true, the status bar shows you the unicode value of
 					//the character the mouse is over every time you move it...
 
+	LekhoRedoUndo	history ;	//redoundo history
 
 	// Initializing functions ////////////////////////////////////////////////////
 public:
@@ -218,8 +219,9 @@ protected:
 
 public:
 	//insert text at paragraph and col indicated
-	int insert(int para, int col, const QString &text); //, bool indent = FALSE, bool checkNewLine = TRUE, bool removeSelected = TRUE );
-	void del(int para1, int col1, int para2, int col2 );
+	int insert(int para, int col, const QString &text, bool histOp = true);
+	int insert(int para, int col, const QString &text, bool histOp, int *paraEnd , int *colEnd ); //, bool indent = FALSE, bool checkNewLine = TRUE, bool removeSelected = TRUE );
+	void del(int para1, int col1, int para2, int col2, bool histOp = true );
 	void splitLine(int para, int col);
 
 	//print it !
@@ -278,6 +280,10 @@ public slots:
 	void paste();
 	void cut();
 
+	//history (redo-undo) ops
+	void undo();
+	void redo();
+
 signals:
 
 	void documentModified( bool );
@@ -287,6 +293,11 @@ signals:
 
 	void foundWrongWord(const QString& );
 	void suggestionList(const QStringList &suggestions , const QStringList &suggestionsScreenFont);
+
+	//history (redo-undo) ops
+	void undoAvailable( bool );
+	void redoAvailable( bool );
+
 };
 
 #endif //BANGLATEXTEDIT_H
