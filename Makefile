@@ -11,9 +11,13 @@
 #### the directory $(HOME)/C++/Lekho/ with something valuable #####
 
 LEKHO_DIR = $(HOME)/C++/Lekho/
-INSTALL_DIR = /usr/local/bin/
 OBJ_DIR = $(LEKHO_DIR)/obj/
 BIN_DIR = $(LEKHO_DIR)/bin/
+
+#works for SuSE....
+INSTALL_DIR = /usr/local/bin/
+FONTS_DIR = /usr/X11R6/lib/X11/fonts/truetype/
+LIB_DIR = /usr/local/lib/lekho/
 
 ################# NO NEED TO CHANGE BEYOND THIS POINT #######################
 
@@ -316,19 +320,25 @@ install: all
 	@echo "Copying the executable file lekho"
 	cp -f $(BIN_DIR)/lekho $(INSTALL_DIR)/lekho
 	@echo "Copying the initialisation file .lekhorc"
-	cp -f $(PWD)/.lekhorc $(INSTALL_DIR)/.lekhorc
+	cp -f $(PWD)/.lekhorc $(HOME)/.lekhorc
 	@echo "Copying the initialisation directory .lekho"
-	cp -r -f $(PWD)/.lekho $(INSTALL_DIR)/.lekho
+	cp -r -f $(PWD)/.lekho $(HOME)/.lekho
 	@echo "Copying the dictionary"
-	cp -r -f $(PWD)/Dict $(INSTALL_DIR)/Dict
+	cp -r -f $(PWD)/Dict $(LIB_DIR)/Dict
 	@echo "Copying the examples directory"
-	cp -r -f $(PWD)/examples $(INSTALL_DIR)/examples
+	cp -r -f $(PWD)/examples $(LIB_DIR)/examples
+	@echo "Copying the fonts"
+	cp -r -f $(PWD)/fonts/* $(FONTS_DIR)
+	@echo "To install the fonts "
+	@echo "a) run kfontinst or whatever your distro supports"
+	@echo "b) restart your GUI"
+	@echo "c) wait a bit :) "
 	@echo 
 	@echo "Making softlinks from $(HOME)"
-	ln -s -f $(INSTALL_DIR)/Dict $(HOME)/Dict
+	ln -s -f $(LIB_DIR)/Dict $(HOME)/Dict
 	ln -s -f $(INSTALL_DIR)/lekho $(HOME)/lekho
-	ln -s -f $(INSTALL_DIR)/.lekho $(HOME)/.lekho
-	ln -s -f $(INSTALL_DIR)/.lekhorc $(HOME)/.lekhorc
+	#ln -s -f $(INSTALL_DIR)/.lekho $(HOME)/.lekho
+	#ln -s -f $(INSTALL_DIR)/.lekhorc $(HOME)/.lekhorc
 	@echo
 	@echo "Install complete ! #####################"
 	@echo "You should be all set. Type lekho"
@@ -339,5 +349,6 @@ install: all
 	@echo "Computer-e bangla lekha upobhog korun !"
 	@echo
 uninstall:
-	@rm -r $(INSTALL_DIR) 
-	@echo "Deleted lekho install directory. Remove the ttf fonts if you wish";
+	@echo "Deleting lekho executable";
+	@rm -i $(INSTALL_DIR)/lekho 
+	@echo "Remove the ttf fonts manually if you wish";

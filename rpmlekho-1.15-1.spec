@@ -4,8 +4,9 @@ Version: 1.15
 Release: 1
 Copyright: GPL
 Group: Applications/Editors
-Source: 
-Patch:
+Provides: lekho Dict
+Requires: qt2.3
+Source: lekho_1.15.src.tgz 
 BuildRoot: /var/tmp/%{name}-buildroot
 
 %description
@@ -17,7 +18,7 @@ It uses the QT toolbox from TrollTech. It is released under the GNU GPL
 
 
 %prep
-%setup
+%setup -n lekho-1.15
 
 %build
 make
