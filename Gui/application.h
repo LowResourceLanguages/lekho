@@ -42,8 +42,8 @@
 #include <lekhostream.h>
 
 #include <BanglaTextEdit.h>
-//#include <lekhoprefs.h>
-#include <preferences.h>
+#include <lekhoprefs.h>
+//#include <preferences.h>
 
 
 class ApplicationWindow: public QMainWindow
@@ -85,6 +85,8 @@ private slots:
     void setWordWrap(bool ww);
     void chooseEnglishFont();
     void chooseBanglaFont();
+    void chooseForeground();
+    void chooseBackground();
 
     void setTabWidth();
     //void insertLatex(int id);

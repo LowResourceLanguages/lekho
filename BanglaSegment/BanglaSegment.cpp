@@ -19,7 +19,8 @@
 */
 #include "BanglaSegment.h"
 
-QValueList<QString> segment(const QString &a)
+//QValueList<QString> segment(const QString &a)
+void segment(const QString &a, QValueList<QString> &out)
 {
 	ushort _kar[] = {0x09be,0x09bf,0x09c0,0x09c1,0x09c2,0x09c3,0x09c7,
 		0x09c8,0x09cb,0x09cc};
@@ -34,7 +35,8 @@ QValueList<QString> segment(const QString &a)
 	kar.setUnicodeCodes(_kar, 10);
 	vowel.setUnicodeCodes(_vowel,24);
 
-	QValueList<QString> out ;
+//	QValueList<QString> out ;
+
 	QString temp ;
 	for(int i = 0 ; i < (int)a.length() ; i++)
 	{
@@ -124,5 +126,5 @@ QValueList<QString> segment(const QString &a)
 		out.append(temp);
 	}
 
-	return(out);
+	//return(out);
 }

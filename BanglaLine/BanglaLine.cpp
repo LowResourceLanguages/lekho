@@ -21,6 +21,7 @@
 //BanglaLine.cpp
 #include <BanglaLine.h>
 
+
 BanglaLine::BanglaLine()
 {
 	lineWidth  = 0;
@@ -67,27 +68,29 @@ bool BanglaLine::insert(int col, const BanglaLetterList &bll)
 	if(col > (int)letter.count()) return false;
 	//if(col >= (int)letter.count() && hasCR()) return false ;
 
+	BanglaLetterList::ConstIterator i = bll.end() ;
+	BanglaLetterList::Iterator	col_  = letter.at(col);
 
-	BanglaLetterList::ConstIterator i = bll.end(),
-					col_ = letter.at(col);
+	for( ; i != bll.begin() ; )
+	{
+		--i;
+		col_ = letter.insert(col_, *i);
+	}
+/*
+	BanglaLetterList::ConstIterator i = bll.end() ;
+	BanglaLetterList::Iterator	col_ = letter.at(col);
+
 	for( ; i  != bll.begin() ; )
 	{
 		--i;
-		//letter.insert(col_, *i);
-		letter.insert(letter.at(col), *i);
+		letter.insert(col_, *i);
+		//letter.insert(letter.at(col), *i);
 		lineWidth += (*i).width ;
 	}
 	//letter.insert(letter.at(col), *i);
 	//lineWidth += (*i).width ;
-
-
-/*
-	for(int i = (int)bll.count() -1 ; i >= 0 ; i--)
-	{
-		letter.insert(letter.at(col),bll[i]) ;
-		lineWidth += bll[i].width ;
-	}
 */
+
 	return true ;
 }
 
@@ -271,6 +274,21 @@ int BanglaLine::findWrapColumn(int col1, int screenWidth)
 	}
 	//didn't find a whitespace, the para end goes to the whole screen line
 	return(letter.count()-1);
+}
+
+void BanglaLine::changeFont(QFont &banglaFont, QFont &englishFont)
+{
+	lineWidth = 0 ;
+	BanglaLetterList::Iterator i ;
+	for(i = letter.begin() ; i != letter.end() ; ++i)
+	{
+		if( ((*i).unicode >= 0x0980) && ((*i).unicode <= 0x09ff) )
+			(*i).width = QFontMetrics(banglaFont).width((*i).screenFont);
+		else
+			(*i).width = QFontMetrics(englishFont).width((*i).unicode);
+
+		lineWidth += (*i).width ;
+	}
 }
 
 QTextStream& operator << (QTextStream& pipe , BanglaLine& bl)

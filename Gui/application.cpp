@@ -35,6 +35,7 @@
 #include <qaction.h>
 #include <qaccel.h>
 #include <qapplication.h>
+#include <qcolordialog.h>
 #include <qdir.h>
 #include <qfile.h>
 #include <qfiledialog.h>
@@ -56,16 +57,6 @@
 #include "filesave.xpm"
 #include "fileopen.xpm"
 #include "fileprint.xpm"
-
-/*
-//our neat little editing menu...
-enum BanglaEditCode
-{
-	CopyUtf8 = 0,
-	CopyScreenFont,
-	CopyCharRef
-};
-*/
 
 /*
  * Just fill 'er up with all the buttons and things you want
@@ -174,6 +165,11 @@ ApplicationWindow::ApplicationWindow()
     connect( action, SIGNAL( toggled(bool) ), this , SLOT( setWordWrap(bool) ) );
     action->addTo( options );
 
+    options->insertItem( "&Bangla font", this, SLOT(chooseBanglaFont()) );
+    options->insertItem( "&English font", this, SLOT(chooseEnglishFont()) );
+    options->insertItem( "&foregorund color", this, SLOT(chooseForeground()) );
+    options->insertItem( "&background color", this, SLOT(chooseBackground()) );
+
 //    options->insertItem( "&WordWrap", this, SLOT(newDoc()), CTRL+Key_N );
 
 
@@ -191,15 +187,6 @@ ApplicationWindow::ApplicationWindow()
 
     menuBar()->insertItem( "&Help", help );
 
-/*
-    // set up the popup clipboard menu...
-    copyMenu = new QPopupMenu(this);       // copy menu
-    copyMenu->insertItem( "Copy utf-8", CopyUtf8 );
-    copyMenu->insertItem( "Copy screenfont", CopyScreenFont );
-    copyMenu->insertItem( "Copy character ref", CopyCharRef );
-
-    connect(copyMenu, SIGNAL(activated(int)), this, SLOT(clipBoardOp(int)));
-*/
 
     //setting up the bangla editor
     e = new BanglaTextEdit( this, "Lekho" );
@@ -219,7 +206,8 @@ ApplicationWindow::ApplicationWindow()
 
     statusBar()->message( "Ready", 2000 );
 
-    resize( 450, 600 );
+    setGeometry(thePref.pos);
+    //resize( 450, 600 );
 
 
     //printDebug();
@@ -228,6 +216,7 @@ ApplicationWindow::ApplicationWindow()
 
 ApplicationWindow::~ApplicationWindow()
 {
+	thePref.pos = geometry();
 	thePref.save(".lekhorc") ;
 	delete printer;
 }
@@ -439,6 +428,7 @@ void ApplicationWindow::HTMLexport()
 
 }
 
+
 void ApplicationWindow::HTMLexportAs()
 {
     QString fn = QFileDialog::getSaveFileName( thePref.workingDir, QString::null,
@@ -541,6 +531,20 @@ void ApplicationWindow::chooseEnglishFont()
 	{
         // the user cancelled the dialog
 	}
+}
+
+void ApplicationWindow::chooseForeground()
+{
+	thePref.foreground = QColorDialog::getColor(thePref.foreground);
+
+	e->setColors(thePref.foreground, thePref.background);
+}
+
+void ApplicationWindow::chooseBackground()
+{
+	thePref.background = QColorDialog::getColor(thePref.background);
+
+	e->setColors(thePref.foreground, thePref.background);
 }
 
 void ApplicationWindow::setTabWidth()

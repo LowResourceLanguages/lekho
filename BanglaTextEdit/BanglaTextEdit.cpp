@@ -157,10 +157,12 @@ void BanglaTextEdit::setFonts(QFont &bf, QFont &ef)
 				   QFontMetrics(englishFont).lineSpacing() ));
 	theDoc.setLinesInPage((int)((float)visibleHeight()/(float)theDoc.getLineHeight()));
 
-	//don't forget to write code to update the document here
+	theDoc.changeFont(banglaFont, englishFont);
 
-	//QFontInfo deFont(banglaFont);
-	//Qcerr << endl << "void BanglaTextEdit::setFonts(QFont &bf, QFont &ef) " << deFont.family() << endl ;
+	//posn the curson correctly now
+	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+
+	viewport()->update();
 }
 
 void BanglaTextEdit::setColors(QColor fg, QColor bg)
@@ -177,7 +179,7 @@ bool BanglaTextEdit::initialiseParser(QTextStream &kar, QTextStream &jukto, QTex
 		Qcerr << "Problem loading parser table : BanglaTextEdit " << endl ;
 		return false;
 	}
-	Qcout << "Loaded parser tables " << endl << bangla ;
+//	Qcout << "Loaded parser tables " << endl << bangla ;
 	emit statusBarMessage( "Loaded parser tables " ) ;
 	return true ;
 }
@@ -188,7 +190,9 @@ bool BanglaTextEdit::initialiseParser(QTextStream &kar, QTextStream &jukto, QTex
 int BanglaTextEdit::insert (int para, int col, const QString &text, bool indent , bool checkNewLine , bool removeSelected)
 {
 	BanglaLetterList bll ;
-	QValueList<QString> segmentedText = segment(text);
+	//QValueList<QString> segmentedText = segment(text);
+	QValueList<QString> segmentedText ; segment(text, segmentedText);
+
 	QString screenFontText ;
 
 	int width ;
@@ -218,7 +222,8 @@ int BanglaTextEdit::insert (int para, int col, const QString &text, bool indent 
 
     	setModified( true );
 	theDoc.insert(para, col, bll);
-	viewport()->update();
+	//viewport()->update();
+	update();
 	return (bll.count());
 }
 
@@ -258,7 +263,9 @@ void BanglaTextEdit::setText(const QString &text)
 
 	//segment the unciode and load it into a bll
 	BanglaLetterList bll ;
-	QValueList<QString> segmentedText = segment(text);
+	//QValueList<QString> segmentedText = segment(text);
+	QValueList<QString> segmentedText ; segment(text, segmentedText);
+
 	QString screenFontText ;
 
 	cout << "Screen fonting text " << endl << flush ;
@@ -469,7 +476,7 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 		//hack, if text is selected then highlight it...
 		if(selectionInView)
 		{
-			p->setPen(QColor(0, 0, 0));
+			p->setPen(foreground);
 			p->setRasterOp(NotXorROP);
 			if((curry == xySelStart.y()) && ( curry == xySelEnd.y()))
 				p->fillRect(xySelStart.x(), curry, xySelEnd.x() - xySelStart.x(), lineHeight, QBrush(QBrush::SolidPattern));
@@ -494,7 +501,7 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
         {
             QRect cursorRect = calculateCursorRect();
 
-            p->setPen(QColor(0, 0, 0));
+	    p->setPen(foreground);
             p->setRasterOp(NotXorROP);
 			if(viewport()->hasFocus())
 				p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));

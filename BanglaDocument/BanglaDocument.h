@@ -98,6 +98,8 @@ public:
 	void setLinesInPage(int);
 	void setScreenWidth(int);
 
+	void changeFont(QFont &banglaFont, QFont &englishFont);
+
 	void wordWrapOn();
 	void wordWrapOff();
 	bool isWordWrap();

@@ -37,10 +37,10 @@ bool LekhoPrefs::load(const QString &filename)
 	modifiableFileName = theFile->getString("banjonborno","jukto.txt");	//jukto/banjon
 	unmodifiableFileName = theFile->getString("shoroborno","shor.txt");	//shoroborno
 	screenfontFileName = theFile->getString("screenfont","adarshalipi.txt");	//unicode->screenfont rules file
-	x = theFile->getNumber("xpos",10);
-	y = theFile->getNumber("ypos",10);
-	width = theFile->getNumber("xpos",600);
-	height = theFile->getNumber("xpos",600);
+	pos.setX(theFile->getNumber("xpos",10));
+	pos.setY(theFile->getNumber("ypos",10));
+	pos.setWidth(theFile->getNumber("width",600));
+	pos.setHeight(theFile->getNumber("height",600));
 
 	//working directories etc.
 	theFile->setGroup("directories");
@@ -63,6 +63,7 @@ bool LekhoPrefs::load(const QString &filename)
 	foreground.setNamedColor(theFile->getString("foreground_color","#dedede"));
 	background.setNamedColor(theFile->getString("background_color","#000000")) ;
 
+	return true ; 	//do checks later
 }
 
 bool LekhoPrefs::save(const QString &filename)
@@ -77,10 +78,10 @@ bool LekhoPrefs::save(const QString &filename)
 	theFile->setString("banjonborno",modifiableFileName);	//jukto/banjon
 	theFile->setString("shoroborno",unmodifiableFileName);	//shoroborno
 	theFile->setString("screenfont",screenfontFileName);	//unicode->screenfont rules file
-	theFile->setNumber("xpos",x);
-	theFile->setNumber("ypos",y);
-	theFile->setNumber("xpos",width);
-	theFile->setNumber("xpos",height);
+	theFile->setNumber("xpos",pos.x());
+	theFile->setNumber("ypos",pos.y());
+	theFile->setNumber("width",pos.width());
+	theFile->setNumber("height",pos.height());
 
 	//working directories etc.
 	theFile->setGroup("directories");
@@ -104,7 +105,7 @@ bool LekhoPrefs::save(const QString &filename)
 	return true ;	//will do check later...
 }
 
-
+/*
 QTextStream& operator << (QTextStream& pipe , LekhoPrefs& thePref)
 {
 	pipe 	<< INITFILE << endl << thePref.initFile << endl
@@ -131,7 +132,7 @@ QTextStream& operator << (QTextStream& pipe , LekhoPrefs& thePref)
 
 	return pipe ;
 }
-
+*/
 /*
 QTextStream& operator >> (QTextStream& pipe , LekhoPrefs& thePref)
 {

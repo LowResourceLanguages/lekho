@@ -27,6 +27,8 @@
 #define BANGLALINE_H
 
 //#include<iostream.h>
+#include<qfont.h>
+#include<qfontmetrics.h>
 #include <qstring.h>
 #include <qstringlist.h>
 
@@ -80,6 +82,8 @@ public:
 	int letterWidth(int l1, int l2);
 
 	int findWrapColumn(int col1, int screenWidth);
+
+	void changeFont(QFont &banglaFont, QFont &englishFont);
 
 public:
 	friend QTextStream& operator << (QTextStream& pipe , BanglaLine& b);

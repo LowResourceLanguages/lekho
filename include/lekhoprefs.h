@@ -26,11 +26,12 @@
 
 #include<preferences.h>
 
-#include<qfont.h>
-#include<qtextstream.h>
 #include<qcolor.h>
+#include<qfont.h>
+#include<qrect.h>
+#include<qtextstream.h>
 
-
+/*
 const char
 		INITFILE[]	= "[initfile]" ,
 		INITDIR[]	= "[initdir]" ,
@@ -49,7 +50,7 @@ const char
 		ENGLISHFONT[]	= "[englishfont]" ,
 		FOREGROUND[]	= "[foreground]" ,
 		BACKGROUND[]	= "[background]" ;
-
+*/
 
 //just a structure to encapsulate lekho directories, start up files etc. etc.
 struct LekhoPrefs
@@ -69,7 +70,9 @@ struct LekhoPrefs
 		htmlDir,	//remember where we stored out html export
 		latexDir;	//remember where we stored our latex exports
 
-	int	x,y, width, height ;
+	//int	x,y, width, height ;
+	QRect	pos ;
+
 	QFont	banglaFont,
 		englishFont ;
 	QColor	foreground,
@@ -79,7 +82,7 @@ struct LekhoPrefs
 	bool	save(const QString& );
 };
 
-QTextStream& operator << (QTextStream& pipe , LekhoPrefs& thePref);
+//QTextStream& operator << (QTextStream& pipe , LekhoPrefs& thePref);
 //QTextStream& operator >> (QTextStream& pipe , LekhoPrefs& thePref);
 
 //ostream& operator << (ostream& pipe , LekhoPrefs& thePref);

@@ -144,6 +144,15 @@ void BanglaDocument::setScreenWidth(int w)
 	wrapWholeDocument();
 }
 
+void BanglaDocument::changeFont(QFont &banglaFont, QFont &englishFont)
+{
+	QValueList<BanglaLine>::Iterator i ;
+	for(i = documentLine.begin() ; i != documentLine.end() ; ++i)
+		(*i).changeFont(banglaFont, englishFont)  ;
+
+	wrapWholeDocument();
+}
+
 void BanglaDocument::wordWrapOn()
 {
 	wordWrap = true ;

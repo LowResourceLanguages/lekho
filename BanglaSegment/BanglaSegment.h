@@ -32,6 +32,7 @@
 
 //takes in a unicode text and segments the bangla letters into
 //consonant-vowel or consonant-ligature-consonant-vowel complexes
-QValueList<QString> segment(const QString &a);
+//QValueList<QString> segment(const QString &a);
+void segment(const QString &a, QValueList<QString> &out);
 
 #endif // ndef SEGMENT_H
