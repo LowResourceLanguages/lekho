@@ -16,7 +16,7 @@
  <group name="directories" >
   <option key="htmldir" value="/home/kghose/Lekho/v1.0/examples" />
   <option key="latexdir" value="/home/kghose/C++/Lekho/tex" />
-  <option key="workingdir" value="/home/kghose/C++/Lekho/v1.0/Doc" />
+  <option key="workingdir" value="examples" />
  </group>
  <group name="startup" >
   <option key="banan directory" value="/home/kghose/Dict/" />

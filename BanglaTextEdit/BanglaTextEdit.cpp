@@ -1998,7 +1998,7 @@ void BanglaTextEdit::undo()
 		else
 		{
 			del( undo_op.paracolStart.y(), undo_op.paracolStart.x(),
-				undo_op.paracolEnd.y(), undo_op.paracolEnd.x(), true);
+				undo_op.paracolEnd.y(), undo_op.paracolEnd.x()-1, true);
 			theCursor.paracol = undo_op.paracolStart ;
 		}
 		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
@@ -2028,7 +2028,7 @@ void BanglaTextEdit::redo()
 		else
 		{
 			del( redo_op.paracolStart.y(), redo_op.paracolStart.x(),
-				redo_op.paracolEnd.y(), redo_op.paracolEnd.x(), true);
+				redo_op.paracolEnd.y(), redo_op.paracolEnd.x()-1, true);
 			theCursor.paracol = redo_op.paracolStart ;
 		}
 		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
