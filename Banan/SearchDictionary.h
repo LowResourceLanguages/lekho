@@ -57,7 +57,7 @@ public:
 			loaded[ i ] = false ;
 
 		dictStream.setDevice( &dictFile );
-    		dictStream.setEncoding(QTextStream::UnicodeUTF8);
+    		//dictStream.setEncoding(QTextStream::UnicodeUTF8);
 
 		//currently we are creating the soundex manually
 		QString soundexElement ;

@@ -530,14 +530,6 @@ void BanglaTextEdit::findWrongWord()
 
 	emit suggestionList( suggestions , suggestionsScreenFont);
 
-/*
-	//the mutant list.... just testing
-	for(int i = 0 ; i < (int)suggestions.count() ; i++)
-	{
-		insert(0,0, "\n");
-		insert(0,0, suggestions[i]);
-	}
-*/
 }
 
 //find , from current cursor pos, the next badly spelt word,

@@ -1,4 +1,8 @@
 v1.15
+2002.12.25
+1. Spell checker now uses "compressed files" to speed up loading and economize on space
+2. Uses dummy files through out the bangla range to prevent "file not found messages" 
+
 2002.12.24
 1. improved spell checker so that it now implements "grammatical normalisation"
 

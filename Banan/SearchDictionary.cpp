@@ -70,6 +70,8 @@ bool	SearchDictionary::loadPage(QChar lett)
 
 bool	SearchDictionary::loadWords(QTextStream &in)
 {
+/*
+//code for uncompressed dict
 	QString newWord = in.readLine();
 	while(!in.atEnd())
 	{
@@ -78,6 +80,22 @@ bool	SearchDictionary::loadWords(QTextStream &in)
 		const QString thisWord( newWord );
 		wordList->insert(thisWord,".");
 		newWord = in.readLine();
+	}
+	return true ;
+*/
+	QString compressedWord = in.readLine(),
+		unicodeWord ;
+	ushort a[1000] ;	//like to see a word that long....
+	while(!in.atEnd())
+	{
+		//"uncompress"
+		for(int i = 0 ; i < (int)compressedWord.length() ; i++)
+			a[i] = ( compressedWord[i].unicode() | 0x0900 );
+		unicodeWord.setUnicodeCodes(a, compressedWord.length() );
+
+		const QString thisWord( unicodeWord );
+		wordList->insert(thisWord,".");
+		compressedWord = in.readLine();
 	}
 	return true ;
 }

@@ -5,21 +5,17 @@
 
 \include{minibangla}
 
-\textwidth=12cm
-\textheight=18cm
-\oddsidemargin=0mm
-\evensidemargin=0mm
-\tolerance=10000
+%\textwidth=12cm
+%\textheight=18cm
+%\oddsidemargin=0mm
+%\evensidemargin=0mm
+%\tolerance=10000
 %\renewcommand{\baselinestretch}{1.2}
 \begin{document}
 
 \title{Bangla spell checking algorithm used by\\ \Hbnw{লেখ}\footnote{http://sourceforge.net/projects/lekho}}
 \author{ {\lbng কৌশিক ঘোষ}\\Kaushik Ghose\\{\tt kghose@users.sourceforge.net}}
 \maketitle
-\section{Word list format}
-The word list used is from the http://www.bengalinux.org site, which is a straight conversion to unicode of Dr. Avijit Das' wordlist supplied with the bwedit package\footnote{Available under GPL from http://sourceforge.net/projects/bengaliwriter}. The word list is broken into different files, each containing words begining with a given letter. The encoding is utf-8.
-%\begin{picture}(12cm,4cm)
-%\end{picture}
 
 \section{Basic spellcheck}
 The spell checker does a basic hash like lookup by assigning words begining with one letter to the same bin. It then does a binary search in this bin to see if the word exists. If it does, then the work is over. When there is no match, if the checker is being run in a noninteractive mode, the word is flagged and the checker moves on. If the checker is being used in an interactive mode the fun begins... 
@@ -41,10 +37,11 @@ We sometimes add/modify the endings of words depending on the part of speech the
 \item {\lbng মা} $\rightarrow$ {\lbng মাও}
 \item {\lbng চলে} $\rightarrow$ {\lbng চলেনা}
 \end{itemize}
-The checker has a list of endings which it checks against the ending of the word sent to it. If one of the endings match, the spellchecker removes the ending, checks it against the dictionary, generates mutants and adds on the removed ending to the suggestions. If it did not do this then the word {\bng চাবিটা} would be flagged as incorrect, even though it is correctly spelled.
+The checker has a list of endings which it checks against the ending of the word sent to it. If one of the endings match, the spellchecker removes the ending, checks it against the dictionary, generates mutants and adds on the removed ending to the suggestions. If it did not do this then, for example, the word {\bng চাবিটা} would be flagged as incorrect, even though it is correctly spelled.
 
+\pagebreak
 The normalisation endings list is
-{\lbng
+{\lbng 
 \begin{itemize}
 \item *ে-
 \item *র
@@ -64,10 +61,11 @@ where ``-'' stands for one letter and ``*'' stands for any group of letters
 \subsection{Mutation rules}
 In {\bng বাংলা} some of the easier ways to make spelling mistakes is to substiute the wrong "kar" (vowel modifier) eg. {\bng ি} for {\bng ী} , or to use the wrong letter variant of a sound, like {\bng জ} for {\bng য},  {\bng ষ} for {\bng স} etc. 
 The mutation rules are basically a set of equivalents - like a soundex - that give the algorithm a list of substitutions it can use for each letter.
-In addition to this if a consonant conjunct is a double like {\bng ন্ন} the checker tries to use jawphola ie. {\bng ন্য} and vice versa
+%In addition to this if a consonant conjunct is a double like {\bng ন্ন} the checker tries to use jawphola ie. {\bng ন্য} and vice versa
 
+\pagebreak
 \subsection{List of mutation rules}
-{\Lbng
+{\lbng
 \begin{itemize}
 \item র, ড়
 \item জ, য, ঝ
@@ -78,7 +76,6 @@ In addition to this if a consonant conjunct is a double like {\bng ন্ন} th
 \item ি , ী
 \item  ু , ূ
 \item ন, ণ
-\item {\tt double consonant} , Y
 \end{itemize}
 }
 
@@ -106,10 +103,10 @@ When used from within {\bng লেখ} the spellchecker runs in interactive mode
 %\begin{center}
 \begin{figure}[ht]
 \begin{picture}(430,323)
-\put(400,280){\makebox(60,10)[rc]{\large{\sc wrong spelling found}}}
-\put(400,250){\makebox(60,10)[rc]{\large{\sc replacement word}}}
-\put(400,190){\makebox(60,10)[rc]{\large{\sc suggestion list}}}
-{\centerline{\includegraphics[bb=0 0 305 323]{spellcheck.jpg}}}
+\put(310,280){\makebox(60,10)[lc]{\large{\sc wrong spelling found}}}
+\put(310,250){\makebox(60,10)[lc]{\large{\sc replacement word}}}
+\put(310,190){\makebox(60,10)[lc]{\large{\sc suggestion list}}}
+{\includegraphics[bb=0 0 305 323]{spellcheck.jpg}}
 \end{picture}
 \caption{Spellchecker dialog box for {\lbng লেখ}}
 \label{fig-dialogbox}
@@ -117,9 +114,32 @@ When used from within {\bng লেখ} the spellchecker runs in interactive mode
 %\end{center}
 The top edit box shows the wrongly spelt word found in the document. The lower edit box shows what the word will be replaced with if the "replace" button is pressed.
 Suggestions are presented in the white list box below. Clicking on a suggestion will copy it into the replace edit box. Typing any word in the replace edit box and then 
-clicking "check" will check that word against the dictionary. Suggestions (if any are found) will be presented in the suggestion box. If the word is incorrect and no suggestions are found the list box will display "---"
+clicking "check" will check that word against the dictionary. Suggestions (if any are found) will be presented in the suggestion box. If the word is incorrect and no suggestions are found the list box will display ``---''.
+Initially the spellchecker will pause every now and then to load the appropriate dictionary file into memory each time it runs across a word with a new first letter. Once the required files have been loaded spell checking will be quicker and smoother.
 
 \section{The dirty details}
+
+The word list used is from the http://www.bengalinux.org site, which is a straight conversion to unicode of Dr. Avijit Das' wordlist supplied with the bwedit package\footnote{Available under GPL from http://sourceforge.net/projects/bengaliwriter}. The word list is broken into different files, each containing words begining with a given letter. The encoding is "compressed" unicode. To save space and save loading time the words have the {\tt hex 09xx} part of the whole code stripped, so instead of being saved as 2 byte (unicode) or 3 byte (utf8) they are saved as 1 byte. To read the data just OR {\tt hex 0900} to each code. The code Lekho uses (which is perhaps inefficient) is shown below.
+\begin{verbatim}
+	QString compressedWord = in.readLine(),
+		unicodeWord ;
+	ushort a[1000] ;	//like to see a word that long....
+	while(!in.atEnd())
+	{
+		//"uncompress"
+		for(int i = 0 ; i < (int)compressedWord.length() ; i++)
+			a[i] = ( compressedWord[i].unicode() | 0x0900 );
+		unicodeWord.setUnicodeCodes(a, compressedWord.length() );
+
+		const QString thisWord( unicodeWord );
+		wordList->insert(thisWord,".");
+		compressedWord = in.readLine();
+	}
+\end{verbatim}
+%\begin{picture}(12cm,4cm)
+%\end{picture}
+
+
 Speed is a consideration, more in case of the non-interactive mode, than in the interactive one. The implementation is as follows
 
 \begin{enumerate}
@@ -132,7 +152,11 @@ Speed is a consideration, more in case of the non-interactive mode, than in the 
 
 \section{Notes}
 \begin{itemize}
-\item This document was written with {\lbng লেখ}
+\item This document was written with {\lbng লেখ} 
 \item The latex and bangtex packages were used for typesetting
+\item Many thanks to Barda (Dr. Avijit Das)\footnote{{\tt adrab@users.sourceforge.net}} without whom there would be no wordlist and hence no spell checker.
 \end{itemize}
+\begin{center}
+\fbox{\includegraphics[bb=0 0 72 72 ]{lekhologo.jpg}}
+\end{center}
 \end{document}
