@@ -492,8 +492,8 @@ void BanglaTextEdit::replaceWord(const QStringList &w)
 
 	cursorErase();
 	theCursor.paracol = paracolSelStart ;
-	del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1);
-	theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), w[1]) );
+	del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1 , false );
+	theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), w[1], false) );
 	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 	cursorDraw();
 
@@ -517,8 +517,8 @@ void BanglaTextEdit::replaceAll(const QStringList &w)
 
 		cursorErase();
 		theCursor.paracol = paracolSelStart ;
-		del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1);
-		theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), w[1]) );
+		del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1, false );
+		theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), w[1], false) );
 		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 		cursorDraw();
 
@@ -654,8 +654,8 @@ void BanglaTextEdit::replaceWrongWordWith(const QString &wd)
 
 	cursorErase();
 	theCursor.paracol = paracolSelStart ;
-	del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1);
-	theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), wd) );
+	del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1, false);
+	theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), wd, false) );
 	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 	cursorDraw();
 

@@ -1,4 +1,7 @@
 v1.15
+2002.12.27
+1. Now spellcheck replaces and find and replace ops are also covered by undo/redo
+
 2002.12.26
 1. YEEEHAH ! Implemented redo/undo. Seems to work bug free (TM) but needs further testing(TM)[small bug in deleting, found and fixed almost immediately]
 2. Added "i" ending rule to the grammatical normalisation
