@@ -895,6 +895,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 	if(event->state() == ShiftButton)
 		shiftPress = true ;
 
+		
 	switch (event->key())
 	{
 		case 	Key_Escape:
@@ -1030,7 +1031,10 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 	}
 
 	//another leetle hack -10
-	ensureVisible ( theCursor.xy.x() - 10 , theCursor.xy.y() + theDoc.getLineHeight(), 10, theDoc.getLineHeight()) ;
+	if( theCursor.xy.x() + theDoc.getLineHeight() < viewport()->width())
+		ensureVisible ( 10 , theCursor.xy.y() + theDoc.getLineHeight(), 10, theDoc.getLineHeight()) ;
+	else
+		ensureVisible ( theCursor.xy.x() , theCursor.xy.y() + theDoc.getLineHeight(), theDoc.getLineHeight() , theDoc.getLineHeight()) ;
 
 	theMessage += "para = " + QString::number(theCursor.paracol.y()) +
 			" col = " + QString::number(theCursor.paracol.x()) ; //+

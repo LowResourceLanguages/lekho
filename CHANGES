@@ -1,9 +1,9 @@
-All changes referenced to v1.0
 
 v1.1
 2002.11.16
 1. Enabled double buffering to remove flicker during typing
 2. Corrected insidous bug (bangla.h, BanglaCR) that sent a \n as screenFont. This was only discovered when I turned wordwrap off and saw the effects (since turning word wrap off returns the whole line, which includes a bangla CR if the line is ENglish - look at the code for paintLine in BanglaTextEdit)
+3. Refined scroll to cursor code
 
 2002.11.09
 1. Fixed bug in multiline insert (BanglaDocument::insert)
