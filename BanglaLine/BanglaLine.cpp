@@ -18,33 +18,44 @@
 *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
 */
 
+//BanglaLine.cpp
+#include <BanglaLine.h>
+
 BanglaLine::BanglaLine()
 {
 	lineWidth  = 0;
-	newline = false ;
+	newLine = false ;
 }
 
-BanglaLine::BanglaLine(BanglaLine& bl)
+BanglaLine::BanglaLine(const BanglaLine& bl)
 {
 	letter = bl.letter ;
 	lineWidth = bl.lineWidth ;
 	newLine = bl.newLine ;
 }
 
-BanglaLine::BanglaLine(BanglaLetterList& bll)
+BanglaLine::BanglaLine(const BanglaLetterList& bll)
 {
 	letter = bll ;
 	lineWidth = 0;
-	for(int i = 0 ; i < bll.count() ; i++)
+	for(int i = 0 ; i < (int)bll.count() ; i++)
 		lineWidth += bll[i].width ;
 	newLine = false ;
 }
 
-bool BanglaLine::insert(int col, BanglaLetterList &bll)
+bool BanglaLine::insert(int col, const BanglaLetter &bl)
 {
-	for(int i = bll.count() -1 ; i > 0 ; i--)
+	letter.insert(letter.at(col),bl) ;
+	lineWidth += bl.width ;
+
+	return true ;
+}
+
+bool BanglaLine::insert(int col, const BanglaLetterList &bll)
+{
+	for(int i = (int)bll.count() -1 ; i >= 0 ; i--)
 	{
-		letter.append(letter.at(col),bll[i]) ;
+		letter.insert(letter.at(col),bll[i]) ;
 		lineWidth += bll[i].width ;
 	}
 
@@ -55,8 +66,8 @@ bool BanglaLine::insert(int col, BanglaLetterList &bll)
 bool BanglaLine::del(int col, int n, BanglaLetterList &bll)
 {
 	if(col < 0) return false ;
-	if(col >= letter.count()) return false ;
-	if(col + n > letter.count()) return false ;
+	if(col >= (int)letter.count()) return false ;
+	if(col + n > (int)letter.count()) return false ;
 
 	for(int i = 0 ; i < n ; i++)
 	{
@@ -70,11 +81,13 @@ bool BanglaLine::del(int col, int n, BanglaLetterList &bll)
 
 //add on the line in the argument to this line, forgetting the
 //present newline...
-bool BanglaLine::joinLine(BanglaLine &bl)
+bool BanglaLine::joinLine(const BanglaLine &bl)
 {
 	letter += bl.letter ;
-	lineWidth += bl.LineWidth ;
+	lineWidth += bl.lineWidth ;
 	newLine = bl.newLine ;
+
+	return true;
 }
 
 bool BanglaLine::addCR()	//add a CR to this line
@@ -104,10 +117,12 @@ bool BanglaLine::hasCR()
 
 ostream& operator << (ostream& pipe , BanglaLine& bl)
 {
-	for(int i = 0 ; i < bl.letter.count() ; i++)
+	for(int i = 0 ; i < (int)bl.letter.count() ; i++)
 	{
 		pipe	<< bl.letter[i].unicode << "{" << bl.letter[i].screenFont << "}[" << bl.letter[i].width << "] " ;
 	}
-	pipe << " <" << bl.lineWidth << ">" << endl ;
+	pipe << " <" << bl.lineWidth << ">" ;
+	if(bl.hasCR())
+	 	pipe << "CR" << endl ;
 	return(pipe);
 }

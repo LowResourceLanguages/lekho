@@ -29,7 +29,7 @@ BanglaLetter::BanglaLetter()
 	width = 0 ;
 }
 
-BanglaLetter::BanglaLetter(BanglaLetter& b)
+BanglaLetter::BanglaLetter(const BanglaLetter& b)
 {
 	unicode = b.unicode ;
 	screenFont = b.screenFont ;

@@ -30,17 +30,17 @@ class BanglaLetter
 {
 public:
 	QString unicode,		//e.g. [0x0995, 0x09cc]
-		screenFont,		//the representation in say adarshalipi
+		screenFont;		//the representation in say adarshalipi
 	int	width ;			//the width of the letter on screen
 	//add other attributes if needed
 public:
 	BanglaLetter();
-	BanglaLetter(BanglaLetter& );
+	BanglaLetter(const BanglaLetter& );
 	BanglaLetter(QString unicode, QString screenFont, int width);
 
 	void setLetter(QString unicode, QString screenFont, int width);
 };
 
-typedef BanglaLetterList QValueList<BanglaLetter> ;
+typedef QValueList<BanglaLetter> BanglaLetterList;
 
 #endif

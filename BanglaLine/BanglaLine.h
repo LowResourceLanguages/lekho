@@ -24,7 +24,7 @@
 #include <qstring.h>
 #include <qstringlist.h>
 
-#inlcude <BanglaLetter.h>
+#include <BanglaLetter.h>
 
 /*
  * This is organized as the lines on screen are organized. The end of the line
@@ -42,14 +42,15 @@ private:
 
 public:
 	BanglaLine();
-	BanglaLine(BanglaLine& );
-	BanglaLine(BanglaLetterList& );
+	BanglaLine(const BanglaLine& );
+	BanglaLine(const BanglaLetterList& );
 
-	bool insert(int col, BanglaLetterList &bl);
-	bool del(int col, int n, BanglaLetterList &bl);
+	bool insert(int col, const BanglaLetter &bl);	//needed this one
+	bool insert(int col, const BanglaLetterList &bll);
+	bool del(int col, int n, BanglaLetterList &bll);
 	//delete n bangla letters starting from column and return deleted letters
 
-	bool joinLine(BanglaLine& );
+	bool joinLine(const BanglaLine& );
 
 	bool addCR();	//add a CR to this line
 	bool removeCR();	//remove CR from this line
