@@ -25,7 +25,7 @@
 #include <qvaluelist.h>
 
 #include <BanglaLine.h>
-//#include <ScreenManger.h>
+#include <ScreenManger.h>
 
 /*
  * Handles editing of the bangla document
@@ -37,7 +37,7 @@ class BanglaDocument
 //this was the cleanest way I could think of separating word wrapping and other
 //housekeeping procedures needed just for display purposes and not
 //suffer a lot of overhead in function calls
-//friend class ScreenManager ;
+friend class ScreenManager ;
 
 
 protected:
@@ -50,6 +50,8 @@ public:
 	BanglaDocument();
 	BanglaDocument(const BanglaDocument &bd);
 	BanglaDocument(const BanglaLetterList &bll);	//handles newlines
+
+	~BanglaDocument();
 
 	// initialisation /////////////////////////////////////////////////////
 

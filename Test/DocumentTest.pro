@@ -7,6 +7,7 @@ HEADERS = ../BanglaDocument/BanglaDocument.h \
 	  ../BanglaLetter/BanglaLetter.h
 
 INCLUDEPATH = ../BanglaLine ../BanglaLetter ../BanglaDocument ../include
-CONFIG += qt warn_on release
+#CONFIG += qt warn_on release
+CONFIG += qt warn_on debug 
 OBJECTS_DIR = ../Obj
 DESTDIR = ../bin

@@ -21,57 +21,42 @@
 #ifndef SCREENMANAGER_H
 #define SCREENMANAGER_H
 
-#include<qstringlist>
-#include<qvaluelist>
-#include<qfont>
+#include<qstringlist.h>
+#include<qvaluelist.h>
+#include<qfont.h>
 
 #include<BanglaDocument.h>
 
 /*
- * This structure carries a list of QStrings, their fonts and positons
+ * Acts as a filter. You put in BanglaDocument and do an operation, like wordWrap,
+ * you get BanglaDocument back in word wrapped format. Any change that changes the
+ * appearance of the document on screen gets filtered through here
+ *
  */
-struct ScreenImage
-{
-QValueList<int> x, y ;	//coordinates of the section
-QValueList<Qfont> thefont ; //font of the section
-QStringList section ;
-};
-
-struct
-{
-QValueList<int>
-};
 
 class ScreenManager
 {
 private:
 	int	wrapWidth,
 		line1, line2, col1, col2;
-		//the lines/cols that have to be refreshed
+		//the lines/cols that have been changed
+
 	QFont	banglaFont, englishFont ;
 	QValueList<ScreenImage> wholeImage ;
 
 private:
-	bool	recomputeScreenImageFrom(int line, int col,
-					BanglaDocument& theDoc,
-					Unicode2ScreenFont);
-	void	wordWrap
+	bool	findSpace(int col, int dir, BanglaLine &bl);
 
 public:
 	ScreenManager();
 	ScreenManager(int wrapWidth, QFont bangla, QFont english);
 
-	bool	setDocument(BanglaDocument& theDoc);
-	void	setWrapWidth(int width);
-	void	setScreenFont(QFont bangla, QFont english);
-	void	lineChanged(int line, int col, BanglaDocument& theDoc);
-	void	lineDeleted(int line, BanglaDocument& theDoc);
-	//send the old line number (of the bangladocument line that's just been deleted)
-	void	lineAdded(int line, BanglaDocument& theDoc);
-	//send the line of the bangladocument after which the new line is to be added
-	void	getScreenImage(ScreenImage& theNewImage);
-	void	transformMouse(int mx, int my, int *docline, int *doccol);
-
+	void	setWrapWidth(BanglaDocument &bd, int width);
+	void	setFonts(BanglaDocument &bd, QFont bangla, QFont english);
+	void	wordWrap(BanglaDocument &bd, int line,
+			 int &line1, int &col1, int &line2, int &col2);
+	void	screen2doc(BanglaDocument &bd, int x, int y, int &line, int &col);
+	void	doc2screen(BanglaDocument &bd, int line, int col, int &x, int &y);
 }
 
 #endif

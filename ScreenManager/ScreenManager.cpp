@@ -30,18 +30,8 @@ ScreenManager::ScreenManager()
 ScreenManager::ScreenManager(int wWidth, QFont bng, QFont eng)
 {
 	wrapWidth = wWidth;
-	bangla = bng;
-	english = eng;
-}
-
-bool ScreenManager::recomputeScreenImageFrom(int line, int col, BanglaDocument& theDoc)
-{
-	wholeImage.append()
-}
-
-bool ScreenManager::setDocument(BanglaDocument& theDoc);
-{
-	recomputeScreenImageFrom(0,0, theDoc);
+	banglaFont = bng;
+	englishFont = eng;
 }
 
 void ScreenManager::setWrapWidth(int width);

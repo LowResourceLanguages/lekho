@@ -19,6 +19,7 @@
 */
 
 //bangla.h
+//some constants etc.
 
 #ifndef BANGLA_H
 #define BANGLA_H

@@ -37,7 +37,7 @@ public:
 	BanglaLetter();
 	BanglaLetter(const BanglaLetter& );
 	BanglaLetter(QString unicode, QString screenFont, int width);
-
+	
 	void setLetter(QString unicode, QString screenFont, int width);
 
 public:

@@ -18,6 +18,9 @@
 *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
 */
 
+/*
+ * 2002.07.01 Licked the split line join line bug, it was actually in removeCR !
+ */
 #ifndef BANGLALINE_H
 #define BANGLALINE_H
 
@@ -26,7 +29,6 @@
 
 #include <BanglaLetter.h>
 #include <bangla.h>
-//#include <ScreenManager.h>
 
 /*
  * This is organized as the lines on screen are organized. The end of the line
@@ -48,6 +50,8 @@ public:
 	BanglaLine();
 	BanglaLine(const BanglaLine& );
 	BanglaLine(const BanglaLetterList& );
+
+	~BanglaLine();
 
 	//return false if the col was beyond insert point
 	bool insert(int col, const BanglaLetter &bl);	//needed this one

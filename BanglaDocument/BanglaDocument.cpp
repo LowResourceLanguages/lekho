@@ -40,6 +40,11 @@ BanglaDocument::BanglaDocument(const BanglaLetterList &bll)
 	setDocument(bll);
 }
 
+BanglaDocument::~BanglaDocument()
+{
+	documentLine.clear();
+}
+
 
 // initialisation /////////////////////////////////////////////////////
 
@@ -151,9 +156,8 @@ bool BanglaDocument::splitLine(int line, int col)
 	else
 		documentLine[line].addCR();
 
-	//CHECK
-	//return(documentLine.insert(documentLine.at(line+1), BanglaLine(temp)));
 	documentLine.insert(documentLine.at(line+1), BanglaLine(temp)) ;
+	temp.clear();
 	return true ;
 }
 

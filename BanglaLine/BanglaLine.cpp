@@ -41,6 +41,15 @@ BanglaLine::BanglaLine(const BanglaLetterList& bll)
 	for(int i = 0 ; i < (int)bll.count() ; i++)
 		lineWidth += bll[i].width ;
 	//newLine = false ;
+
+	//force the list to detach
+	//letter += BanglaCR ;
+	//letter.remove(letter.end());
+}
+
+BanglaLine::~BanglaLine()
+{
+	letter.clear();
 }
 
 bool BanglaLine::insert(int col, const BanglaLetter &bl)
@@ -167,7 +176,8 @@ bool BanglaLine::removeCR()	//remove CR
 	if(!hasCR()) return false;
 	else
 	{
-		letter.remove(letter.end()) ;
+		//licked the bug ! Don't use end()...
+		letter.remove(letter.fromLast()) ;
 		return true ;
 	}
 }
