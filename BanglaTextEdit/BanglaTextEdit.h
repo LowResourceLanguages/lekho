@@ -181,6 +181,10 @@ protected:
 	//small func to delete the selected text and move the cursor to the approp pos afterwards...
 	void delSelected();
 
+	//small internal function to set the selection limits correctly
+	//given tempParacolSelStart etc.
+	void setCorrectSelectionLimits();
+
 public:
 	void contentsMousePressEvent ( QMouseEvent *e );
 	void contentsMouseMoveEvent ( QMouseEvent *e );

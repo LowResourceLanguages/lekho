@@ -275,14 +275,77 @@ void ApplicationWindow::readPrefs()
 	if(QFile::exists(lekhorc))
 		thePref.load(lekhorc);
 	else
-	if(QFile::exists(".lekhorc"))
+	if(QFile::exists("./.lekhorc"))
 	{
-		lekhorc = ".lekhorc" ;
+		lekhorc = "./.lekhorc" ;
 		thePref.load(lekhorc);
 	}
 	else
 	{
-		Qcerr << "couldn't find a .lekhorc file, faking one" << flush ;
+//		Qcerr << "couldn't find a .lekhorc file, faking one" << flush ;
+	    	switch( QMessageBox::information( this, "Lekho : Init file not found",
+				      "Couldn't find init file .lekhorc\n"
+				      "Will fake one and all required files\n"
+				      "Is this OK ?\n"
+				      "(If you say \"no\" the program cannot continue and will exit)" ,
+				      "Yes", "No",
+				      0, 1 ) )
+		{
+			case 0:
+				break;
+			case 1:
+				exit(0);
+				break;
+			default: // just for sanity
+				exit(0);
+				break;
+		}
+
+		QFile lekhorc(".lekhorc");
+		if(!lekhorc.open(IO_WriteOnly)) {Qcerr << "Can't create .lekhorc, quitting" << endl ; exit(0);};
+
+		QTextStream	out( &lekhorc ) ;
+		QString filetext ;
+		makeLekhorc(filetext);
+		out << filetext ;
+		lekhorc.close();
+
+		QFile karfile("kar.txt");
+		if(!karfile.open(IO_WriteOnly)) {Qcerr << "Can't create kar.txt, quitting" << endl ; exit(0);};
+		QTextStream	karout( &karfile ) ;
+		makeKar(filetext);
+		karout << filetext ;
+		karfile.close();
+
+		QFile shorfile("shor.txt");
+		if(!shorfile.open(IO_WriteOnly)) {Qcerr << "Can't create shor.txt, quitting" << endl ; exit(0);};
+		QTextStream	shorout( &shorfile ) ;
+		makeShor(filetext);
+		shorout << filetext ;
+		shorfile.close();
+
+		QFile juktofile("jukto.txt");
+		if(!juktofile.open(IO_WriteOnly)) {Qcerr << "Can't create jukto.txt, quitting" << endl ; exit(0);};
+		QTextStream	juktoout( &juktofile ) ;
+		makeJukto(filetext);
+		juktoout << filetext ;
+		juktofile.close();
+
+		QFile adarshalipifile("adarshalipi.txt");
+		if(!adarshalipifile.open(IO_WriteOnly)) {Qcerr << "Can't create adarshalipi.txt, quitting" << endl ; exit(0);};
+		QTextStream	adarshalipiout( &adarshalipifile ) ;
+		makeAdarshalipi(filetext);
+		adarshalipiout << filetext ;
+		adarshalipifile.close();
+
+		QFile bangtexfile("bangtex.txt");
+		if(!bangtexfile.open(IO_WriteOnly)) {Qcerr << "Can't create bangtex.txt, quitting" << endl ; exit(0);};
+		QTextStream	bangtexout( &bangtexfile ) ;
+		makeBangtex(filetext);
+		bangtexout << filetext ;
+		bangtexfile.close();
+
+		readPrefs();
 	}
 }
 

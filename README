@@ -1,4 +1,12 @@
 2002.10.03 Kaushik Ghose kghose@wam.umd.edu
+In this file
+
+REQUIREMENTS
+INSTALLING (WINDOWS/LINUX)
+PERSONALISING
+FEATURES
+THANKS
+
 
 REQUIREMENTS
 
@@ -91,3 +99,27 @@ CAUTION !!!!
 When you are changing the romanisation rules you need to ensure that the first letter of any romanisation sequence in one file eg. in jukto.txt is not the
 same as that in another file like shor.txt. If you violate this rule, then the results will be unexpected.
 
+FEATURES
+V1.0
+ - Copy and paste
+      - copy utf8, utf16, screenfont, html character reference
+      - paste utf8, utf16, romanised
+ - Find and replace
+ - Soft word wrap
+ - remembers preferences like fonts, colours, position and directories
+ - on start up if any input files are missing it creates defaults
+ - Print 
+ - export to html (inserts headersi, tabs and line breaks other tags upto user)
+ - export to bangtex
+
+NOTE* 
+bangtex is a separate freely available package available from .... that enables one to have bangla in latex documents. Lekho will convert bangla text into the appropriate macros required by bangtex to "latex" bangla.
+i*
+  
+THANKS
+For feedback, moral support and various bits of information thanks are due to (in alphabetical order)
+
+Taneem Ahmed
+Avijit Das (barda)
+Progga
+S Mazumdar

@@ -904,6 +904,9 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 		theMessage = "English | " ;
 
 
+	bool shiftPress = false ;
+	if(event->state() == ShiftButton)
+		shiftPress = true ;
 
 	switch (event->key())
 	{
@@ -912,6 +915,8 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			break;
 */
 		case 	Key_Escape:
+			if(hasSelText)
+				hasSelText = false ;
 
 			keyPressEventFlushBangla();
 			bangla->toggleLanguage();
@@ -933,16 +938,48 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 		case	Key_PageDown:
 
 			keyPressEventFlushBangla();
+			cursorErase();
 			//if we press a key, we should get rid of the select
-			if(hasSelText)
+			//unless the shift is pressed
+			if(shiftPress)
 			{
-				hasSelText = false ;
+/*
+				if(hasSelText)	//extend the selection
+				{
+					tempParacolSelEnd = theCursor.paracol ;
+					setCorrectSelectionLimits();
+				}
+				else
+*/
+				if(!hasSelText)
+				{
+					paracolSelStart = theCursor.paracol ;
+					paracolSelEnd = theCursor.paracol ;
+					tempParacolSelStart = theCursor.paracol ;
+					tempParacolSelEnd = theCursor.paracol ;
+					hasSelText = true ;
+				}
+				//viewport()->update();
+			}
+			else
+			{
+				if(hasSelText)
+				{
+					hasSelText = false ;
+					viewport()->update();
+				}
+			}
+			theDoc.moveCursor(event->key(), theCursor.xy, theCursor.paracol);
+			cursorDraw();
+
+			if(shiftPress && hasSelText)
+			{
+				tempParacolSelEnd = theCursor.paracol ;
+				setCorrectSelectionLimits();
 				viewport()->update();
 			}
 
-			cursorErase();
-			theDoc.moveCursor(event->key(), theCursor.xy, theCursor.paracol);
-			cursorDraw();
+
 			break;
 
 		case	Key_Delete:
@@ -951,6 +988,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			if(hasSelText)
 			{
 				delSelected();
+				hasSelText = false ;
 				break;
 			}
 			keyPressEventFlushBangla();
@@ -965,6 +1003,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			if(hasSelText)
 			{
 				delSelected();
+				hasSelText = false ;
 				break;
 			}
 			keyPressEventFlushBangla();
@@ -978,7 +1017,10 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 		case	Key_Enter:
 		case	Key_Return:
 			if(hasSelText)
+			{
+				hasSelText = false ;
 				delSelected();
+			}
 
 			keyPressEventFlushBangla();
 			cursorErase();
@@ -989,7 +1031,10 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 
 		default:
 			if(hasSelText)
+			{
 				delSelected();
+				hasSelText = false ;
+			}
 
 			if(!bangla->isBangla() && (event->text().length() > 0))
 			{
@@ -1177,14 +1222,10 @@ void BanglaTextEdit::contentsMouseMoveEvent ( QMouseEvent *mausevent )
 	QPoint mauspos = mausevent->pos() ;//viewportToContents(mausevent->pos()) ;
 	QPoint paracol = theDoc.xy2paracol( mauspos );
 
-
-	//cursorErase();
-	//theCursor.xy = mauspos ;
-	//theCursor.paracol = paracol ;
-	//cursorDraw();
-
-
 	tempParacolSelEnd = paracol ;
+	setCorrectSelectionLimits();
+
+/*
 
 	QPoint sign = tempParacolSelEnd - tempParacolSelStart ;
 	if( (sign.y() < 0) || ( (sign.y() == 0) && (sign.x() < 0) ) )
@@ -1201,7 +1242,7 @@ void BanglaTextEdit::contentsMouseMoveEvent ( QMouseEvent *mausevent )
 
 	xySelStart = theDoc.paracol2xy(paracolSelStart);
 	xySelEnd = theDoc.paracol2xy(paracolSelEnd);
-
+*/
 	hasSelText = true ;
 	viewport()->update();
 }
@@ -1214,8 +1255,9 @@ void BanglaTextEdit::contentsMouseReleaseEvent ( QMouseEvent *mausevent )
 	QPoint mauspos = mausevent->pos() ;//viewportToContents(mausevent->pos()) ;
 	QPoint paracol = theDoc.xy2paracol( mauspos );
 
-
 	tempParacolSelEnd = paracol ;
+	setCorrectSelectionLimits();
+	/*
 
 	QPoint sign = tempParacolSelEnd - tempParacolSelStart ;
 	//if( (sign.x() < 0) || (sign.y() < 0) )
@@ -1229,6 +1271,8 @@ void BanglaTextEdit::contentsMouseReleaseEvent ( QMouseEvent *mausevent )
 		paracolSelStart = tempParacolSelStart ;
 		paracolSelEnd = tempParacolSelEnd ;
 	}
+
+	*/
 
 	//mouse just clicked in place....
 	if(paracolSelEnd == paracolSelStart)
@@ -1245,10 +1289,10 @@ void BanglaTextEdit::contentsMouseReleaseEvent ( QMouseEvent *mausevent )
 
 	//paracolSelEnd = paracol ;
 
-
+/*
 	xySelStart = theDoc.paracol2xy(paracolSelStart);
 	xySelEnd = theDoc.paracol2xy(paracolSelEnd);
-
+*/
 
 	//show the para/col on the status bar
 	QString theMessage ;
@@ -1275,6 +1319,27 @@ void BanglaTextEdit::contentsMouseReleaseEvent ( QMouseEvent *mausevent )
 	viewport()->update();
 }
 
+//small internal function to set the selection limits correctly
+//given tempParacolSelStart etc.
+void BanglaTextEdit::setCorrectSelectionLimits()
+{
+
+	QPoint sign = tempParacolSelEnd - tempParacolSelStart ;
+	//if( (sign.x() < 0) || (sign.y() < 0) )
+	if( (sign.y() < 0) || ( (sign.y() == 0) && (sign.x() < 0) ) )
+	{
+		paracolSelStart = tempParacolSelEnd ;
+		paracolSelEnd   = tempParacolSelStart ;
+	}
+	else
+	{
+		paracolSelStart = tempParacolSelStart ;
+		paracolSelEnd = tempParacolSelEnd ;
+	}
+
+	xySelStart = theDoc.paracol2xy(paracolSelStart);
+	xySelEnd = theDoc.paracol2xy(paracolSelEnd);
+}
 
 
 //clipboard stuff
@@ -1364,7 +1429,7 @@ bool BanglaTextEdit::print(QPainter *p, int page, bool &firstPrint, int pageWidt
 		maxPaintHeight = pageHeight - topMargin - bottomMargin  ;
 	int	lineHeight = theDoc.getLineHeight() ;
 	//snapfit the page height...
-	maxPaintHeight = ((int)(float)maxPaintHeight/(float)lineHeight)*lineHeight ;
+	maxPaintHeight = (int)( (float)maxPaintHeight/(float)lineHeight ) * lineHeight ;
 
 
 

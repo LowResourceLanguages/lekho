@@ -19,7 +19,7 @@
 */
 
 //bangla.h
-//some constants and utility functionsetc.
+//some constants and utility functions etc.
 
 #ifndef BANGLA_H
 #define BANGLA_H
@@ -52,5 +52,24 @@ inline bool isBangla(const QChar &text)
 //small utility function used for html export
 //inserts a fake header and tab stops
 void fudgeHtml(QString &text) ;
+
+//makes default files in working directory if it can't find em
+//makes lekhorc
+void makeLekhorc(QString &) ;
+
+//makes kar.txt
+void makeKar(QString &) ;
+
+//make shor.txt
+void makeShor(QString &) ;
+
+//make jukto.txt
+void makeJukto(QString &) ;
+
+//make adarshalipi.txt
+void makeAdarshalipi(QString &) ;
+
+//make bangtex.txt
+void makeBangtex(QString &) ;
 
 #endif

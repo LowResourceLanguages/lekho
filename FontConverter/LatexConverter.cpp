@@ -23,7 +23,7 @@
 LatexConverter::LatexConverter()
 {
 	ushort _mophola[] = {0x09cd, 0x09ae};
-	ushort _jawphola[] = {0x09cd, 0x09df};
+	ushort _jawphola[] = {0x09cd, 0x09af};
 	ushort _lophola[] = {0x09cd, 0x09b2};
 	ushort _bophola[] = {0x09cd, 0x09ac};
 	ushort _rawphola[] = {0x09cd, 0x09b0};
