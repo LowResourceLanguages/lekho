@@ -79,20 +79,22 @@ private slots:
 	void LaTeXexport();
 	void LaTeXexportAs();
 
-//	void clipBoardOp(int id);
+	void copy();	//all utf-16 ops
+	void paste();
+	void cut();
 
-    void print();
+	void print();
 
-    void find();
+	void find();
 
-    void setWordWrap(bool ww);
-    void setCursorBlink(bool cb);
-    void chooseEnglishFont();
-    void chooseBanglaFont();
-    void chooseForeground();
-    void chooseBackground();
+	void setWordWrap(bool ww);
+	void setCursorBlink(bool cb);
+	void chooseEnglishFont();
+	void chooseBanglaFont();
+	void chooseForeground();
+	void chooseBackground();
 
-    void setTabWidth();
+	void setTabWidth();
     //void insertLatex(int id);
     //void insertHtml(int id);
 

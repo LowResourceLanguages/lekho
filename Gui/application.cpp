@@ -182,7 +182,10 @@ ApplicationWindow::ApplicationWindow()
 
     //Edit
     QPopupMenu *edit = new QPopupMenu( this );
-    edit->insertItem( "Find", this, SLOT(find()), Key_F3 );
+    edit->insertItem( "&Find", this, SLOT(find()), Key_F3 );
+    edit->insertItem( "Copy", this, SLOT(copy()), CTRL+Key_C);		//utf-16 ops
+    edit->insertItem( "Paste", this, SLOT(paste()), CTRL+Key_V );	//utf-16 ops
+    edit->insertItem( "Cut", this, SLOT(cut()), CTRL+Key_X );	//utf-16 ops
 
     //Options
     QPopupMenu * options = new QPopupMenu( this );
@@ -282,10 +285,12 @@ void ApplicationWindow::readPrefs()
 	}
 	else
 	{
-//		Qcerr << "couldn't find a .lekhorc file, faking one" << flush ;
+		Qcerr << "couldn't find a .lekhorc file, creating default one" << flush ;
 	    	switch( QMessageBox::information( this, "Lekho : Init file not found",
-				      "Couldn't find init file .lekhorc\n"
-				      "Will fake one and all required files\n"
+				      "Couldn't find initialisation file .lekhorc\n"
+				      "Will create a default one and all required files\n"
+				      "The files are .lekhorc, kar.txt, shor.txt, jukto.txt\n"
+				      "adarshalipi.txt and bangtex.txt\n"
 				      "Is this OK ?\n"
 				      "(If you say \"no\" the program cannot continue and will exit)" ,
 				      "Yes", "No",
@@ -589,19 +594,14 @@ void ApplicationWindow::LaTeXexportAs()
 void ApplicationWindow::print()
 {
 
-/*
-    QMessageBox::information( this, "Lekho : Not implemented",
-				    "The print feature is currently not available");
-	return;
-*/
 #ifndef QT_NO_PRINTER
+
+    printer->setMinMax(1,6500);
     if ( printer->setup( this ) )
     {
 
 	printer->setFullPage(true);
 	QPaintDeviceMetrics printerMetrics(printer);
-
-    	//QRect printerPos ;
 
 	statusBar()->message( "Printing..." );
 
@@ -614,7 +614,6 @@ void ApplicationWindow::print()
 		leftMargin = printer->margins().width(), rightMargin = printer->margins().width(),
 		topMargin = printer->margins().height() , bottomMargin = printer->margins().height() ;
 
-	printer->setMinMax(1,6500);
 
 	//has the user set the pages
 	if(startPage == 0) startPage = 1 ;
@@ -622,21 +621,60 @@ void ApplicationWindow::print()
 
 	bool 	firstPrint = true ;	//don't want to wordWrap document every time we print a page...
 
+
 	for(int copy = 0 ; copy < printer->numCopies(); copy++)
 	{
-		if(!e->print( &p , startPage - 1 , firstPrint, pageWidth, pageHeight,
-			leftMargin, rightMargin,
-			topMargin, bottomMargin))
-			break ;
 
-		for(int i = startPage ; i <= endPage - 1; i++)
+		if(printer->pageOrder() != QPrinter::FirstPageFirst)
 		{
-			printer->newPage();
-			if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
+			switch( QMessageBox::information( this, "Lekho : Not Implemented",
+				"Printing in reverse order not implemented yet\n"
+				"Continue print in first-page-first order ?",
+				"Yes", "Cancel",
+				0, 1 ) )
+			{
+   				case 0:
+					break;
+				case 1:
+					return;
+				default:
+					return;
+			}
+		}
+
+//		{
+			if(!e->print( &p , startPage - 1 , firstPrint, pageWidth, pageHeight,
 				leftMargin, rightMargin,
 				topMargin, bottomMargin))
 				break ;
-		}
+
+			for(int i = startPage ; i < endPage ; i++)
+			{
+				printer->newPage();
+				if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
+					leftMargin, rightMargin,
+					topMargin, bottomMargin))
+					break ;
+			}
+//		}
+/*
+		else
+		{
+			if(!e->print( &p , endPage - 1 , firstPrint, pageWidth, pageHeight,
+				leftMargin, rightMargin,
+				topMargin, bottomMargin))
+				break ;
+
+			for(int i = endPage - 2 ; i >= startPage - 1; i--)
+			{
+				printer->newPage();
+				if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
+					leftMargin, rightMargin,
+					topMargin, bottomMargin))
+					break ;
+			}
+
+		}*/
 	}
     }
 #endif
@@ -650,6 +688,21 @@ void ApplicationWindow::find()
 	connect(fd, SIGNAL(replace(const QStringList &)), e, SLOT(replaceWord(const QStringList &)) );
 	connect(fd, SIGNAL(replaceAll(const QStringList &)), e, SLOT(replaceAll(const QStringList &)) );
 	connect(fd, SIGNAL(top()), e, SLOT(top()) );
+}
+
+void ApplicationWindow::copy()
+{
+	e->copy();
+}
+
+void ApplicationWindow::paste()
+{
+	e->paste();
+}
+
+void ApplicationWindow::cut()
+{
+	e->cut();
 }
 
 void ApplicationWindow::setWordWrap(bool ww)
@@ -756,10 +809,11 @@ void ApplicationWindow::about()
     QMessageBox::about( this, "Lekho : About",
 			"This program is distributed in the hope that it will be useful,\n"
 			"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-			"GNU General Public License for more details\n"
+			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+			"See the GNU General Public License for more details\n"
 			"A copy of the GNU GPL should be included with the release.\n"
-			"The GNU GPL is also available online at http://www.gnu.org/licenses/licenses.html#GPL.\n"
+			"The GNU GPL is also available online at\n"
+			"http://www.gnu.org/licenses/licenses.html#GPL.\n"
 			"\n"
 			"Lekho is a plain text Bangla (Bengali) editor.\n"
 			"It takes in romanised input from a US-ASCII keyboard and\n"

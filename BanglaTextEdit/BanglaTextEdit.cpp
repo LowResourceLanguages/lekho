@@ -285,13 +285,11 @@ int BanglaTextEdit::insert (int para, int col, const QString &text)
 //, bool indent , bool checkNewLine , bool removeSelected)
 {
 	BanglaLetterList bll ;
-	//QValueList<QString> segmentedText = segment(text);
 	QValueList<QString> segmentedText ; segment(text, segmentedText);
 
 	QString screenFontText ;
 
 	int width ;
-	//for(int i = 0 ; i < (int)segmentedText.count() ; i++)
 	QValueList<QString>::Iterator i ;
 	for(i = segmentedText.begin() ; i != segmentedText.end() ; ++i)
 	{
@@ -469,10 +467,7 @@ bool BanglaTextEdit::screenFontConverterInit(QTextStream &file)
 	_wecreatedLipi = true ;
 
 	if(!lipi->initialiseConverter(file))
-	{
-		//emit screenFontInitialiseProblem();
 		return false;
-	}
 	else
 		return true;
 }
@@ -628,7 +623,6 @@ QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 	 	englishFontStart = "<font face=\"" + englishFont.family() + "\">",
 		fontFinish = "</font>" ;
 
-	//for(int i = 0 ; i < (int)text.count() ; i++)
 	BanglaLetterList::Iterator i ;
 	for(i = text.begin() ; i != text.end() ; ++i)
 	{
@@ -692,18 +686,12 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 			&& ((*i).unicode[0].unicode() != 0x09) )	//tabs
 		{
 			if(!banglaMode)
-			{
-			banglaMode = true ;
-			//latex += latexFinish ;
-			}
+				banglaMode = true ;
 		}
 		else
 		{
 			if(banglaMode)
-			{
-			banglaMode = false ;
-			//latex += englishLatexStart ;
-			}
+				banglaMode = false ;
 		}
 
 		if(banglaMode)
@@ -711,11 +699,6 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 		else
 			latex += (*i).unicode ;
 
-		//if((*i).unicode[0].unicode() != 0x09)
-		//	theScreenText += (*i).screenFont ;
-		//else
-		//	//exception for tabs....
-		//	theScreenText += (*i).unicode[0];
 	}
 
 	return(latex);
@@ -730,12 +713,6 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
  */
 void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 {
-
-	//cout << "cx " << cx << " cy " << cy << endl << flush ;
-
-	//p->setBackgroundMode(OpaqueMode);
-
-	//int maxPaintWidth = QMAX(contentsWidth(), viewport()->width());
 	int maxPaintWidth = viewport()->width();
 
 
@@ -885,6 +862,9 @@ void BanglaTextEdit::paintLineSegment(QPainter *p, int x, int y, int segmentWidt
 //small func to delete the selected text and move the cursor to the approp pos afterwards...
 void BanglaTextEdit::delSelected()
 {
+	if(!hasSelText)
+		return ;
+		
 	cursorErase();
 	del(paracolSelStart.y(),paracolSelStart.x(),paracolSelEnd.y(),paracolSelEnd.x()-1);
 	hasSelText = false ;
@@ -910,10 +890,6 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 
 	switch (event->key())
 	{
-/*		case	Key_F3:
-			highlightWord("this");
-			break;
-*/
 		case 	Key_Escape:
 			if(hasSelText)
 				hasSelText = false ;
@@ -943,14 +919,6 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			//unless the shift is pressed
 			if(shiftPress)
 			{
-/*
-				if(hasSelText)	//extend the selection
-				{
-					tempParacolSelEnd = theCursor.paracol ;
-					setCorrectSelectionLimits();
-				}
-				else
-*/
 				if(!hasSelText)
 				{
 					paracolSelStart = theCursor.paracol ;
@@ -959,7 +927,6 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 					tempParacolSelEnd = theCursor.paracol ;
 					hasSelText = true ;
 				}
-				//viewport()->update();
 			}
 			else
 			{
@@ -1030,22 +997,25 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			break;
 
 		default:
-			if(hasSelText)
+			if(event->text().length() > 0)
 			{
-				delSelected();
-				hasSelText = false ;
-			}
+				if(hasSelText)
+				{
+					delSelected();
+					hasSelText = false ;
+				}
 
-			if(!bangla->isBangla() && (event->text().length() > 0))
-			{
-				cursorErase();
-				insert (theCursor.paracol.y(), theCursor.paracol.x(), event->text());
-				theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
-				cursorDraw();
-			}
-			else
-			{
-				theMessage += parseKeyHit(event->text()) + " ";
+				if(!bangla->isBangla() )
+				{
+					cursorErase();
+					insert (theCursor.paracol.y(), theCursor.paracol.x(), event->text());
+					theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
+					cursorDraw();
+				}
+				else
+				{
+					theMessage += parseKeyHit(event->text()) + " ";
+				}
 			}
 			break;
 
@@ -1225,24 +1195,6 @@ void BanglaTextEdit::contentsMouseMoveEvent ( QMouseEvent *mausevent )
 	tempParacolSelEnd = paracol ;
 	setCorrectSelectionLimits();
 
-/*
-
-	QPoint sign = tempParacolSelEnd - tempParacolSelStart ;
-	if( (sign.y() < 0) || ( (sign.y() == 0) && (sign.x() < 0) ) )
-	{
-		paracolSelStart = tempParacolSelEnd ;
-		paracolSelEnd   = tempParacolSelStart ;
-	}
-	else
-	{
-		paracolSelStart = tempParacolSelStart ;
-		paracolSelEnd = tempParacolSelEnd ;
-	}
-
-
-	xySelStart = theDoc.paracol2xy(paracolSelStart);
-	xySelEnd = theDoc.paracol2xy(paracolSelEnd);
-*/
 	hasSelText = true ;
 	viewport()->update();
 }
@@ -1257,22 +1209,6 @@ void BanglaTextEdit::contentsMouseReleaseEvent ( QMouseEvent *mausevent )
 
 	tempParacolSelEnd = paracol ;
 	setCorrectSelectionLimits();
-	/*
-
-	QPoint sign = tempParacolSelEnd - tempParacolSelStart ;
-	//if( (sign.x() < 0) || (sign.y() < 0) )
-	if( (sign.y() < 0) || ( (sign.y() == 0) && (sign.x() < 0) ) )
-	{
-		paracolSelStart = tempParacolSelEnd ;
-		paracolSelEnd   = tempParacolSelStart ;
-	}
-	else
-	{
-		paracolSelStart = tempParacolSelStart ;
-		paracolSelEnd = tempParacolSelEnd ;
-	}
-
-	*/
 
 	//mouse just clicked in place....
 	if(paracolSelEnd == paracolSelStart)
@@ -1287,12 +1223,6 @@ void BanglaTextEdit::contentsMouseReleaseEvent ( QMouseEvent *mausevent )
 	theCursor.paracol = paracol ;
 	cursorDraw();
 
-	//paracolSelEnd = paracol ;
-
-/*
-	xySelStart = theDoc.paracol2xy(paracolSelStart);
-	xySelEnd = theDoc.paracol2xy(paracolSelEnd);
-*/
 
 	//show the para/col on the status bar
 	QString theMessage ;
@@ -1354,6 +1284,22 @@ void BanglaTextEdit::clipboardChanged()
 		this, SLOT(clipboardChanged()) );
     //deselect();
 #endif
+}
+
+void BanglaTextEdit::copy()
+{
+	clipBoardOp(CopyUtf16);
+}
+
+void BanglaTextEdit::paste()
+{
+	clipBoardOp(PasteUtf16);
+}
+
+void BanglaTextEdit::cut()
+{
+	clipBoardOp(CopyUtf16);
+	delSelected() ;
 }
 
 //function::clipBoardOp

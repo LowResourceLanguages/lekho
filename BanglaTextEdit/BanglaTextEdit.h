@@ -227,9 +227,11 @@ public slots:
 	void replaceAll(const QStringList &w);
 
 	// clipboard ops ////////////////////////////////////////////////////////////
-private slots:
 	void clipBoardOp(int id);
 	void clipboardChanged();
+	void copy();
+	void paste();
+	void cut();
 
 signals:
 
