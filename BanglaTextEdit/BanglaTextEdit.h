@@ -82,7 +82,7 @@ protected:
 	LatexConverter	*bangtex ;		//unicode->bangtex
 
 	Parser *bangla ;			//keystroke parser
-	bool _wecreatedBangla, _wecreatedLipi ;
+	bool _wecreatedBangla, _wecreatedLipi, _wecreatedBangtex ;
 
 	bool partialCodeInserted ;		//needed by parser, keeps track of if partial code has been inserted
 	QString keysHit ;			//fun display of romanised input

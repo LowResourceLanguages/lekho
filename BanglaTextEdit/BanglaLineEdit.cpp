@@ -24,6 +24,7 @@
 BanglaLineEdit::BanglaLineEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontsize )
 : BanglaTextEdit(bte, name, parent, maxFontsize) // parent, name)
 {
+	setVScrollBarMode( AlwaysOff );
 
 	//fun diagnostic stuff..
 	//revealUnicode = false ;		//if this is set true, the status bar shows you the unicode value of

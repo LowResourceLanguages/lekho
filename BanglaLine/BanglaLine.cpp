@@ -303,7 +303,7 @@ QPoint BanglaLine::findWord(const QString &wd, int startCol, int endCol)
 
 	BanglaLetterList::Iterator i = letter.at(startCol),
 				theEnd ;
-	if((endCol < 0) || (endCol == letter.count() -1))
+	if((endCol < 0) || (endCol == (int)letter.count() -1))
 		theEnd = letter.end();
 	else
 		theEnd = letter.at(endCol + 1) ;

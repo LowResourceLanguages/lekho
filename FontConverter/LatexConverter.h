@@ -40,7 +40,7 @@ protected:
 
 public:
 	LatexConverter() ;
-	~LatexConverter() {;}
+	//~LatexConverter() {;}
 
 	bool initialiseConverter( QTextStream& file);	//the file with all the codes
 	QString unicode2latex(QString uc);		//convert uc into bangtex command

@@ -78,6 +78,7 @@ a1 a2 a3 a4 a7 aa ae b0 b1
 3	09a4	09cd	09ac	2	61	c5	
 3	09a4	09cd	09ae	2	61	c8	
 3	09a4	09cd	09b0	2	5f	bb	
+4	09a4	09cd	09b0	09c1	3	5f	bb	a6
 3	09ac	09cd	099c	2	68	53	
 3	09ac	09cd	09ac	1	ee
 3	09ac	09cd	09a6	1	eb
@@ -205,6 +206,7 @@ a1 a2 a3 a4 a7 aa ae b0 b1
 5	0999	09cd	0996	09cd	09a3	2	b4	72
 3	0999	09cd	099a	2	b4	51	
 3	0999	09cd	09ae	2	50	c8
+3	099e	09cd	0995	2	53	4c	
 3	099e	09cd	099c	2	53	b7	
 3	099e	09cd	099a	2	62	b7
 3	099e	09cd	099b	2	52	b7	

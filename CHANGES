@@ -5,9 +5,16 @@ v1.1
 
 2. in the export to screen font there is an option to not use automatic headers (see point 1). This means you can type up a webpage in bangla unicode (writing your own headers) and export it to screenfont and Lekho won't add an automatic header to the file if you tell it not to. 
 
+3. Fixed delete bangtex bug in destructor of BanglaTextEdit. Destructo no longer tries to delete bangtex if it hasn't been allocated
+
 2002.10.15
 3. Fixed bug in segmenting that didn't take into account jawphola for a
 
 4. Added section in segmenting to take into account chondrobindu after kar
 
 5. Modified shor.txt to input a-jawphola-akar and a-jawphola-akar-chondrobindu
+
+2002.10.02
+1. Added html export
+2. expanded adarshalipi.txt
+3. added bangtex support !

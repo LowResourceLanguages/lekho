@@ -143,6 +143,7 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 
 	_wecreatedBangla = false ;
 	_wecreatedLipi = false ;
+	_wecreatedBangtex = false ;
 
 	foreground = bte->foreground;
 	background = bte->background;
@@ -188,7 +189,7 @@ BanglaTextEdit::~BanglaTextEdit()
 
     if(_wecreatedBangla) delete bangla ;
     if(_wecreatedLipi) delete lipi ;
-    delete bangtex ;
+    if(_wecreatedBangtex) delete bangtex ;
 }
 
 //set the tab size and recompute all tabs.
@@ -321,6 +322,8 @@ int BanglaTextEdit::insert (int para, int col, const QString &text)
 
 	//QPoint thisparacol(para,col), thisxy = theDoc.paracol2xy(thisparacol);
 	//updateContents(0, thisxy.y(), viewport()->width(), viewport()->height() - contentsY());
+
+	segmentedText.clear();
 
 	return (bll.count());
 }
@@ -477,7 +480,7 @@ bool BanglaTextEdit::screenFontConverterInit(QTextStream &file)
 bool BanglaTextEdit::latexConverterInit(QTextStream &file)
 {
 	bangtex = new LatexConverter ;
-	//_wecreatedLipi = true ;
+	_wecreatedBangtex = true ;
 
 	if(!bangtex->initialiseConverter(file))
 	{

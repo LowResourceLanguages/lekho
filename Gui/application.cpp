@@ -781,7 +781,6 @@ void ApplicationWindow::print()
 
 void ApplicationWindow::find()
 {
-	//FindDialog *fd = new FindDialog(this,"Find", e->getParser(), e->getFontConverter());
 	FindDialog *fd = new FindDialog(e, "Find", this);
 	connect(fd, SIGNAL(find(const QString &)), e, SLOT(highlightWord(const QString &)) );
 	connect(fd, SIGNAL(replace(const QStringList &)), e, SLOT(replaceWord(const QStringList &)) );
