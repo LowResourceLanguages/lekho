@@ -38,7 +38,6 @@ struct LekhoRedoUndoUnit
 	bool 	isInsert ; //insert or del
 	QPoint	paracolStart ,	//start point of insert/del
 		paracolEnd	;//this is important for multi para deletes
-	uint	letters ;	//#of letters inserted/del
 	QString	theText ;	//the unicode text inserted/deleted
 
 	LekhoRedoUndoUnit() { next = NULL; prev = NULL; }
@@ -55,12 +54,16 @@ class LekhoRedoUndo
 {
 	LekhoRedoUndoUnit *top,
 			*current ;
+	uint	savePosition,		//point on the chain at which the file was saved
+		currentPosition ;	//we are here in the chain
 
 public:
 	LekhoRedoUndo()
 	{
 		top = NULL ;
 		current = top ;
+		savePosition = 0 ;
+		currentPosition = 0 ;
 	}
 	~LekhoRedoUndo()
 	{
@@ -74,10 +77,12 @@ public:
 			delete top ;
 		top = NULL ;
 		current = top ;
+		savePosition = 0 ;
+		currentPosition = 0 ;
 	}
 
 	//all ops, like cut (block delete) and paste can be defined at one go
-	void setop(bool isInsert_, QString &theText_, QPoint &paracolStart_, QPoint &paracolEnd_, uint letters_=0 );
+	void setop(bool isInsert_, QString &theText_, QPoint &paracolStart_, QPoint &paracolEnd_ );
 
 	//find out if undo and redo are available
 	bool undoAvailable()
@@ -104,6 +109,19 @@ public:
 			else
 				return(false);
 		}
+	}
+
+	void setSavePosition()	//saved at this point
+	{
+		savePosition = currentPosition ;
+	}
+
+	bool atSavePosition()	//theoretically at this point document is identical to saved version
+	{
+		if( savePosition == currentPosition )
+			return true ;
+		else
+			return false ;
 	}
 
 	//return the undo and redo ops and adjust current accordingly

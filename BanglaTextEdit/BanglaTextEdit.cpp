@@ -781,6 +781,10 @@ void BanglaTextEdit::setModified(bool mod)
 {
 	modified = mod ;
 	emit documentModified( mod ) ;
+
+	if( !mod )
+		history.setSavePosition();
+	//no, this does not recurse....
 }
 
 bool BanglaTextEdit::isModified()
@@ -790,6 +794,7 @@ bool BanglaTextEdit::isModified()
 
 QString BanglaTextEdit::unicode()
 {
+	keyPressEventFlushBangla();
 	QPoint start(0,0),
 		end( theDoc.lettersInLine(theDoc.totalLines()-1)-1,
 			theDoc.totalLines()-1) ;
@@ -798,6 +803,7 @@ QString BanglaTextEdit::unicode()
 
 QString BanglaTextEdit::unicode(QPoint &start, QPoint &end)
 {
+	keyPressEventFlushBangla();
 	QString theText ;
 	theDoc.unicode(start.y(), start.x(),
 			end.y(), end.x(),
@@ -807,6 +813,7 @@ QString BanglaTextEdit::unicode(QPoint &start, QPoint &end)
 
 QString BanglaTextEdit::charRef()
 {
+	keyPressEventFlushBangla();
 	QPoint start(0,0),
 		end( theDoc.lettersInLine(theDoc.totalLines()-1)-1,
 			theDoc.totalLines()-1) ;
@@ -815,6 +822,7 @@ QString BanglaTextEdit::charRef()
 
 QString BanglaTextEdit::charRef(QPoint &start, QPoint &end)
 {
+	keyPressEventFlushBangla();
 	QString theText ;
 	theDoc.unicode(start.y(), start.x(),
 			end.y(), end.x(),
@@ -831,6 +839,7 @@ QString BanglaTextEdit::charRef(QPoint &start, QPoint &end)
 
 QString BanglaTextEdit::screenFont()
 {
+	keyPressEventFlushBangla();
 	QPoint start(0,0),
 		end( theDoc.lettersInLine(theDoc.totalLines()-1)-1,
 			theDoc.totalLines()-1) ;
@@ -839,6 +848,7 @@ QString BanglaTextEdit::screenFont()
 
 QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 {
+	keyPressEventFlushBangla();
 	BanglaLetterList text;
 
 	theDoc.copy(start.y(), start.x(),
@@ -885,6 +895,7 @@ QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 
 QString BanglaTextEdit::getLatex()
 {
+	keyPressEventFlushBangla();
 	QPoint start(0,0),
 		end( theDoc.lettersInLine(theDoc.totalLines()-1)-1,
 			theDoc.totalLines()-1) ;
@@ -893,6 +904,7 @@ QString BanglaTextEdit::getLatex()
 
 QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 {
+	keyPressEventFlushBangla();
 	BanglaLetterList text;
 
 	theDoc.copy(start.y(), start.x(),
@@ -1269,7 +1281,8 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 
 			keyPressEventFlushBangla();
 			cursorErase();
-			splitLine( theCursor.paracol.y(), theCursor.paracol.x() );
+			//splitLine( theCursor.paracol.y(), theCursor.paracol.x() );
+			insert (theCursor.paracol.y(), theCursor.paracol.x(), "\n", false);
 			theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 			cursorDraw();
 			break;
@@ -2007,8 +2020,8 @@ void BanglaTextEdit::undo()
 		}
 		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 
-		if(!history.undoAvailable())
-			setModified( false ) ;
+		//if(!history.undoAvailable())
+		//	setModified( false ) ;
 	}
 
 	//another leetle hack
@@ -2019,6 +2032,8 @@ void BanglaTextEdit::undo()
 
 	emit undoAvailable(history.undoAvailable());
 	emit redoAvailable(history.redoAvailable());
+
+	setModified( !history.atSavePosition() );
 }
 
 void BanglaTextEdit::redo()
@@ -2052,4 +2067,6 @@ void BanglaTextEdit::redo()
 
 	emit undoAvailable(history.undoAvailable());
 	emit redoAvailable(history.redoAvailable());
+
+	setModified( !history.atSavePosition() );
 }

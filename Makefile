@@ -6,13 +6,14 @@
 # Command: $(QMAKE) Lekho.pro
 #############################################################################
 
-#### change the following two directories to whatever you want ####
+#### change the following four directories to whatever you want ####
 #### leaving them as is won't harm you unless you already have ####
-#### the directory $(HOME)/Lekho1.0/ with something valuable #####
+#### the directory $(HOME)/C++/Lekho/ with something valuable #####
 
-LEKHO_DIR = /home/kghose/C++/Lekho
-OBJ_DIR = $(LEKHO_DIR)/obj
-BIN_DIR = $(LEKHO_DIR)/bin
+LEKHO_DIR = $(HOME)/C++/Lekho/
+INSTALL_DIR = $(HOME)/LekhoBin/
+OBJ_DIR = $(LEKHO_DIR)/obj/
+BIN_DIR = $(LEKHO_DIR)/bin/
 
 ################# NO NEED TO CHANGE BEYOND THIS POINT #######################
 
@@ -304,15 +305,27 @@ BanglaTextEdit/moc_BanglaLineEdit.cpp: $(MOC) BanglaTextEdit/BanglaLineEdit.h
 install: all 
 	@echo "##########################################"
 	@echo
+	@echo "Making $(INSTALL_DIR) if necessary" 
+	@test -d $(INSTALL_DIR)/ || mkdir -p $(INSTALL_DIR)/
+	@echo "Copying the executable file lekho"
+	cp -f $(BIN_DIR)/lekho $(INSTALL_DIR)/lekho
 	@echo "Copying the initialisation file .lekhorc"
-	@cp $(PWD)/.lekhorc $(BIN_DIR)/.lekhorc
+	cp -f $(PWD)/.lekhorc $(INSTALL_DIR)/.lekhorc
 	@echo "Copying the initialisation directory .lekho"
-	@cp -r $(PWD)/.lekho $(BIN_DIR)/.lekho
+	cp -r -f $(PWD)/.lekho $(INSTALL_DIR)/.lekho
+	@echo "Copying the dictionary"
+	cp -r -f $(PWD)/Dict $(INSTALL_DIR)/Dict
 	@echo "Copying the examples directory"
-	@cp -r $(PWD)/examples $(BIN_DIR)/examples
+	cp -r -f $(PWD)/examples $(INSTALL_DIR)/examples
 	@echo 
+	@echo "Making softlinks from $(HOME)"
+	ln -s -f $(INSTALL_DIR)/Dict $(HOME)/Dict
+	ln -s -f $(INSTALL_DIR)/lekho $(HOME)/lekho
+	ln -s -f $(INSTALL_DIR)/.lekho $(HOME)/.lekho
+	ln -s -f $(INSTALL_DIR)/.lekhorc $(HOME)/.lekhorc
+	@echo
 	@echo "Install complete ! #####################"
-	@echo "You should be all set. Go into the directory" $(BIN_DIR) "and type ./lekho"
+	@echo "You should be all set. Type lekho"
 	@echo "Lekho should start up with defaults"
 	@echo "Look at the help.txt file in the examples directory to get started"
 	@echo "Look at the Personalisation section of the README file to learn"
@@ -320,5 +333,5 @@ install: all
 	@echo "Computer-e bangla lekha upobhog korun !"
 	@echo
 uninstall:
-	@rm -r $(BIN_DIR) 
+	@rm -r $(INSTALL_DIR) 
 	@echo "Deleted lekho install directory. Remove the ttf fonts if you wish";

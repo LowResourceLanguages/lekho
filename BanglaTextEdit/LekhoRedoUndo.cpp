@@ -23,9 +23,9 @@
 		 |
 		[ ]
 		 |
-		[ ]
+		[ ] <- savePosition
 		 |
-		[ ] <- current (we got here by undos/redos)
+		[ ] <- current (we got here by undos/redos) = currentPosition
 		 |
 		[ ] <- this is the op we did last
 
@@ -36,11 +36,13 @@
 5. if we have redone till the end, current->next will be NULL
 
 */
+#include <iostream.h>
+
 #include <LekhoRedoUndo.h>
 
 //all ops, like cut (block delete) and paste can be defined at one go
 void LekhoRedoUndo::setop(bool isInsert_, QString &theText_,
-			QPoint &paracolStart_, QPoint &paracolEnd_, uint letters_ )
+			QPoint &paracolStart_, QPoint &paracolEnd_ )
 {
 
 	if( current == NULL )//either we are at the top, or we haven't started a undo redo stack yet
@@ -49,6 +51,7 @@ void LekhoRedoUndo::setop(bool isInsert_, QString &theText_,
 			delete top;//delete the whole stack
 		current = new LekhoRedoUndoUnit ;
 		top = current ;
+		currentPosition = 1 ;
 	}
 	else
 	{
@@ -61,13 +64,13 @@ void LekhoRedoUndo::setop(bool isInsert_, QString &theText_,
 		current->next->prev = current ;
 		current = current->next ;
 		//confusing isn't it ? Just like the Red Queen
+		currentPosition++ ;
 	}
 
 	current->isInsert = isInsert_ ;
 	current->theText = theText_ ;
 	current->paracolStart = paracolStart_ ;
 	current->paracolEnd = paracolEnd_ ;
-	current->letters = letters_ ;
 
 }
 
@@ -85,6 +88,7 @@ LekhoRedoUndoOp LekhoRedoUndo::undo()
 		return_value.theText = current->theText ;
 
 		current = current->prev ;
+		currentPosition-- ;
 	}
 	return return_value ;
 }
@@ -96,9 +100,15 @@ LekhoRedoUndoOp LekhoRedoUndo::redo()
 	{
 		LekhoRedoUndoUnit *now ;
 		if( current == NULL)
+		{
 			now = top ;
+			currentPosition = 1 ;
+		}
 		else
+		{
 			now = current->next ;
+			currentPosition++ ;
+		}
 
 		return_value.isInsertOp = now->isInsert ;
 		return_value.paracolStart = now->paracolStart ;

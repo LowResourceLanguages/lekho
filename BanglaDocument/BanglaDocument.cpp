@@ -1,7 +1,7 @@
 /*
-*  Lekho v1.0 will be a simple editor for bangla in unicode that will export
+*  Lekho is a simple editor for bangla in unicode that exports
 *  to bangtex
-*  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
+*  Copyright (C) 2001,2002,2003 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -880,7 +880,8 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 		{
 			//delete on this para, and join the next one
 			(*documentLineAt(line1)).del(col1,col2 - col1 + 1,bll) ;
-			joinLine(line1);
+			if ( joinLine(line1) )
+				bll += BanglaCR ;
 			return true ;
 		}
 	}
@@ -890,9 +891,11 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 		{
 			(*documentLineAt(line1)).del(col1,-1,bll) ;
 			joinLine(line1);
+			bll += BanglaCR ;
 		}
 
 		(*documentLineAt(line1)).del(col1,-1,bll) ;
+		bll += BanglaCR ;
 		(*documentLineAt(line1+1)).del(0,col2 + 1,bll) ;
 		joinLine(line1);
 		return true ;

@@ -1,6 +1,8 @@
 v1.15
 2002.12.27
 1. Now spellcheck replaces and find and replace ops are also covered by undo/redo
+2. Fixed multiline undo/redo problem (was in BanglaDocument, multiline delete wasn't returning carriage returns...)
+3. Undo/redo remembers when you saved a file and when you have undone/redone to the saved point it flags it...
 
 2002.12.26
 1. YEEEHAH ! Implemented redo/undo. Seems to work bug free (TM) but needs further testing(TM)[small bug in deleting, found and fixed almost immediately]
