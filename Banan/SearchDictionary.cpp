@@ -42,7 +42,7 @@ bool	SearchDictionary::loadPage(QChar lett)
 	QString filename = dictDir + "x" + QString::number(lett.unicode(),16) + ".dct" ;
 
 	cout << "Loading dictionary file " << filename << endl ;
-	
+
 	dictFile.setName(filename);
 	if ( !dictFile.open( IO_ReadOnly ) )
 	{
@@ -68,11 +68,9 @@ bool	SearchDictionary::loadWords(QTextStream &in)
 	QString newWord = in.readLine();
 	while(!in.atEnd())
 	{
-		//Qcout << newWord << "<br>" << endl ;
 		int j = newWord.findRev(':') ;
 		newWord = newWord.left(j);
 		const QString thisWord( newWord );
-		//thisPage.wordInPage.append(thisWord);
 		wordList->insert(thisWord,".");
 		newWord = in.readLine();
 	}
@@ -97,6 +95,12 @@ bool	SearchDictionary::lookUpWord(const QString &wd) 	//basic search, will elabo
 	else
 		return true;
 }
+/*
+void	SearchDictionary::findValidMutants(QStringList &mutantList) 	//basic search, will elaborate later
+{
+
+}
+*/
 /*
 //loads all the words from a dictionary file
 bool	SearchDictionary::loadWords(QTextStream &in)

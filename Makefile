@@ -200,7 +200,9 @@ $(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
 		Gui/lekho.xpm \
 		Gui/filesave.xpm \
 		Gui/fileopen.xpm \
-		Gui/fileprint.xpm
+		Gui/fileprint.xpm \
+		Gui/findinfile.xpm \
+		Gui/spell.xpm
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/application.o Gui/application.cpp
 
 $(OBJ_DIR)/FindDialog.o: Gui/FindDialog.cpp Gui/FindDialog.h 

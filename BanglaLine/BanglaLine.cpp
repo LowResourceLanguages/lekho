@@ -404,7 +404,7 @@ QPoint BanglaLine::findNextWord(QString &wd, int startCol)
 			index++;
 		}
 
-		wordEnd = index ;
+		wordEnd = index - 1;
 		if(wordEnd >= letter.count() )
 			wordEnd = letter.count() -1;
 	}

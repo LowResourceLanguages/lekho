@@ -527,7 +527,7 @@ void BanglaTextEdit::findNextWrongWord(QString &wd)
 	{
 		paracolSelStart = selStart ;
 		paracolSelEnd = selEnd;
-		paracolSelEnd.setX(paracolSelEnd.x())  ;
+		paracolSelEnd.setX(paracolSelEnd.x() + 1 )  ;	//de leetle hack...
 		hasSelText = true ;
 		xySelStart = theDoc.paracol2xy(paracolSelStart);
 		xySelEnd = theDoc.paracol2xy(paracolSelEnd);

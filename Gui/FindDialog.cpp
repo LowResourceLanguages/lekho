@@ -25,6 +25,8 @@
 FindDialog::FindDialog(BanglaTextEdit *bte, QString name, QWidget *parent)// ,  Parser *p, FontConverter *fc )
  : QDialog(parent, name)
 {
+	setCaption ( name ) ;
+	
 	setGeometry(parent->x()+ parent->width()-300, parent->y()+ parent->height()-100,300,100);
 
 	findedit = new BanglaLineEdit(bte, name, this, 22);//this, name, p, fc);

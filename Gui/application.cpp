@@ -60,6 +60,8 @@
 #include "filesave.xpm"
 #include "fileopen.xpm"
 #include "fileprint.xpm"
+#include "findinfile.xpm"
+#include "spell.xpm"
 
 #include<FindDialog.h>
 #include<SpellDialog.h>
@@ -89,7 +91,7 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     fudgeHtmlOn = false ;
 
-    QPixmap lekhoIcon, openIcon, saveIcon, printIcon;
+    QPixmap lekhoIcon, openIcon, saveIcon, printIcon, findIcon, spellIcon;
     lekhoIcon = QPixmap( lekho );
     this->setIcon(lekhoIcon);
 
@@ -115,11 +117,20 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 	= new QToolButton( saveIcon, "Save File", QString::null,
 			   this, SLOT(save()), fileTools, "save file" );
 
+    findIcon = QPixmap( findinfile );
+    QToolButton * find
+	= new QToolButton( findIcon, "Find", QString::null,
+			   this, SLOT(find()), fileTools, "find" );
+
+    spellIcon = QPixmap( spell );
+    QToolButton * spell
+	= new QToolButton( spellIcon, "Spell check", QString::null,
+			   this, SLOT(spellCheck()), fileTools, "spell check" );
+
     printIcon = QPixmap( fileprint );
     QToolButton * filePrint
 	= new QToolButton( printIcon, "Print File", QString::null,
 			   this, SLOT(print()), fileTools, "print file" );
-
 
     //context help
     (void)QWhatsThis::whatsThisButton( fileTools );
@@ -197,8 +208,8 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     //Edit
     QPopupMenu *edit = new QPopupMenu( this );
-    edit->insertItem( "&Find", this, SLOT(find()), Key_F3 );
-    edit->insertItem( "&Spell", this, SLOT(spellCheck()), Key_F2 );
+    edit->insertItem( findIcon, "&Find", this, SLOT(find()), Key_F3 );
+    edit->insertItem( spellIcon, "&Spell", this, SLOT(spellCheck()), Key_F2 );
 
     edit->insertSeparator();
 
@@ -784,7 +795,7 @@ void ApplicationWindow::print()
 
 void ApplicationWindow::find()
 {
-	FindDialog *fd = new FindDialog(e, "Find", this);
+	FindDialog *fd = new FindDialog(e, "Lekho : Find", this);
 	connect(fd, SIGNAL(find(const QString &)), e, SLOT(highlightWord(const QString &)) );
 	connect(fd, SIGNAL(replace(const QStringList &)), e, SLOT(replaceWord(const QStringList &)) );
 	connect(fd, SIGNAL(replaceAll(const QStringList &)), e, SLOT(replaceAll(const QStringList &)) );
@@ -793,7 +804,7 @@ void ApplicationWindow::find()
 
 void ApplicationWindow::spellCheck()
 {
-	SpellDialog *fd = new SpellDialog(e, "Spell", this);
+	SpellDialog *fd = new SpellDialog(e, "Lekho : Spell Check", this);
 	connect(fd, SIGNAL(findNext()), e, SLOT(findWrongWord()) );
 	connect(e, SIGNAL( foundWrongWord(const QString& ) ), fd , SLOT( wordFound(const QString &) ) );
 	connect(fd, SIGNAL(replace(const QString &)), e, SLOT(replaceWrongWordWith(const QString &)) );
@@ -925,6 +936,8 @@ void ApplicationWindow::keyMapHelp()
 void ApplicationWindow::about()
 {
     QMessageBox::about( this, "Lekho : About",
+    			"Lekho v1.1\n"
+			"\n"
 			"This program is distributed in the hope that it will be useful,\n"
 			"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
 			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
@@ -941,7 +954,10 @@ void ApplicationWindow::about()
 			"It can export to html and bangtex\n"
 			"Please see help.txt (bangla) and help_en.txt (english)\n"
 			"to learn how to operate the program\n"
-			"This is version 1.1\n"
+			"\n"
+			"The spell checker uses the wordlist from Barda (Dr. Avijit Das)\n"
+			"(adrab@users.sourceforge.net)\n"
+			"\n"
 			"Comments and suggestions to kghose@users.sourceforge.net");
 }
 
