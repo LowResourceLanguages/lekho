@@ -28,7 +28,7 @@ class BanglaLineEdit : public BanglaTextEdit
 
 public:
 	//BanglaLineEdit( QWidget *parent=0, QString name=0, Parser *p=0, FontConverter *fc=0);
-	BanglaLineEdit(BanglaTextEdit *bte, QString name=0, QWidget *parent=0);
+	BanglaLineEdit(BanglaTextEdit *bte, QString name=0, QWidget *parent=0, int maxFontsize = 1000);
 	//virtual ~BanglaTextEdit();
 
 	//the only change we need is to ensure that return gets evaluated differently

@@ -72,7 +72,8 @@ protected:
 		xySelStart , xySelEnd ,
 		tempParacolSelStart , tempParacolSelEnd ;//needed to handle flipping of start and end posns...
 
-	bool hasSelText ;
+	bool hasSelText ;	//any selected text in the doc ?
+	bool wordFound ;	//has the word been found ? used for replace
 
 	BanglaDocument theDoc ;
 	FontConverter *lipi ;			//unicode->screen font
@@ -104,14 +105,16 @@ protected:
 public:
 	//BanglaTextEdit ( const QString &text, const QString &context = QString::null, QWidget *parent = 0, const char *name = 0 );
 	BanglaTextEdit( QWidget *parent=0, QString name=0);
-	BanglaTextEdit( BanglaTextEdit *bte, QString name=0, QWidget *parent=0 );
+	BanglaTextEdit( BanglaTextEdit *bte, QString name=0, QWidget *parent=0, int maxFontSize = 1000 );
 	virtual ~BanglaTextEdit();
 
 	//set tab width
 	void setTabWidth(int tw);
 
-	//set the fonts
+	//set/get the fonts/font info
 	void setFonts(QFont &bf, QFont &ef);
+	QFont getBanglaFont();
+	QFont getEnglishFont();
 
 	//set colors
 	void setColors(QColor fg, QColor bg);

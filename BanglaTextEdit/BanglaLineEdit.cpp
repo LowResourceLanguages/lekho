@@ -21,8 +21,8 @@
 #include<BanglaLineEdit.h>
 
 //BanglaLineEdit::BanglaLineEdit( QWidget *parent, QString name, Parser *p, FontConverter *fc)
-BanglaLineEdit::BanglaLineEdit(BanglaTextEdit *bte, QString name, QWidget *parent )
-: BanglaTextEdit(bte, name, parent) // parent, name)
+BanglaLineEdit::BanglaLineEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontsize )
+: BanglaTextEdit(bte, name, parent, maxFontsize) // parent, name)
 {
 
 	//fun diagnostic stuff..

@@ -27,11 +27,12 @@ FindDialog::FindDialog(BanglaTextEdit *bte, QString name, QWidget *parent)// ,  
 {
 	setGeometry(parent->x()+ parent->width()-300, parent->y()+ parent->height()-100,300,100);
 
-	findedit = new BanglaLineEdit(bte, name, this);//this, name, p, fc);
+	findedit = new BanglaLineEdit(bte, name, this, 22);//this, name, p, fc);
 	findedit->setGeometry(105,3,190,30);
 
-	replaceedit = new BanglaLineEdit(bte, name, this);//this, name, p, fc);
+	replaceedit = new BanglaLineEdit(bte, name, this, 22);//this, name, p, fc);
 	replaceedit->setGeometry(105,35,190,30);
+
 
 	QPushButton *findbtn = new QPushButton("&Find",this) ;
 	QPushButton *replacebtn = new QPushButton("&Replace",this) ;

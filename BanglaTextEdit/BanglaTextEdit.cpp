@@ -107,10 +107,12 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
 
 	modified = false ;
 
+	wordFound = false ;
+
 	cursorBlinkOn() ;
 }
 
-BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent )
+BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontSize )
 	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
 {
 #ifdef Q_WS_X11
@@ -118,7 +120,18 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 	QApplication::clipboard()->setSelectionMode(true);
 #endif
 
-	setFonts(bte->banglaFont , bte->englishFont );
+	QFont		bf(bte->getBanglaFont()) ,
+			ef(bte->getEnglishFont()) ;
+	QFontInfo 	bfi(bf),
+			efi(ef) ;
+
+	if(bfi.pointSize() > maxFontSize)
+		bf.setPointSize(maxFontSize);
+
+	if(efi.pointSize() > maxFontSize)
+		ef.setPointSize(maxFontSize);
+
+	setFonts(bf , ef );
 	setTabWidth(bte->tabWidth);
 
 	bangla = new Parser(bte->bangla) ;	//need to copy the parser over, sicne it has a state
@@ -204,6 +217,7 @@ void BanglaTextEdit::setTabWidth(int tw)
 	viewport()->update();
 }
 
+//function::setFonts
 void BanglaTextEdit::setFonts(QFont &bf, QFont &ef)
 {
 	banglaFont = bf ;
@@ -219,6 +233,16 @@ void BanglaTextEdit::setFonts(QFont &bf, QFont &ef)
 	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 
 	viewport()->update();
+}
+
+QFont BanglaTextEdit::getBanglaFont()
+{
+	return(banglaFont);
+}
+
+QFont BanglaTextEdit::getEnglishFont()
+{
+	return(englishFont);
 }
 
 void BanglaTextEdit::setColors(QColor fg, QColor bg)
@@ -314,6 +338,8 @@ void BanglaTextEdit::splitLine(int para, int col)
 	viewport()->update();
 }
 
+//function::top
+//moves cursor to the top and crolls there
 void BanglaTextEdit::top()
 {
 	cursorErase();
@@ -331,6 +357,8 @@ void BanglaTextEdit::top()
 
 
 //function::highlightWord
+//looks for this word from the current cursor posititon
+//and selects it
 void BanglaTextEdit::highlightWord(const QString &wd)
 {
 	QPoint paracolStart = theCursor.paracol ,
@@ -341,6 +369,8 @@ void BanglaTextEdit::highlightWord(const QString &wd)
 
 	if( (selStart.x() > -1) && (selEnd.x() > -1) )
 	{
+		wordFound = true ;
+
 		paracolSelStart = selStart ;
 		paracolSelEnd = selEnd;
 		paracolSelEnd.setX(paracolSelEnd.x() + 1 )  ;	//the leetele hack - see copy/paste etc.
@@ -362,6 +392,7 @@ void BanglaTextEdit::highlightWord(const QString &wd)
 	}
 	else	//go to top
 	{
+		wordFound = false ;
 		top();
 	}
 
@@ -370,31 +401,35 @@ void BanglaTextEdit::highlightWord(const QString &wd)
 //function::replaceWord
 void BanglaTextEdit::replaceWord(const QStringList &w)
 {
-	QPoint paracolStart = theCursor.paracol ,
-		paracolEnd(theDoc.lettersInLine(theDoc.totalLines()-1)-1,
-			theDoc.totalLines()-1) ;
-	QPoint selStart(-1,-1), selEnd(-1,-1) ;
-	theDoc.findWord(selStart, selEnd, w[0], paracolStart, paracolEnd);
 
-	if( (selStart.x() > -1) && (selEnd.x() > -1) )
-	{
-		cursorErase();
-		theCursor.paracol = selEnd ;
+	//OK, now we gotta do two things.
+	//either the word has been found and high lighted by highlightWord,
+	//then just change that, and find the next word
+	//or else we gotta find that word first, then change it, then find the next word.
 
-		del(selStart.y(), selStart.x(), selEnd.y(), selEnd.x());
-		theCursor.paracol.setX( theCursor.paracol.x() + insert(selStart.y(), selStart.x(), w[1]) );
+	if(!wordFound)
+		highlightWord(w[0]);
 
-		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
-		cursorDraw();
+	if(!wordFound)
+		return ;
 
-		//another leetle hack -10
-		ensureVisible ( theCursor.xy.x() - 10 , theCursor.xy.y() + theDoc.getLineHeight(),
-				10, theDoc.getLineHeight()) ;
+	hasSelText = false ;
+	wordFound = false ;
 
-		viewport()->update();
-	}
-	else
-		top();
+	cursorErase();
+	theCursor.paracol = paracolSelStart ;
+	del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1);
+	theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), w[1]) );
+	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+	cursorDraw();
+
+	highlightWord(w[0]);
+
+	//another leetle hack -10
+	ensureVisible ( theCursor.xy.x() - 10 , theCursor.xy.y() + theDoc.getLineHeight(),
+			10, theDoc.getLineHeight()) ;
+
+	viewport()->update();
 }
 
 //get an existing one
@@ -766,10 +801,10 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 
 	switch (event->key())
 	{
-		case	Key_F3:
+/*		case	Key_F3:
 			highlightWord("this");
 			break;
-
+*/
 		case 	Key_Escape:
 
 			keyPressEventFlushBangla();
