@@ -53,25 +53,6 @@ enum BanglaEditCode
 	PasteRomanised
 };
 
-/*
-//small utility function is this a bangla letter ?
-inline bool isBangla(const QChar &text)
-{
-	switch(text.unicode())
-	{
-		case 0x0964:	//dari
-		case 0x0965:	//double dari
-			return true ;
-			break;
-		default:
-			if( (text.unicode() > 0x0980) & (text.unicode() < 0x09ff) )
-				return true ;
-			break;
-	}
-	return false ;
-}
-*/
-
 //is it a tab ?
 inline bool isTab(const QChar &text)
 {
@@ -84,9 +65,10 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
 	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
 {
 
-	//otherwise X11 systems can't paste to other apps
+#ifdef Q_WS_X11
+	//otherwise on X11 systems Lekho can't paste to other apps
 	QApplication::clipboard()->setSelectionMode(true);
-
+#endif
 
 	//otherwise the cursor won't appear...
 	theDoc.setLineHeight(QMAX( QFontMetrics(banglaFont).lineSpacing(),
@@ -268,6 +250,8 @@ bool BanglaTextEdit::screenFontConverterInit(QTextStream &file)
 //handle the loading of text into the document
 void BanglaTextEdit::setText(const QString &text)
 {
+	if(hasSelText)
+		hasSelText = false ;
 
 	cout << "Segmenting text " << endl << flush ;
 	emit statusBarMessage( "Segmenting text" ) ;
@@ -984,7 +968,7 @@ void BanglaTextEdit::clipBoardOp(int id)
 {
 	//nothing selected, if its a copy go back
 	if((paracolSelStart == paracolSelEnd) &&
-		(id <= PasteUtf8))
+		(id < PasteUtf8))
 		return ;
 
 	paracolSelEnd -= QPoint(1,0) ;	//a leetle hack
@@ -997,7 +981,7 @@ void BanglaTextEdit::clipBoardOp(int id)
 	{
 	// Copy text into the clipboard
 	case 	CopyUtf8:
-		cb->setText( unicode(paracolSelStart,paracolSelEnd).utf8() );
+		cb->setText( QString(unicode(paracolSelStart,paracolSelEnd).utf8()) );
 		break ;
 	case 	CopyUtf16:
 		cb->setText( unicode(paracolSelStart,paracolSelEnd) );
