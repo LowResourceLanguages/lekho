@@ -860,8 +860,10 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 	int totlines = (int)documentLine.count();
 	if(line1 >= totlines) return false ;
 	if(line2 >= totlines) return false ;
-	if(col1 > (*documentLineAt(line1)).letterCount()) return false ;
-	if(col2 > (*documentLineAt(line2)).letterCount()) return false ;
+	if(col1 > (*documentLineAt(line1)).letterCount())
+		col1 = (*documentLineAt(line1)).letterCount() ;//return false ;
+	if(col2 > (*documentLineAt(line2)).letterCount())
+		col2 = (*documentLineAt(line2)).letterCount() ;//return false ;
 
 	QPoint paracol(col1, line1);
 	QPoint linecol = paragraph2line(paracol);
