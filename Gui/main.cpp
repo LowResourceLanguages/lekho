@@ -36,14 +36,15 @@
 #include <SearchDictionary.h>
 #include "application.h"
 
+#include <iostream.h>
 
 SearchDictionary	*banan;			//spelling dict
-
+/*
 QTextStream Qcout( stdout, IO_WriteOnly );	//same as cout etc...
 QTextStream Qcin ( stdin,  IO_ReadOnly );
 QTextStream Qcerr( stderr, IO_WriteOnly );
 QTextStream debugStream ;				//dump all debug messages here
-
+*/
 void showLicense()
 {
 	cout	<< endl

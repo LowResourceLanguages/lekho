@@ -395,7 +395,7 @@ void ApplicationWindow::readPrefs()
 	}
 	else
 	{
-		Qcerr << "couldn't find a .lekhorc file, creating default one" << flush ;
+		cout << "couldn't find a .lekhorc file, creating default one" << flush ;
 	    	switch( QMessageBox::information( this, "Lekho : Init file not found",
 				      "Couldn't find initialisation file .lekhorc\n"
 				      "Will create a default one and all required files\n"
@@ -417,7 +417,7 @@ void ApplicationWindow::readPrefs()
 		}
 
 		QFile lekhorc(".lekhorc");
-		if(!lekhorc.open(IO_WriteOnly)) {Qcerr << "Can't create .lekhorc, quitting" << endl ; exit(0);};
+		if(!lekhorc.open(IO_WriteOnly)) {cout << "Can't create .lekhorc, quitting" << endl ; exit(0);};
 
 		QTextStream	out( &lekhorc ) ;
 		QString filetext ;
@@ -426,35 +426,35 @@ void ApplicationWindow::readPrefs()
 		lekhorc.close();
 
 		QFile karfile("kar.txt");
-		if(!karfile.open(IO_WriteOnly)) {Qcerr << "Can't create kar.txt, quitting" << endl ; exit(0);};
+		if(!karfile.open(IO_WriteOnly)) {cout << "Can't create kar.txt, quitting" << endl ; exit(0);};
 		QTextStream	karout( &karfile ) ;
 		makeKar(filetext);
 		karout << filetext ;
 		karfile.close();
 
 		QFile shorfile("shor.txt");
-		if(!shorfile.open(IO_WriteOnly)) {Qcerr << "Can't create shor.txt, quitting" << endl ; exit(0);};
+		if(!shorfile.open(IO_WriteOnly)) {cout << "Can't create shor.txt, quitting" << endl ; exit(0);};
 		QTextStream	shorout( &shorfile ) ;
 		makeShor(filetext);
 		shorout << filetext ;
 		shorfile.close();
 
 		QFile juktofile("jukto.txt");
-		if(!juktofile.open(IO_WriteOnly)) {Qcerr << "Can't create jukto.txt, quitting" << endl ; exit(0);};
+		if(!juktofile.open(IO_WriteOnly)) {cout << "Can't create jukto.txt, quitting" << endl ; exit(0);};
 		QTextStream	juktoout( &juktofile ) ;
 		makeJukto(filetext);
 		juktoout << filetext ;
 		juktofile.close();
 
 		QFile adarshalipifile("adarshalipi.txt");
-		if(!adarshalipifile.open(IO_WriteOnly)) {Qcerr << "Can't create adarshalipi.txt, quitting" << endl ; exit(0);};
+		if(!adarshalipifile.open(IO_WriteOnly)) {cout << "Can't create adarshalipi.txt, quitting" << endl ; exit(0);};
 		QTextStream	adarshalipiout( &adarshalipifile ) ;
 		makeAdarshalipi(filetext);
 		adarshalipiout << filetext ;
 		adarshalipifile.close();
 
 		QFile bangtexfile("bangtex.txt");
-		if(!bangtexfile.open(IO_WriteOnly)) {Qcerr << "Can't create bangtex.txt, quitting" << endl ; exit(0);};
+		if(!bangtexfile.open(IO_WriteOnly)) {cout << "Can't create bangtex.txt, quitting" << endl ; exit(0);};
 		QTextStream	bangtexout( &bangtexfile ) ;
 		makeBangtex(filetext);
 		bangtexout << filetext ;
@@ -472,9 +472,9 @@ void ApplicationWindow::initialiseParser()
 		juktoFile(thePref.initDir + thePref.modifiableFileName),
 		shorFile(thePref.initDir + thePref.unmodifiableFileName);
 
-	if(!karFile.open(IO_ReadOnly)) {Qcerr << "Kar file problem" << endl ; exit(0);};
-	if(!juktoFile.open(IO_ReadOnly)) {Qcerr << "Jukto file problem" << endl ; exit(0);};
-	if(!shorFile.open(IO_ReadOnly)) {Qcerr << "Shor file problem" << endl ; exit(0);};
+	if(!karFile.open(IO_ReadOnly)) {cout << "Kar file problem" << endl ; exit(0);};
+	if(!juktoFile.open(IO_ReadOnly)) {cout << "Jukto file problem" << endl ; exit(0);};
+	if(!shorFile.open(IO_ReadOnly)) {cout << "Shor file problem" << endl ; exit(0);};
 
 	QTextStream 	kar( &karFile),
 			jukto( &juktoFile),
@@ -492,7 +492,7 @@ void ApplicationWindow::initialiseScreenFontConverter()
 {
 	QFile fontFile(thePref.initDir + thePref.screenfontFileName) ;
 
-	if(!fontFile.open(IO_ReadOnly)) {Qcerr << "screen font converter file problem" << endl ; exit(0);};
+	if(!fontFile.open(IO_ReadOnly)) {cout << "screen font converter file problem" << endl ; exit(0);};
 	QTextStream 	fontF( &fontFile) ;
 
 	if(!e->screenFontConverterInit(fontF))
@@ -505,7 +505,7 @@ void ApplicationWindow::initialiseLatexConverter()
 	QFile fontFile(thePref.initDir + thePref.latexFileName) ;
 
 	//not a fatal error
-	if(!fontFile.open(IO_ReadOnly)) {Qcerr << "latex converter file problem" << endl ; };
+	if(!fontFile.open(IO_ReadOnly)) {cout << "latex converter file problem" << endl ; };
 	QTextStream 	fontF( &fontFile) ;
 
 	if(!e->latexConverterInit(fontF))

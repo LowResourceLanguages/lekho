@@ -298,7 +298,7 @@ bool BanglaTextEdit::initialiseParser(QTextStream &kar, QTextStream &jukto, QTex
 
 	if(!bangla->initialiseParser(kar, jukto, shor))
 	{
-		Qcerr << "Problem loading parser table : BanglaTextEdit " << endl ;
+		cout << "Problem loading parser table : BanglaTextEdit " << endl ;
 		return false;
 	}
 //	Qcout << "Loaded parser tables " << endl << bangla ;
