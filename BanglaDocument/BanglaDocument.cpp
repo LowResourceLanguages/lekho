@@ -788,7 +788,7 @@ bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll)
 			(*documentLineAt(currline)).insert(currcol , oneLine);
 
 			oneLine.clear();
-			splitLine(currline, (*documentLineAt(currline)).letterCount()) + 1;
+			splitLine(currline, (*documentLineAt(currline)).letterCount()) ;
 
 			currline++;
 			currcol = 0 ;
@@ -831,6 +831,37 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 	QPoint linecol = paragraph2line(paracol);
 
 
+	if(line2 == line1)
+	{
+		if(col2 < (int)(*documentLineAt(line2)).letterCount())
+		{
+			//just delete on this para
+			(*documentLineAt(line1)).del(col1,col2 - col1 + 1,bll) ;
+			wrapParagraph(line1, linecol.y());
+			return true ;
+		}
+		else
+		{
+			//delete on this para, and join the next one
+			(*documentLineAt(line1)).del(col1,col2 - col1 + 1,bll) ;
+			joinLine(line1);
+			return true ;
+		}
+	}
+	else
+	{
+		for(int line = line1 ; line < line2 -1 ; line++)
+		{
+			(*documentLineAt(line1)).del(col1,-1,bll) ;
+			joinLine(line1);
+		}
+		
+		(*documentLineAt(line1)).del(col1,-1,bll) ;
+		(*documentLineAt(line1+1)).del(0,col2,bll) ;
+		joinLine(line1);
+		return true ;
+	}
+/*
 	if(line2 > line1)
 	{
 		(*documentLineAt(line1)).del(col1,-1,bll) ;
@@ -871,7 +902,7 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 
 	(*documentLineAt(line2)).del(0,col2+1,bll);	//need to check this....
 	joinLine(line1);
-
+*/
 	return true ;
 }
 

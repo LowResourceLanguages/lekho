@@ -685,10 +685,14 @@ void ApplicationWindow::about()
 			"The GNU GPL is also available online at http://www.gnu.org/licenses/licenses.html#GPL.\n"
 			"\n"
 			"Lekho is a plain text Bangla (Bengali) editor.\n"
+			"It takes in romanised input from a US-ASCII keyboard and\n"
+			"converts them into bangla characters\n"
 			"It uses unicode as its internal encoding.\n"
 			"It saves its files in utf-8 format.\n"
-			"It can export to html\n"
-			"This is version .95\n"
+			"It can export to html and bangtex\n"
+			"Please see help.txt (bangla) and help_en.txt (english)\n"
+			"to learn how to operate the program\n"
+			"This is version 1.0\n"
 			"Comments and suggestions to kghose@users.sourceforge.net");
 }
 

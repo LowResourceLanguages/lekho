@@ -24,7 +24,7 @@ void showLicense()
 {
 	Qcout	<< endl
 		<<	"-------------------------------------------------------------------------" << endl
-		<<	"| Lekho version .95, Copyright (C) 2002 Kaushik Ghose                   |" << endl
+		<<	"| Lekho version 1.0, Copyright (C) 2002 Kaushik Ghose                   |" << endl
     		<<	"| Lekho comes with ABSOLUTELY NO WARRANTY; for details see the GNU GPL  |" << endl
     		<<	"| This is free software, and you are welcome to redistribute it         |" << endl
     		<<	"| under certain conditions; for details see the GNU GPL.                |" << endl
