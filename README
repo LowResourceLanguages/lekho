@@ -71,18 +71,9 @@ Compiling and installing:
 
 PERSONALISING THE LOOK
 
-The .lekhorc file contains information that Lekho uses when it starts up. Each parameter has a identifier label enclosed in square brackets [...]. The file
-structure is absolutely fixed, the labels are currently just there to aid humans. Things to change are
-[banglafont]
-AdarshaLipiExp 20<------ change this value to change the bangla font size
-[englishfont]
-arial 15<--------------- change this to change the english font size
-[foreground]
-0 0 0 <----------------- r g b values for the text (black)
-[background]
-255 255 255<------------ r g b values for the background (white)
+The .lekhorc file contains information that Lekho uses when it starts up. 
+You can mess with this (its in XML format) but Lekho now has dialogs that can do most of the configuring (from the menu item Options)
 
-Bear with me, I'll add dialogs to configure all this from within lekho...
 
 PERSONALISING THE ROMANISATION RULES
 

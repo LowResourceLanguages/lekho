@@ -1,5 +1,5 @@
 /*
-*  lekho will ultimately be a full fledged bangla word processor
+*  lekho is a simple bangla unicode editor
 *  Copyright (C) 2001 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify

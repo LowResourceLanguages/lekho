@@ -130,6 +130,7 @@ BanglaTextEdit::~BanglaTextEdit()
 }
 
 //set the tab size and recompute all tabs.
+//fairly inefficient algorithm...
 void BanglaTextEdit::setTabWidth(int tw)
 {
 	tabWidth = tw ;
@@ -401,9 +402,9 @@ QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 	for(i = text.begin() ; i != text.end() ; ++i)
 	{
 		//bangla starts. Flush whatever was there before and switch to bangla
-		if( isBangla( (*i).unicode[0].unicode() ) )
+		if( isBangla( (*i).unicode[0].unicode() )  && ((*i).unicode[0].unicode() != 0x20))
 		{
-			if(!banglaMode )
+			if(!banglaMode)
 			{
 			//out += theScreenText ;
 			banglaMode = true ;

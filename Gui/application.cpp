@@ -167,8 +167,8 @@ ApplicationWindow::ApplicationWindow()
 
     options->insertItem( "&Bangla font", this, SLOT(chooseBanglaFont()) );
     options->insertItem( "&English font", this, SLOT(chooseEnglishFont()) );
-    options->insertItem( "&foreground color", this, SLOT(chooseForeground()) );
-    options->insertItem( "&background color", this, SLOT(chooseBackground()) );
+    options->insertItem( "f&oreground color", this, SLOT(chooseForeground()) );
+    options->insertItem( "b&ackground color", this, SLOT(chooseBackground()) );
 
 
     //help
@@ -277,6 +277,26 @@ void ApplicationWindow::newDoc()
 
 void ApplicationWindow::choose()
 {
+    if ( e->isModified() )
+    {
+    	switch( QMessageBox::information( this, "Lekho : Save changes ?",
+				      "Do you want to save the changes"
+				      "before loading a new document ?",
+				      "Yes", "No", "Cancel",
+				      0, 1 ) )
+	{
+		case 0:
+			save();
+			break;
+		case 1:
+			break;
+		case 2:
+		default: // just for sanity
+			return;
+			break;
+	}
+    }
+
     QString fn = QFileDialog::getOpenFileName( thePref.workingDir, QString::null,
 					       this);
     if ( !fn.isEmpty() )
@@ -365,6 +385,7 @@ void ApplicationWindow::HTMLexport()
     }
 
     QTextStream t( &f );
+    //t.setEncoding(QTextStream::Latin1);	//adarshalipi uses this...
 
     t << text;
     f.close();
@@ -534,16 +555,15 @@ void ApplicationWindow::about()
 			"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
 			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
 			"GNU General Public License for more details\n"
-			"\n"
 			"A copy of the GNU GPL should be included with the release.\n"
 			"The GNU GPL is also available online at http://www.gnu.org/licenses/licenses.html#GPL.\n"
 			"\n"
 			"Lekho is a plain text Bangla (Bengali) editor.\n"
 			"It uses unicode as its internal encoding.\n"
 			"It saves its files in utf-8 format.\n"
-			"It can export to latex or html\n"
-			"This is version 1.0\n"
-			"Comments and suggestions to kghose@wam.umd.edu");
+			"It can export to html\n"
+			"This is version .95\n"
+			"Comments and suggestions to kghose@users.sourceforge.net");
 }
 
 
