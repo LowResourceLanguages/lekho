@@ -155,10 +155,10 @@ ApplicationWindow::ApplicationWindow()
 
     file->insertSeparator();
 
-    id = file->insertItem( "Export &html", this, SLOT(HTMLexport()), CTRL+Key_H );
+    id = file->insertItem( "Export screenfont &html", this, SLOT(HTMLexport()), CTRL+Key_H );
     //file->setWhatsThis( id, htmlExportText );
 
-    id = file->insertItem( "Export html (choose name)...", this, SLOT(HTMLexportAs()) );
+    id = file->insertItem( "Export screenfont (choose name)...", this, SLOT(HTMLexportAs()) );
     //file->setWhatsThis( id, htmlExportText );
 
     file->insertSeparator();

@@ -66,9 +66,12 @@ void segment(const QString &a, QValueList<QString> &out)
 				//a vowel always stands alone
 				if(vowel.find(a[i]) > -1)
 				{
-					out.append(temp);
+					if(!temp.isEmpty())
+					{
+						out.append(temp);
+						temp ="";
+					}
 					out.append(QString(a[i]));
-					temp = "";
 				}
 				else
 					//this must be a consonant,ligature or zwnj
@@ -111,7 +114,7 @@ void segment(const QString &a, QValueList<QString> &out)
 									i++;
 									temp += a[i];
 								}
-								
+
 							}
 							else
 							{

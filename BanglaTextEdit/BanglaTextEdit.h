@@ -78,6 +78,7 @@ private:
 	FontConverter lipi ;			//unicode->screen font
 	Parser bangla ;				//keystroke parser
 	bool partialCodeInserted ;		//needed by parser, keeps track of if partial code has been inserted
+	QString keysHit ;			//fun display of romanised input
 	//LatexConverter bangtex ;
 
 	QFont banglaFont, englishFont ;

@@ -220,7 +220,10 @@ int BanglaTextEdit::insert (int para, int col, const QString &text)
     	setModified( true );
 	theDoc.insert(para, col, bll);
 
-	//viewport()->update();
+	viewport()->update();
+
+	//QPoint thisparacol(para,col), thisxy = theDoc.paracol2xy(thisparacol);
+	//updateContents(0, thisxy.y(), viewport()->width(), viewport()->height() - contentsY());
 
 	return (bll.count());
 }
@@ -707,7 +710,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 //return the key typed
 QString BanglaTextEdit::parseKeyHit(const QString &text)
 {
-	static QString keysHit ;
+//	QString keysHit ;
 
 	for(int i = 0 ; i < (int)text.length() ; i++)
 	{
@@ -759,6 +762,8 @@ QString BanglaTextEdit::parseKeyHit(const QString &text)
 //function::keyPressEventFlushBangla
 void BanglaTextEdit::keyPressEventFlushBangla()
 {
+	keysHit = "" ;
+
 	bangla.flushStack();
 
 	if(bangla.isCodeAvailable())
