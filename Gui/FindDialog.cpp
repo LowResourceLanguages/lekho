@@ -25,24 +25,57 @@
 FindDialog::FindDialog(BanglaTextEdit *bte, QString name, QWidget *parent)// ,  Parser *p, FontConverter *fc )
  : QDialog(parent, name)
 {
-	setGeometry(20,20,300,100);
+	setGeometry(parent->x()+ parent->width()-300, parent->y()+ parent->height()-100,300,100);
+
 	findedit = new BanglaLineEdit(bte, name, this);//this, name, p, fc);
-	findedit->setGeometry(100,10,200,30);
+	findedit->setGeometry(105,3,190,30);
 
 	replaceedit = new BanglaLineEdit(bte, name, this);//this, name, p, fc);
-	replaceedit->setGeometry(100,45,200,30);
+	replaceedit->setGeometry(105,35,190,30);
 
 	QPushButton *findbtn = new QPushButton("&Find",this) ;
 	QPushButton *replacebtn = new QPushButton("&Replace",this) ;
-	QPushButton *okbtn = new QPushButton("&Close",this) ;
+	QPushButton *allbtn = new QPushButton("&All",this) ;
+	QPushButton *skipbtn = new QPushButton("&Skip",this) ;
+	QPushButton *topbtn = new QPushButton("&Top",this) ;
+
+	findbtn->setGeometry(5,3,90,30);
+	replacebtn->setGeometry(5,35,90,30);
+	allbtn->setGeometry(5,67,90,30);
+	skipbtn->setGeometry(105,67,90,30);
+	topbtn->setGeometry(205,67,90,30);
 
 	connect( findedit, SIGNAL(returnPressed()), this, SLOT(findPressed()));
-	findedit->show();
+	connect( findbtn, SIGNAL(clicked()), this, SLOT(findPressed()));
+	connect( replaceedit, SIGNAL(returnPressed()), this, SLOT(replacePressed()));
+	connect( replacebtn, SIGNAL(clicked()), this, SLOT(replacePressed()));
+	connect( skipbtn, SIGNAL(clicked()), this, SLOT(findPressed()));	//eqiv to skipping
+
+	connect( topbtn, SIGNAL(clicked()), this, SLOT(topPressed()));
+
+	findedit->show();findedit->setFocus();
 	replaceedit->show();
+
 	this->show();
 }
 
 void FindDialog::findPressed()
 {
 	emit	find(findedit->unicode()) ;
+}
+
+void FindDialog::replacePressed()
+{
+	if(!findedit->unicode().isEmpty())
+	{
+		QStringList l;
+		l += findedit->unicode() ;
+		l += replaceedit->unicode() ;
+		emit replace(l);
+	}
+}
+
+void FindDialog::topPressed()
+{
+	emit	top();
 }

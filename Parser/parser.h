@@ -79,11 +79,11 @@ protected:
 		MODIF
 	};
 
-	CodeTreeElement modifiable,	//shoroborno, consonants and conjuncts
-			unmodifiable,	//banjonborno, cant have kar stuck to them
-			modifier;	//kar vowel sounds added to consonants or ligatures
+	CodeTreeElement *modifiable,	//shoroborno, consonants and conjuncts
+			*unmodifiable,	//banjonborno, cant have kar stuck to them
+			*modifier;	//kar vowel sounds added to consonants or ligatures
 
-	CodeTreeElement* codeTreePointer ;	//where we are now on the transliteration tree
+	CodeTreeElement *codeTreePointer ;	//where we are now on the transliteration tree
 
 	ParserState 	state ,		//the state of this machine
 			lastState ;	//previous state, only needed with escape sequences
@@ -97,10 +97,11 @@ protected:
 public:
 
 	Parser();
+	Parser(Parser *);
 	~Parser();
 
 protected:
-	void	addToTree(CodeTreeElement &C, QString letter, QString u);
+	void	addToTree(CodeTreeElement *C, QString letter, QString u);
 	bool	loadCodeFileLine(QTextStream &file, TreeIdentifier id);
 
 public:

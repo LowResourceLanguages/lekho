@@ -178,9 +178,9 @@ ApplicationWindow::ApplicationWindow()
 
     menuBar()->insertSeparator();
 
-    //Options
+    //Edit
     QPopupMenu *edit = new QPopupMenu( this );
-    edit->insertItem( "Find", this, SLOT(find()), CTRL+Key_F3 );
+    edit->insertItem( "Find", this, SLOT(find()), Key_F3 );
 
     //Options
     QPopupMenu * options = new QPopupMenu( this );
@@ -520,6 +520,8 @@ void ApplicationWindow::find()
 	//FindDialog *fd = new FindDialog(this,"Find", e->getParser(), e->getFontConverter());
 	FindDialog *fd = new FindDialog(e, "Find", this);
 	connect(fd, SIGNAL(find(const QString &)), e, SLOT(highlightWord(const QString &)) );
+	connect(fd, SIGNAL(replace(const QStringList &)), e, SLOT(replaceWord(const QStringList &)) );
+	connect(fd, SIGNAL(top()), e, SLOT(top()) );
 }
 
 void ApplicationWindow::setWordWrap(bool ww)

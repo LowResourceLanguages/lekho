@@ -845,7 +845,6 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 
 	if(line2 > line1)
 	{
-		//documentLine[line1].del(col1,-1,bll) ;
 		(*documentLineAt(line1)).del(col1,-1,bll) ;
 		joinLine(line1);
 
@@ -857,7 +856,6 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 		if(col2 < (int)(*documentLineAt(line2)).letterCount())
 		{
 			//just delete on this para
-			//documentLine[line1].del(col1,col2 - col1 + 1,bll) ;
 			(*documentLineAt(line1)).del(col1,col2 - col1 + 1,bll) ;
 			wrapParagraph(line1, linecol.y());
 			return true ;
@@ -865,7 +863,6 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 		else
 		{
 			//delete on this para, and join the next one
-			//documentLine[line1].del(col1,col2 - col1 + 1,bll) ;
 			(*documentLineAt(line1)).del(col1,col2 - col1 + 1,bll) ;
 			joinLine(line1);
 			return true ;
@@ -877,16 +874,13 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 
 	for(int line = line1 + 1 ; line < line2 ; line++)
 	{
-		//documentLine.remove(documentLine.at(line1+1));
 		documentLine.remove(documentLineAt(line1+1));
 		removeScreenLines(line, newline);
 	}
 
 	for(int i = newline ; i < (int)screenMapLine.count() ; i++)
-		//screenMapLine[i].para -= (line2 - line1 - 1);
 		(*screenMapLineAt(i)).para -= (line2 - line1 - 1);
 
-//	documentLine[line2].del(0,col2+1,bll);	//need to check this....
 	(*documentLineAt(line2)).del(0,col2+1,bll);	//need to check this....
 	joinLine(line1);
 

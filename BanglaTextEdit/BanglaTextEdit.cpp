@@ -121,8 +121,8 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 	setFonts(bte->banglaFont , bte->englishFont );
 	setTabWidth(bte->tabWidth);
 
-	//bangla = new Parser(bte->bangla) ;	//need to copy the parser over, sicne it has a state
-	bangla = bte->bangla ;
+	bangla = new Parser(bte->bangla) ;	//need to copy the parser over, sicne it has a state
+	//bangla = bte->bangla ;
 	lipi = bte->lipi ;			//lipi has no state, can share it
 
 	_wecreatedBangla = false ;
@@ -314,6 +314,22 @@ void BanglaTextEdit::splitLine(int para, int col)
 	viewport()->update();
 }
 
+void BanglaTextEdit::top()
+{
+	cursorErase();
+	theCursor.paracol.setX(0) ;
+	theCursor.paracol.setY(0) ;
+	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+	cursorDraw();
+
+	//another leetle hack -10
+	ensureVisible ( theCursor.xy.x() - 10 , theCursor.xy.y() + theDoc.getLineHeight(),
+			10, theDoc.getLineHeight()) ;
+
+	viewport()->update();
+}
+
+
 //function::highlightWord
 void BanglaTextEdit::highlightWord(const QString &wd)
 {
@@ -338,9 +354,47 @@ void BanglaTextEdit::highlightWord(const QString &wd)
 		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 		cursorDraw();
 
+		//another leetle hack -10
+		ensureVisible ( theCursor.xy.x() - 10 , theCursor.xy.y() + theDoc.getLineHeight(),
+				10, theDoc.getLineHeight()) ;
+
 		viewport()->update();
 	}
+	else	//go to top
+	{
+		top();
+	}
 
+}
+
+//function::replaceWord
+void BanglaTextEdit::replaceWord(const QStringList &w)
+{
+	QPoint paracolStart = theCursor.paracol ,
+		paracolEnd(theDoc.lettersInLine(theDoc.totalLines()-1)-1,
+			theDoc.totalLines()-1) ;
+	QPoint selStart(-1,-1), selEnd(-1,-1) ;
+	theDoc.findWord(selStart, selEnd, w[0], paracolStart, paracolEnd);
+
+	if( (selStart.x() > -1) && (selEnd.x() > -1) )
+	{
+		cursorErase();
+		theCursor.paracol = selEnd ;
+
+		del(selStart.y(), selStart.x(), selEnd.y(), selEnd.x());
+		theCursor.paracol.setX( theCursor.paracol.x() + insert(selStart.y(), selStart.x(), w[1]) );
+
+		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+		cursorDraw();
+
+		//another leetle hack -10
+		ensureVisible ( theCursor.xy.x() - 10 , theCursor.xy.y() + theDoc.getLineHeight(),
+				10, theDoc.getLineHeight()) ;
+
+		viewport()->update();
+	}
+	else
+		top();
 }
 
 //get an existing one
@@ -611,7 +665,7 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 	}
 
 	//draw the cursor
-        if (theCursor.cursorOn)
+        if (theCursor.cursorOn && viewport()->hasFocus())
         {
 		QRect cursorRect = calculateCursorRect();
 

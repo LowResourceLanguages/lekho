@@ -190,6 +190,7 @@ public:
 
 
 
+
 public slots:
 
 	void wordWrapOn();
@@ -197,9 +198,12 @@ public slots:
 	void cursorBlinkOn();
 	void cursorBlinkOff();
 
+	void top();	//go to document start ;
+
 	//experimental stage...
 	//find ops
 	void highlightWord(const QString &wd); //, bool onlySelected = false);
+	void replaceWord(const QStringList &w);
 
 	// clipboard ops ////////////////////////////////////////////////////////////
 private slots:
