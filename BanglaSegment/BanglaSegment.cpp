@@ -36,7 +36,7 @@ void segment(const QString &a, QValueList<QString> &out)
 		0x098c,0x098f,0x0990,0x0993,0x0994,
 		0x09e6,0x09e7,0x09e8,0x09e9,0x09ea,0x09eb,0x09ec,0x09ed,0x09ee,0x09ef,0x09f7};
 
-	QChar candrabindu(0x0981), ligature(0x09cd), zwnj(0x200c);
+	QChar candrabindu(0x0981), ligature(0x09cd), zwnj(0x200c), zwj(0x200d);
 
 	QString kar, vowel;
 	kar.setUnicodeCodes(_kar, 10);
@@ -111,8 +111,8 @@ void segment(const QString &a, QValueList<QString> &out)
 					}
 					//its a consonant or zwnj
 					else
-						//its a zwnj, that completes the character
-						if( a[i] == zwnj )
+						//its a zwnj or a zwj, that completes the character
+						if( (a[i] == zwnj) | (a[i] == zwj) )
 						{
 							temp += a[i];
 							out.append(temp);

@@ -36,6 +36,7 @@ inline bool isBangla(const QChar &text)
 		case 0x0964:	//dari
 		case 0x0965:	//double dari
 		case 0x200c:	//zwnj
+		case 0x200d:	//zwj
 			return true ;
 			break;
 		default:
