@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file '.\infowindow_base.ui'
 **
-** Created: Sun Apr 4 12:58:19 2004
+** Created: Tue Apr 13 09:50:46 2004
 **      by:  The User Interface Compiler (uic)
 **
 ** WARNING! All changes made in this file will be lost!

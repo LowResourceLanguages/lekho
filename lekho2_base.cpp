@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file '.\lekho2_base.ui'
 **
-** Created: Sun Apr 4 10:49:19 2004
+** Created: Tue Apr 13 09:50:46 2004
 **      by:  The User Interface Compiler (uic)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -28,7 +28,7 @@ Lekho2_base::Lekho2_base( QWidget* parent,  const char* name, WFlags fl )
 {
     if ( !name )
 	setName( "Lekho2_base" );
-    resize( 564, 480 ); 
+    resize( 560, 510 ); 
     setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, sizePolicy().hasHeightForWidth() ) );
     setCaption( tr( "Form1" ) );
     setFocusPolicy( QWidget::ClickFocus );
@@ -47,20 +47,10 @@ Lekho2_base::Lekho2_base( QWidget* parent,  const char* name, WFlags fl )
 
     Lekho2_baseLayout->addWidget( paragraphSlider, 1, 4 );
 
-    mainEdit = new BanglaMultilineEdit( this, "mainEdit" );
-    mainEdit->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, mainEdit->sizePolicy().hasHeightForWidth() ) );
-    mainEdit->setFocusPolicy( BanglaMultilineEdit::StrongFocus );
-    QToolTip::add(  mainEdit, tr( "" ) );
-    QWhatsThis::add(  mainEdit, tr( "This is the main text area. Enter bangla/english text here. Use esc to switch keymaps" ) );
-
-    Lekho2_baseLayout->addMultiCellWidget( mainEdit, 1, 1, 0, 3 );
-
     TextLabel1 = new QLabel( this, "TextLabel1" );
     TextLabel1->setText( tr( "Jump to para" ) );
 
     Lekho2_baseLayout->addWidget( TextLabel1, 0, 0 );
-    QSpacerItem* spacer = new QSpacerItem( 20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum );
-    Lekho2_baseLayout->addItem( spacer, 0, 2 );
 
     jumpToParaEdit = new QComboBox( FALSE, this, "jumpToParaEdit" );
     jumpToParaEdit->setEditable( TRUE );
@@ -69,9 +59,21 @@ Lekho2_base::Lekho2_base( QWidget* parent,  const char* name, WFlags fl )
 
     Lekho2_baseLayout->addWidget( jumpToParaEdit, 0, 1 );
 
+    mainEdit = new BanglaMultilineEdit( this, "mainEdit" );
+    mainEdit->setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, mainEdit->sizePolicy().hasHeightForWidth() ) );
+    mainEdit->setFocusPolicy( BanglaMultilineEdit::StrongFocus );
+    QToolTip::add(  mainEdit, tr( "" ) );
+    QWhatsThis::add(  mainEdit, tr( "This is the main text area. Enter bangla/english text here. Use esc to switch keymaps" ) );
+
+    Lekho2_baseLayout->addMultiCellWidget( mainEdit, 1, 1, 0, 3 );
+    QSpacerItem* spacer = new QSpacerItem( 20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum );
+    Lekho2_baseLayout->addMultiCell( spacer, 0, 0, 2, 3 );
+    QSpacerItem* spacer_2 = new QSpacerItem( 20, 20, QSizePolicy::Expanding, QSizePolicy::Minimum );
+    Lekho2_baseLayout->addItem( spacer_2, 2, 3 );
+
     infoEdit = new QLineEdit( this, "infoEdit" );
 
-    Lekho2_baseLayout->addWidget( infoEdit, 0, 3 );
+    Lekho2_baseLayout->addMultiCellWidget( infoEdit, 2, 2, 0, 2 );
 
     // signals and slots connections
     connect( infoEdit, SIGNAL( returnPressed() ), this, SLOT( setJumpParagraph_slot() ) );
@@ -91,6 +93,11 @@ Lekho2_base::~Lekho2_base()
 void Lekho2_base::mouse_pos_slot(int,int)
 {
     qWarning( "Lekho2_base::mouse_pos_slot(int,int): Not implemented yet!" );
+}
+
+void Lekho2_base::unicode_under_cursor_slot(const QString&)
+{
+    qWarning( "Lekho2_base::unicode_under_cursor_slot(const QString&): Not implemented yet!" );
 }
 
 void Lekho2_base::setCurrentParagraph_slot(int)

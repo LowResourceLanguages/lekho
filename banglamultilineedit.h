@@ -148,8 +148,15 @@ public:
 	int expandAtBottom(Segmenter &seg, FontConverter &conv, int screen_width, Paragraph &para);//add this to bottom of chunk, return how many lines in this para
 	int removeAtTop();	//kaput the topmost screen para, return lines lost
 	int removeAtBottom();	//kaput the topmost screen para, return lines lost
-	int insertInMiddle();
 	
+	//random access for inserts, including pultiple para inserts
+	//same as expand at top/bottom, except you send in a paragraph list and an int
+	//telling you at what screen para the insert was done.
+	//The function's job is to then wipe this screen para and add as many new ones at that point
+	//as there are in ParagraphList
+	int insertInMiddle(Segmenter &seg, FontConverter &conv, int screen_width, ParagraphList &para, int screen_para);
+	
+
 	int screenLinesTopPara() {return screen_lines_top_para ;}
 	int screenLinesLastPara() {return screen_lines_last_para ;}
 
@@ -269,6 +276,9 @@ private:
 public:
 	BanglaMultilineEdit( QWidget *parent=0, QString name=0);
 
+	//fonts
+	void setFonts(QFont &b_f, QFont &e_f);
+
 	//computation for drawing
 	void recomputeScreenMatrix(int screen_width, int screen_height);//done when we resize, or load
 	void scrollEvent(int top_y, int bottom_y, int screen_width);//used when we scroll, page up, down etc
@@ -325,6 +335,8 @@ signals:
 	void currentParagraph_signal(int);
 	void paragraphCount_signal(int);
 	void linesOnScreen_signal(int);
+
+	void unicode_under_cursor_signal(const QString &);
 	void mouse_pos_signal(int, int);
 
 public slots:

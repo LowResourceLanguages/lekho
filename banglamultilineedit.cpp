@@ -8,6 +8,14 @@
 //and instead prepare to paint the next segment on the next line...
 bool ScreenImage::getSegment(QString &screen_text, FontType &font)//update the iterator
 {
+	//we have an empty scren image (no document)
+	if(segment_list_iter == segment_list.end())
+	{
+		screen_text = "";
+		font = English ;
+		return false ;
+	}
+
 	screen_text = (*segment_list_iter).segment ;
 	font = (*segment_list_iter).font ;
 	if( segment_list_iter == segment_list.end() )
@@ -131,6 +139,68 @@ int ScreenMatrix::removeAtBottom()
 	screen_lines_last_para = screen_paragraph.last().height_in_lines ;
 
 	return lines ;
+}
+
+//random access for inserts, including pultiple para inserts
+//same as expand at top/bottom, except you send in a paragraph list and an int
+//telling you at what screen para the insert was done.
+//The function's job is to then wipe this screen para and add as many new ones at that point
+//as there are in ParagraphList
+//return how many screen lines have been inserted
+int ScreenMatrix::insertInMiddle(Segmenter &seg, FontConverter &conv, int screen_width, ParagraphList &para_list, int screen_para)
+{
+	//how many net lines did this operation add
+	int cumulative_lines = 0 ;
+
+	if(screen_paragraph.count() > 0)
+	//i.e. we have existing screen paras
+	{
+		//figure out where to jump
+		//gotta jump down
+		for(int m = screen_paragraph_int ; m < screen_para ; m++)
+		{
+			screen_paragraph_iter++;
+			screen_paragraph_int++;
+		}
+		//gotta jump up
+		for(int n = screen_paragraph_int ; n > screen_para ; n--)
+		{
+			screen_paragraph_iter--;
+			screen_paragraph_int--;
+		}
+
+		int lines_removed = (*screen_paragraph_iter).height_in_lines ;
+		cumulative_lines -= lines_removed ;
+		expanded_chunk_height -= lines_removed * line_height ;
+		screen_paragraph_iter = screen_paragraph.remove(screen_paragraph_iter);
+	}
+	else
+	//this is an insert into an empty docu
+	{
+		screen_paragraph_iter = screen_paragraph.end();
+		screen_paragraph_int = 0;
+	}
+
+	ScreenParagraphList_iterator sp_iter = screen_paragraph_iter;
+
+	//confucious say "To avoid problem with QValueList inserts with iterators
+	//insert backwards"
+	ParagraphList_iterator p_iter = para_list.end();
+	while( p_iter != para_list.begin())
+	{
+		p_iter-- ;
+		//QString haha = (*p_iter).text ;
+		ScreenParagraph new_screen_para ;
+		int lines = static_wordWrap(seg, conv, screen_width, (*p_iter), new_screen_para);
+		expanded_chunk_height += lines * line_height ;
+		screen_paragraph_iter = screen_paragraph.insert(screen_paragraph_iter,new_screen_para);
+		cumulative_lines += lines ;
+	}
+
+	screen_lines_top_para = screen_paragraph.first().height_in_lines ;
+	screen_lines_last_para = screen_paragraph.last().height_in_lines ;
+
+	return cumulative_lines ;
 }
 
 int ScreenMatrix::static_wordWrap(Segmenter &seg, FontConverter &conv, int screen_width, Paragraph &para, ScreenParagraph &sp)
@@ -291,7 +361,21 @@ bool ScreenMatrix::cursorXY(int para, int letter,
 							int &x, int &y)
 {
 	if( (para < 0) | (para >= (int)screen_paragraph.count()) )
-		return false ;
+	{
+		if(screen_paragraph.count() == 0)
+		{
+			//caveat, if we have an empty docu, then we should actually position the cursor
+			//at the start, and not just return false and be done with it
+			character = 0 ;
+			letter_len = 0 ;
+			letter_iter = NULL;
+			x = 0;
+			y = 0;
+			return true ;
+		}
+		else
+			return false ;
+	}
 
 	//at this stage our cursor is within the expanded chunk
 	ScreenParagraphList_iterator sp_iter = screen_paragraph.begin() ;
@@ -442,6 +526,8 @@ int ScreenMatrix::howManyLettersInPara(int para)
 	return screen_paragraph[ para ].ll.count();
 }
 
+
+//also slow....
 void ScreenMatrix::linesInParagraphs(int lines[1000])
 {
 	int i ;
@@ -511,11 +597,18 @@ BanglaMultilineEdit::BanglaMultilineEdit( QWidget *parent, QString name)
 
 	paragraphs_below = paragraph.count();
 
-	converter.setScreenFont(English, font());
-	screen_matrix.setLineHeight(QFontMetrics(font()).height());
+	//font initialisation
+	QFont bangla_f ;
+	bangla_f.setFamily("ekushey");
+	bangla_f.setPointSize(16);
+
+//	setFonts(font(), font());/////////////////////////////////////////DEEEEEEEEEEEEEEEEEEEEBUUUUUUUUUUUUUUUUUUUUUUUUUGGGGGGGGGGGGGGGGGGGGGGGGG
+
+	setFonts(bangla_f, font());
+	
 
 	setVScrollBarMode(QScrollView::AlwaysOff);
-	//setHScrollBarMode(QScrollView::AlwaysOn);
+
 
 	visible_text_width = visibleWidth() - left_text_margin - right_text_margin;
 	visible_text_height = visibleHeight() - top_text_margin - bottom_text_margin ;
@@ -525,6 +618,22 @@ BanglaMultilineEdit::BanglaMultilineEdit( QWidget *parent, QString name)
 	//for debugging !
 	viewport()->setMouseTracking(true);
 
+}
+
+
+void BanglaMultilineEdit::setFonts(QFont &b_f, QFont &e_f)
+{
+	//font initialisation
+	converter.setScreenFont(English, e_f);
+	converter.setScreenFont(Bangla, b_f);
+
+	int bf_lh = QFontMetrics(b_f).height(),
+		ef_lh = QFontMetrics(e_f).height(),
+		lh = bf_lh ;
+
+	if(lh < ef_lh)
+		lh = ef_lh ;
+	screen_matrix.setLineHeight(lh);
 }
 
 //used when we load file, or resize or jump to an arbitrary location
@@ -537,7 +646,7 @@ void BanglaMultilineEdit::recomputeScreenMatrix(int screen_width, int screen_hei
 	if (paragraph.isEmpty())
 		return;
 
-	screen_matrix.setLineHeight(QFontMetrics(font()).height());
+	//screen_matrix.setLineHeight(QFontMetrics(font()).height());
 	screen_matrix.clear();
 	expanded_chunk_top_y = 0;
 	paragraphs_below = paragraph.count() - paragraphs_above ;
@@ -782,6 +891,9 @@ void BanglaMultilineEdit::resizeEvent(QResizeEvent *re)
 //function::drawContents
 void BanglaMultilineEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 {	
+
+	QFont regularFont = font();
+
 	QPixmap::setDefaultOptimization( QPixmap::BestOptim );
 	QPixmap pm(visibleWidth(), visibleHeight());
 	pm.fill(background);
@@ -806,13 +918,16 @@ void BanglaMultilineEdit::drawContents(QPainter *p, int cx, int cy, int cw, int 
 		line_number = 0,
 		lineHeight = img.line_height ;
 
+	QFont ft ;
 	img.getSegment(screen_text, font_type);
 	int new_max_width = 0 ;
 	do
 	{
 		if(screen_text != "\n")
 		{
-			segmentWidth = QFontMetrics(font()).width(screen_text);
+			converter.getScreenFont(font_type, ft) ;
+			segmentWidth = QFontMetrics(ft).width(screen_text);
+			ptr->setFont(ft);
 			ptr->drawText( x, y, screen_text);
 			x += segmentWidth ;
 		}
@@ -828,10 +943,13 @@ void BanglaMultilineEdit::drawContents(QPainter *p, int cx, int cy, int cw, int 
 	}
 	while(img.getSegment(screen_text, font_type));
 
+	setFont(regularFont);
+	ptr->setFont(font());
+	//////////////////////////////////////////// DON'T MESS W FONT AFTRE THIS....
+
 	//draw the margin
 	ptr->drawLine( left_text_margin -5, 0,left_text_margin -5, visibleHeight());
 	
-
 	//draw the para numbers
 	drawParaNumbers(ptr);
 
@@ -930,10 +1048,36 @@ bool BanglaMultilineEdit::saveFile(QString &fname)
 }
 
 //call this everytime you mess with the text
-//DUMMY IMPLEMENTATION VERY COSTLY
+
 void BanglaMultilineEdit::paraChanged(ParagraphList_iterator p_iter, int paras)
 {
-	recomputeScreenMatrix(visible_text_width, visible_text_height);
+	//bit of a hack, not too ugly. we need some inits, that only recomputescrenmatrix
+	//does, when we start a new docu...
+//	if(paragraph.count() < 2)
+//	{
+//		if(paragraph[0].text.length() > 1)
+//		{
+//			recomputeScreenMatrix(visible_text_width, visible_text_height);
+//			return ;
+//		}
+//	}
+
+	//p_iter is bound to be lower that expanded_chunk_top_para_iter
+	int screen_para = 0 ;
+	ParagraphList_iterator counter_iter = p_iter ;	
+	//we just need this to compute how far we are from the start of the expanded_chunk
+	while(counter_iter != expanded_chunk_top_para_iter)
+	{
+		screen_para++;
+		counter_iter--;
+	}
+
+	ParagraphList para_list ;
+	for(int n = 0 ; n < paras ; n++)
+		para_list.append(*(p_iter++));
+
+	screen_matrix.insertInMiddle(segmenter, converter , visible_text_width, para_list, screen_para);
+
 }
 
 //insert this into current cursor position
@@ -1112,12 +1256,14 @@ void BanglaMultilineEdit::keyPressEvent(QKeyEvent *event)
 
 		case	Key_Return:
 			insertText("\n");
+			cursorLetterRight(1);
 			viewport()->update();
 			break;
 
 		default:
 			//parser.keystrokeToUnicode(key_seq, letter);
 			insertText(event->text());
+			cursorLetterRight(1);
 			viewport()->update();
 			break;
 	}
@@ -1168,6 +1314,8 @@ void BanglaMultilineEdit::makeCursorVisible()
 			cursor_position.letter_iter,
 			x, y);
 	}
+
+//	emit unicode_under_cursor_signal((*cursor_position.para_iter).text.mid(cursor_position.character-1,cursor_position.letter_len));
 }
 
 
@@ -1180,7 +1328,7 @@ void BanglaMultilineEdit::cursorLetterRight(int n_lett)
 	if(cursor_position.letter > 
 		screen_matrix.howManyLettersInPara(cursor_position.para - paragraphs_above) )
 	{
-		if(cursor_position.para < paragraph.count()-1)
+		if(cursor_position.para < (int)paragraph.count()-1)
 		{
 			cursor_position.para++ ;
 			cursor_position.para_iter++;
@@ -1222,9 +1370,7 @@ void BanglaMultilineEdit::cursorLineDown(int n_lines)
 	
 	int old_y = y ;
 
-	int aaa = y - expanded_chunk_top_y - top_text_margin + screen_matrix.getLineHeight();
-	
-	if((y - expanded_chunk_top_y - top_text_margin + screen_matrix.getLineHeight()) > visible_text_height)
+	if((y - expanded_chunk_top_y - top_text_margin + screen_matrix.getLineHeight()) >= visible_text_height)
 	{
 		screenLineDown();
 		getCursorXY(x,y);

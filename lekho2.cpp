@@ -9,14 +9,17 @@ Lekho2::Lekho2( QWidget* parent,  const char* name, WFlags fl )
 {
 	connect(mainEdit, SIGNAL(currentParagraph_signal(int)), this, SLOT(setCurrentParagraph_slot(int)));
 	connect(mainEdit, SIGNAL(paragraphCount_signal(int)), this, SLOT(setParagraphCount_slot(int)));
-	connect(mainEdit, SIGNAL(mouse_pos_signal(int,int)), this, SLOT(mouse_pos_slot(int,int)));
+//	connect(mainEdit, SIGNAL(mouse_pos_signal(int,int)), this, SLOT(mouse_pos_slot(int,int)));
+	connect(mainEdit, SIGNAL(unicode_under_cursor_signal(const QString &)), this, SLOT(unicode_under_cursor_slot(const QString &)));
 
 	setParagraphCount_slot(0);
 
 	//for testing
 	//mainEdit->loadFile( QString("test2.txt") );
-	//mainEdit->loadFile( QString("one_line.txt") );
-	mainEdit->loadFile( QString("../idle_thoughts.txt") );
+	mainEdit->loadFile( QString("one_line.txt") );
+	//mainEdit->loadFile( QString("../idle_thoughts.txt") );
+	//mainEdit->loadFile( QString("juktolist.txt") );
+	//mainEdit->loadFile( QString("baanshi.bn.htm") );
 }
 
 
@@ -54,7 +57,17 @@ void Lekho2::setCurrentParagraph_slot(int cp)
 	jumpToParaEdit->lineEdit()->setText(QString::number(cp));
 }
 
+//prints variou bits of info
 void Lekho2::mouse_pos_slot(int x, int y)
 {
 	infoEdit->setText(QString::number(x) + "," + QString::number(y));
+}
+
+void Lekho2::unicode_under_cursor_slot(const QString &uc)
+{
+	QString out ;
+	for(int i = 0 ; i < (int)uc.length() ; i++)
+		out += "0x0" + QString::number(uc[i].unicode(),16) + ", ";
+
+	infoEdit->setText(out);
 }

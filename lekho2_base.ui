@@ -11,8 +11,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>564</width>
-            <height>480</height>
+            <width>560</width>
+            <height>510</height>
         </rect>
     </property>
     <property stdset="1">
@@ -74,6 +74,36 @@
                 <number>1</number>
             </property>
         </widget>
+        <widget row="0"  column="0" >
+            <class>QLabel</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>TextLabel1</cstring>
+            </property>
+            <property stdset="1">
+                <name>text</name>
+                <string>Jump to para</string>
+            </property>
+        </widget>
+        <widget row="0"  column="1" >
+            <class>QComboBox</class>
+            <property stdset="1">
+                <name>name</name>
+                <cstring>jumpToParaEdit</cstring>
+            </property>
+            <property stdset="1">
+                <name>editable</name>
+                <bool>true</bool>
+            </property>
+            <property>
+                <name>toolTip</name>
+                <string>Enter para here, or drop down to go to last para</string>
+            </property>
+            <property>
+                <name>whatsThis</name>
+                <string>Enter paragraph number here to jump directly there. The dropdown has one value, which is the number of the last paragraph.</string>
+            </property>
+        </widget>
         <widget row="1"  column="0"  rowspan="1"  colspan="4" >
             <class>BanglaMultilineEdit</class>
             <property stdset="1">
@@ -100,18 +130,7 @@
                 <string>This is the main text area. Enter bangla/english text here. Use esc to switch keymaps</string>
             </property>
         </widget>
-        <widget row="0"  column="0" >
-            <class>QLabel</class>
-            <property stdset="1">
-                <name>name</name>
-                <cstring>TextLabel1</cstring>
-            </property>
-            <property stdset="1">
-                <name>text</name>
-                <string>Jump to para</string>
-            </property>
-        </widget>
-        <spacer row="0"  column="2" >
+        <spacer row="0"  column="2"  rowspan="1"  colspan="2" >
             <property>
                 <name>name</name>
                 <cstring>Spacer1</cstring>
@@ -132,26 +151,28 @@
                 </size>
             </property>
         </spacer>
-        <widget row="0"  column="1" >
-            <class>QComboBox</class>
-            <property stdset="1">
+        <spacer row="2"  column="3" >
+            <property>
                 <name>name</name>
-                <cstring>jumpToParaEdit</cstring>
-            </property>
-            <property stdset="1">
-                <name>editable</name>
-                <bool>true</bool>
+                <cstring>Spacer2</cstring>
             </property>
             <property>
-                <name>toolTip</name>
-                <string>Enter para here, or drop down to go to last para</string>
+                <name>orientation</name>
+                <enum>Horizontal</enum>
             </property>
             <property>
-                <name>whatsThis</name>
-                <string>Enter paragraph number here to jump directly there. The dropdown has one value, which is the number of the last paragraph.</string>
+                <name>sizeType</name>
+                <enum>Expanding</enum>
             </property>
-        </widget>
-        <widget row="0"  column="3" >
+            <property>
+                <name>sizeHint</name>
+                <size>
+                    <width>20</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget row="2"  column="0"  rowspan="1"  colspan="3" >
             <class>QLineEdit</class>
             <property stdset="1">
                 <name>name</name>
@@ -211,6 +232,7 @@
         <slot>jumpToPara_slot(int)</slot>
     </connection>
     <slot access="public">mouse_pos_slot(int,int)</slot>
+    <slot access="public">unicode_under_cursor_slot(const QString&amp;)</slot>
     <slot access="public">setCurrentParagraph_slot(int)</slot>
     <slot access="public">setJumpParagraph_slot()</slot>
     <slot access="public">setParagraphCount_slot(int)</slot>

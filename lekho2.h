@@ -30,7 +30,7 @@ public slots:
 
 	//debugging
 	void mouse_pos_slot(int,int);
-
+	void unicode_under_cursor_slot(const QString &uc);
 
 	//file ops
 	void openFile(QString &fname);

@@ -21,6 +21,10 @@ enum FontType
 	English
 };
 
+//this tells you what language this is. Remember, "text" is assumed to be one letter in
+//whatever language
+FontType language(const QString &text) ;
+
 //this structure contains relevant information about each letter on screen
 //a new line has zero width
 //12 bytes

@@ -2,15 +2,40 @@
 #ifndef _SEGMENTER_H
 #define _SEGMENTER_H
 
+#include "banglaunicode.h"
 #include "structures.h"
 
-//this tells you what language this is. Remember, "text" is assumed to be one letter in
-//whatever language
-FontType language(QString &text) ;
+enum States
+{
+	P = 0,	//STATE_PRINT = 0,
+	P_J,	//STATE_PRINT_JUMP,
+	C,		//STATE_CONSONANT,
+	C_H,	//STATE_CONSONANT_HOS,
+	C_V		//STATE_CONSONANT_VM
+} ;
 
 class Segmenter
 {
+	QString vowel_string,
+			vowel_modifier_string,
+			special_stop_string,
+			consonant_string,
+			punctuation_mark_string,
+			hoshonto_string,
+			zwnj_string,
+			zwj_string;
+
+	QString ready_letter, buffer ;
+
+	States state ;
+
+private:
+	void step(QCharRef k);//run the statemachine with this input
+	CharacterType charClass(QCharRef k);
+
 public:
+
+	Segmenter();
 	void segment(QString &in, LetterList &ll);
 	//remember this leaves all the screen_font variables blank, use fontconverter to compute these
 };

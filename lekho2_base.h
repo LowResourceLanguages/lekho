@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file '.\lekho2_base.ui'
 **
-** Created: Sun Apr 4 10:49:19 2004
+** Created: Tue Apr 13 09:50:46 2004
 **      by:  The User Interface Compiler (uic)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -29,13 +29,14 @@ public:
     ~Lekho2_base();
 
     QSlider* paragraphSlider;
-    BanglaMultilineEdit* mainEdit;
     QLabel* TextLabel1;
     QComboBox* jumpToParaEdit;
+    BanglaMultilineEdit* mainEdit;
     QLineEdit* infoEdit;
 
 public slots:
     virtual void mouse_pos_slot(int,int);
+    virtual void unicode_under_cursor_slot(const QString&);
     virtual void setCurrentParagraph_slot(int);
     virtual void setJumpParagraph_slot();
     virtual void setParagraphCount_slot(int);
