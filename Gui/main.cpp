@@ -55,8 +55,13 @@ void showLicense()
 int main( int argc, char ** argv )
 {
     QApplication a( argc, argv );
-    ApplicationWindow * mw = new ApplicationWindow();
-    mw->setCaption( "Lekho" );
+
+    QStringList fileList ;
+    for(int i = 1 ; i < a.argc() ; i++)
+    	fileList.append( a.argv()[i] );
+
+    ApplicationWindow * mw = new ApplicationWindow( fileList );
+    //mw->setCaption( "Lekho" );
     mw->show();
     a.connect( &a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()) );
 

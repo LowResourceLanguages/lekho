@@ -32,6 +32,7 @@
 
 #include "application.h"
 #include <bangla.h>
+#include <startup.h>
 
 #include <qaction.h>
 #include <qaccel.h>
@@ -77,7 +78,7 @@ QString stripFileName(const QString &fn)
 /*
  * Just fill 'er up with all the buttons and things you want
  */
-ApplicationWindow::ApplicationWindow()
+ApplicationWindow::ApplicationWindow(QStringList &sl)
     : QMainWindow( 0, "Lekho", WDestructiveClose )
 {
     printer = new QPrinter;
@@ -263,6 +264,20 @@ ApplicationWindow::ApplicationWindow()
 
     setGeometry(thePref.pos);
 
+    if(sl.count() > 0)
+    {
+    	load(sl[0]);
+	if(sl.count() > 1)
+	{
+		QStringList fileList ;
+		for(int i = 1 ; i < (int)sl.count() ; i++)
+			fileList.append(sl[i]) ;
+
+		newDoc( fileList);
+	}
+    }
+    else
+    	setCaption("Lekho");
 }
 
 
@@ -413,8 +428,14 @@ void ApplicationWindow::initialiseLatexConverter()
 
 void ApplicationWindow::newDoc()
 {
-    ApplicationWindow *ed = new ApplicationWindow;
-    ed->setCaption("Lekho");
+    QStringList sl ;
+    ApplicationWindow *ed = new ApplicationWindow( sl );
+    ed->show();
+}
+
+void ApplicationWindow::newDoc(QStringList &fl)
+{
+    ApplicationWindow *ed = new ApplicationWindow( fl );
     ed->show();
 }
 

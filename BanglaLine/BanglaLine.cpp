@@ -282,10 +282,12 @@ void BanglaLine::changeFont(QFont &banglaFont, QFont &englishFont)
 	BanglaLetterList::Iterator i ;
 	for(i = letter.begin() ; i != letter.end() ; ++i)
 	{
-		if( ((*i).unicode >= 0x0980) && ((*i).unicode <= 0x09ff) )
+		//if( ((*i).unicode >= 0x0980) && ((*i).unicode <= 0x09ff) )
+		if(isBangla( (*i).unicode[0] ))
 			(*i).width = QFontMetrics(banglaFont).width((*i).screenFont);
 		else
-			(*i).width = QFontMetrics(englishFont).width((*i).unicode);
+			//(*i).width = QFontMetrics(englishFont).width((*i).unicode);
+			(*i).width = QFontMetrics(englishFont).width((*i).screenFont);
 
 		lineWidth += (*i).width ;
 	}

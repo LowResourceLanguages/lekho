@@ -65,6 +65,7 @@ HEADERS = Gui/application.h \
 		include/preferences.h \
 		include/lekhoprefs.h \
 		include/bangla.h \
+		include/startup.h \
 		Parser/parser.h
 SOURCES = Gui/main.cpp \
 		Gui/application.cpp \
@@ -81,6 +82,7 @@ SOURCES = Gui/main.cpp \
 		include/preferences.cpp \
 		include/lekhoprefs.cpp \
 		include/bangla.cpp \
+		include/startup.cpp \
 		Parser/parser.cpp
 OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/application.o \
@@ -97,6 +99,7 @@ OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/preferences.o \
 		$(OBJ_DIR)/lekhoprefs.o \
 		$(OBJ_DIR)/bangla.o \
+		$(OBJ_DIR)/startup.o \
 		$(OBJ_DIR)/parser.o
 FORMS = 
 UICDECLS = 
@@ -180,7 +183,9 @@ $(OBJ_DIR)/main.o: Gui/main.cpp Gui/application.h
 	test -d $(OBJ_DIR)/ || mkdir -p $(OBJ_DIR)/
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/main.o Gui/main.cpp
 
-$(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h include/bangla.h \
+$(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
+		include/bangla.h \
+		include/startup.h \
 		Gui/filesave.xpm \
 		Gui/fileopen.xpm \
 		Gui/fileprint.xpm
@@ -222,6 +227,9 @@ $(OBJ_DIR)/lekhoprefs.o: include/lekhoprefs.cpp include/lekhoprefs.h
 $(OBJ_DIR)/bangla.o: include/bangla.cpp include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/bangla.o include/bangla.cpp
 
+$(OBJ_DIR)/startup.o: include/startup.cpp include/startup.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/startup.o include/startup.cpp
+
 $(OBJ_DIR)/preferences.o: include/preferences.cpp  include/preferences.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/preferences.o include/preferences.cpp
 
@@ -240,6 +248,10 @@ $(OBJ_DIR)/moc_BanglaTextEdit.o: BanglaTextEdit/moc_BanglaTextEdit.cpp
 $(OBJ_DIR)/moc_BanglaLineEdit.o: BanglaTextEdit/moc_BanglaLineEdit.cpp  
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/moc_BanglaLineEdit.o BanglaTextEdit/moc_BanglaLineEdit.cpp
 
+#the file startup.cpp is made automatically by a small c program
+#include/startup.cpp: .lekho/shor.txt .lekho/kar.txt .lekho/jukto.txt .lekho/adarshalipi.txt .lekho/bangtex.txt
+#	$(MAKESTARTUP) .lekho/shor.txt .lekho/kar.txt .lekho/jukto.txt .lekho/adarshalipi.txt .lekho/bangtex.txt include/startup.cpp 
+	 
 Gui/moc_application.cpp: $(MOC) Gui/application.h
 	$(MOC) Gui/application.h -o Gui/moc_application.cpp
 
@@ -268,7 +280,7 @@ install: all
 	@echo "You should be all set. Go into the directory" $(BIN_DIR) "and type ./lekho"
 	@echo "Lekho should start up with defaults"
 	@echo "Look at the help.txt file in the examples directory to get started"
-	@echo "Look at the Personalisation section of thr README file to learn"
+	@echo "Look at the Personalisation section of the README file to learn"
 	@echo "how to change .lekhorc to suit your taste"
 	@echo "Computer-e bangla lekha upobhog korun !"
 	@echo

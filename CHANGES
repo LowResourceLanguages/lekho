@@ -1,11 +1,18 @@
 All changes referenced to v1.0
 
 v1.1
+
+2002.10.31
+1. Fixed bug in changing screen font that didn't handle tabs
+2. Modified shor.txt so that by typing * in front of a kar you can now type in a kar that hangs alone...
+
+
+****
 1. save as html and save as utf16 added to file options. Utf16 is self explanatory, save as html basically adds on some html tags like <br> to line ends and some default headers, its useful for me because I can type up a bangla page in plain text and save it as a moderately passable webpage as is.
 
 2. in the export to screen font there is an option to not use automatic headers (see point 1). This means you can type up a webpage in bangla unicode (writing your own headers) and export it to screenfont and Lekho won't add an automatic header to the file if you tell it not to. 
 
-3. Fixed delete bangtex bug in destructor of BanglaTextEdit. Destructo no longer tries to delete bangtex if it hasn't been allocated
+3. Fixed delete bangtex bug in destructor of BanglaTextEdit. Destructor no longer tries to delete bangtex if it hasn't been allocated
 
 2002.10.15
 3. Fixed bug in segmenting that didn't take into account jawphola for a

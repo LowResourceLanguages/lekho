@@ -18,6 +18,12 @@ ku = ক + উ = কু
 kU = ক + ঊ = কূ
 kR = ক + ঋ = কৃ
 
+যদি কন কারনে স্বরচিহ্ন একলা ছাপতে দরকার হয় তা হলে প্রথমে '*' চিহ্ন টিপে তার পর স্বর চিহ্ন টিপবেন। অর্থাত:
+*i = ি
+*I = ী
+*R = ৃ
+ইত্যাদি
+ 
 ৪।যুক্তবর্ণ লিখতে গেলে '/' চাবি ব্যবহার করতে হবে, যেমন: 
 Juk/tbr/N = যুক্তবর্ণ
 Ju = যু
@@ -60,7 +66,7 @@ utf-8, utf-16 হচ্ছে encoding-এর উপায়:
 আমি একটু গবেশনা করে বার কোরেছি কন কন program থেকে clipboard-এ কি format-এ copy হয়।
 
 Netscape 4.2 (linux ও windows)	utf-8
-Internet Explorer 6	utf-8
+Inernet Explorer 6	utf-8
 opera 6	utf16
 
 খ)
@@ -69,11 +75,11 @@ copy as character reference:
 
 গ)
 paste as romanised:
-এই উপায় ব্য়বহার করবেন জখন আপনার কিছু বাংলা কথা ইংরেজিতে phonetically লেখা আছে, ধরুন আপনার বন্ধু আপনাকে ইমাইল পাঠিয়েছে "tui kemon aachish ?" লিখে। আপনি এই লেখাটি নির্দিশ্ত করে copy করে লেকর windowতে মাউস এনে টিপলেন "paste from romanised", screen-এ ফুটে উঠল "তুই কেমোন আচিশ ?"। উপায় টা নির্ভুলত নয়ই, কিন্তু মটা মটি কাজ করে।  
+এই উপায় ব্যাবহার করবেন জখন আপনার কিছু বাংলা কথা ইংরেজিতে phonetically লেখা আছে, ধরুন আপনার বন্ধু আপনাকে ইমাইল পাঠিয়েছে "tui kemon aachish ?" লিখে। আপনি এই লেখাটি নির্দিশ্ত করে copy করে লেকর windowতে মাউস এনে টিপলেন "paste from romanised", screen-এ ফুটে উঠল "তুই কেমোন আচিশ ?"। উপায় টা নির্ভুলত নয়ই, কিন্তু মটা মটি কাজ করে।  
 
 ঘ)
 export html 
-এই উপায় দেয়ে আপনি লেখাটা webpage হিশাবে save কোরতে পারেন। export হয় adarshalipi font-এ। এই webpage, জে কোন browser-এ দেখা যায়, adarshalipi font থাকলেই হোল। যেমন, help_lipi.html এই ফাইল (help.txt) থেকে বানান হয়ছে export html ব্যভার করে।
+এই উপায় দিয়ে আপনি লেখাটা webpage হিশাবে save কোরতে পারেন। export হয় adarshalipi font-এ। এই webpage, জে কোন browser-এ দেখা যায়, adarshalipi font থাকলেই হোল। যেমন, help_lipi.html এই ফাইল (help.txt) থেকে বানান হয়ছে export html ব্যভার করে।
 
 ঙ)
 export latex

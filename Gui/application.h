@@ -35,9 +35,10 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
-#include <qmainwindow.h>
 #include <qdir.h>
 #include <qfiledialog.h>
+#include <qmainwindow.h>
+#include <qstringlist.h>
 
 #include <lekhostream.h>
 
@@ -52,7 +53,7 @@ class ApplicationWindow: public QMainWindow
 
 //initialisation
 public:
-    ApplicationWindow();
+    ApplicationWindow(QStringList &sl);
     ~ApplicationWindow();
 
 protected:
@@ -70,6 +71,7 @@ public:
 
 private slots:
 	void newDoc();
+	void newDoc(QStringList &fl);
 	void choose();
 	void load( const QString &fileName );
 	void save();

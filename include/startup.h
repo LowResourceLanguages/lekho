@@ -18,41 +18,25 @@
 *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
 */
 
-//bangla.h
-//some constants and utility functions etc.
+//startup.h
+//this contains function prototypes for routines that create default startup files
+//eg. kar.tx, jukto.txt, adarshalipi.txt etc.,
 
-#ifndef BANGLA_H
-#define BANGLA_H
+//makes default files in working directory if it can't find em
+//makes lekhorc
+void makeLekhorc(QString &) ;
 
-#include<BanglaLetter.h>
+//makes kar.txt
+void makeKar(QString &) ;
 
-const BanglaLetter BanglaCR("\n","\n",0);
+//make shor.txt
+void makeShor(QString &) ;
 
-//small utility function is this a bangla letter ?
-inline bool isBangla(const QChar &text)
-{
-	switch(text.unicode())
-	{
-		case 0x0964:	//dari
-		case 0x0965:	//double dari
-		case 0x200c:	//zwnj
-		case 0x200d:	//zwj
-			return true ;
-			break;
-		default:
-			if( (text.unicode() > 0x0980) & (text.unicode() < 0x09ff) )
-				return true ;
-			break;
-	}
-	return false ;
-}
+//make jukto.txt
+void makeJukto(QString &) ;
 
+//make adarshalipi.txt
+void makeAdarshalipi(QString &) ;
 
-
-
-//small utility function used for html export
-//inserts a fake header and tab stops
-void fudgeHtml(QString &text, bool isEncodingUtf8 = false) ;
-
-
-#endif
+//make bangtex.txt
+void makeBangtex(QString &) ;
