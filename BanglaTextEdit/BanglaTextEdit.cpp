@@ -1102,8 +1102,9 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
         {
 		QRect cursorRect = calculateCursorRect();
 
-		p->setPen(background);
-		p->setRasterOp(NotXorROP);
+		//p->setPen(background);
+		p->setPen(foreground);
+		//p->setRasterOp(XorROP);
 
 		p->drawRect(cursorRect);
 		p->setRasterOp(CopyROP);

@@ -10,14 +10,17 @@
 #### leaving them as is won't harm you unless you already have ####
 #### the directory $(HOME)/C++/Lekho/ with something valuable #####
 
-LEKHO_DIR = $(HOME)/C++/Lekho/
+#LEKHO_DIR = $(HOME)/C++/Lekho/
+LEKHO_DIR = /tmp/lekho/
 OBJ_DIR = $(LEKHO_DIR)/obj/
-BIN_DIR = $(LEKHO_DIR)/bin/
+#BIN_DIR = $(LEKHO_DIR)/bin/
+BIN_DIR = $(HOME)/C++/Lekho/bin/
 
 #works for SuSE....
 INSTALL_DIR = /usr/local/bin/
 FONTS_DIR = /usr/X11R6/lib/X11/fonts/truetype/
-LIB_DIR = /usr/local/lib/lekho/
+#LIB_DIR = /usr/local/lib/lekho/
+LIB_DIR = /usr/local/share/lekho/
 
 ################# NO NEED TO CHANGE BEYOND THIS POINT #######################
 
@@ -57,7 +60,8 @@ OBJECTS_DIR = $(OBJ_DIR)/
 
 ####### Files
 
-HEADERS = Gui/application.h \
+HEADERS = include/license.h \
+	  	Gui/application.h \
 	  	Gui/FindDialog.h \
 	  	Gui/SpellDialog.h \
 		BanglaLine/BanglaLine.h \
@@ -78,7 +82,8 @@ HEADERS = Gui/application.h \
 		include/startup.h \
 		Parser/parser.h
 
-SOURCES = Gui/main.cpp \
+SOURCES = include/license.cpp \
+		Gui/main.cpp \
 		Gui/application.cpp \
 	  	Gui/FindDialog.cpp \
 	  	Gui/SpellDialog.cpp \
@@ -100,7 +105,8 @@ SOURCES = Gui/main.cpp \
 		include/startup.cpp \
 		Parser/parser.cpp
 
-OBJECTS = $(OBJ_DIR)/main.o \
+OBJECTS = $(OBJ_DIR)/license.o \
+		$(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/application.o \
 		$(OBJ_DIR)/FindDialog.o \
 		$(OBJ_DIR)/SpellDialog.o \
@@ -164,6 +170,7 @@ first: all
 all: Makefile $(TARGET)
 
 $(TARGET): $(UICDECLS) $(OBJECTS) $(OBJMOC) 
+	touch include/license.cpp
 	test -d $(BIN_DIR)/ || mkdir -p $(BIN_DIR)/
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJMOC) $(LIBS)
 
@@ -173,7 +180,7 @@ $(MOC):
 	( cd $(QTDIR)/src/moc ; $(MAKE) )
 
 Makefile: Lekho.pro  
-	$(QMAKE) Lekho.pro
+#	$(QMAKE) Lekho.pro
 qmake: 
 	@$(QMAKE) Lekho.pro
 
@@ -201,8 +208,7 @@ FORCE:
 
 ####### Compile
 
-$(OBJ_DIR)/main.o: Gui/main.cpp Gui/application.h \
-		Banan/SearchDictionary.h	
+$(OBJ_DIR)/main.o: Gui/main.cpp Gui/application.h Banan/SearchDictionary.h include/license.h
 	test -d $(OBJ_DIR)/ || mkdir -p $(OBJ_DIR)/
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/main.o Gui/main.cpp
 
@@ -216,8 +222,12 @@ $(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
 		Gui/findinfile.xpm \
 		Gui/spell.xpm \
 		Gui/undoxpm.xpm \
-		Gui/redoxpm.xpm
+		Gui/redoxpm.xpm \
+		include/license.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/application.o Gui/application.cpp
+
+$(OBJ_DIR)/license.o: include/license.cpp include/license.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/license.o include/license.cpp
 
 $(OBJ_DIR)/FindDialog.o: Gui/FindDialog.cpp Gui/FindDialog.h 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/FindDialog.o Gui/FindDialog.cpp

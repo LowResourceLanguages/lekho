@@ -69,6 +69,8 @@
 #include<FindDialog.h>
 #include<SpellDialog.h>
 
+#include <license.h>
+
 //small util function
 QString stripFileName(const QString &fn)
 {
@@ -1026,8 +1028,9 @@ void ApplicationWindow::keyMapHelp()
 
 void ApplicationWindow::about()
 {
-    QMessageBox::about( this, "Lekho : About",
-    			"Lekho v1.15\n"
+    QMessageBox::about( this, "Lekho : About", aboutstring());
+/*
+    			"Lekho v1.15 compiled : "
 			"\n"
 			"This program is distributed in the hope that it will be useful,\n"
 			"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -1050,6 +1053,7 @@ void ApplicationWindow::about()
 			"(adrab@users.sourceforge.net)\n"
 			"\n"
 			"Comments and suggestions to kghose@users.sourceforge.net");
+*/
 }
 
 

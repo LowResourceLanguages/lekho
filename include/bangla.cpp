@@ -1,7 +1,7 @@
 /*
 *  Lekho is a simple editor for bangla in unicode that exports
 *  to bangtex and html
-*  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
+*  Copyright (C) 2001,2002,2003 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ postamble
 
 	//little hack to have header say charset = utf8
 	if(isEncodingUtf8)
-		preamble = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf8\">\n   <meta name=\"Author\" content=\"Me\">\n   <meta name=\"GENERATOR\" content=\"Lekho\">\n   <meta name=\"Keywords\" content=\"\">\n   <meta name=\"Classification\" content=\"\">\n   <title>\n   untitled\n   </title>\n</head>\n<body text=\"#FFFFFF\" bgcolor=\"#000000\" link=\"#FFFFCC\" vlink=\"#D3D3D3\" alink=\"#FF0000\">\n";
+		preamble = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n   <meta name=\"Author\" content=\"Me\">\n   <meta name=\"GENERATOR\" content=\"Lekho\">\n   <meta name=\"Keywords\" content=\"\">\n   <meta name=\"Classification\" content=\"\">\n   <title>\n   untitled\n   </title>\n</head>\n<body text=\"#FFFFFF\" bgcolor=\"#000000\" link=\"#FFFFCC\" vlink=\"#D3D3D3\" alink=\"#FF0000\">\n";
 
 	QString htmlTabSymbol ;
 	QChar tabSymbol(0x09);

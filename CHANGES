@@ -1,3 +1,10 @@
+v1.16
+2003.01.26
+1. Added license.cpp to show date and time of compile
+2. Lekho cursor colour is now foreground colour
+3. export to html now says utf-8 instead of utf8 (thanks Taneem)
+4. Makefile now makes in /tmp (thanks Progga)
+
 v1.15
 2003.01.04
 1. debugged syntax highlighting, now in options...
