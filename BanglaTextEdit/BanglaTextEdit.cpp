@@ -1282,7 +1282,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 				if(!bangla->isBangla() )
 				{
 					cursorErase();
-					insert (theCursor.paracol.y(), theCursor.paracol.x(), event->text());
+					insert (theCursor.paracol.y(), theCursor.paracol.x(), event->text(), false);
 					for(int howmanycharacters = 0 ; howmanycharacters < (int)event->text().length() ; howmanycharacters++)
 						theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 					cursorDraw();
