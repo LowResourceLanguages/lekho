@@ -11,7 +11,7 @@
 #### the directory $(HOME)/C++/Lekho/ with something valuable #####
 
 LEKHO_DIR = $(HOME)/C++/Lekho/
-INSTALL_DIR = $(HOME)/LekhoBin/
+INSTALL_DIR = /usr/local/bin/
 OBJ_DIR = $(LEKHO_DIR)/obj/
 BIN_DIR = $(LEKHO_DIR)/bin/
 
