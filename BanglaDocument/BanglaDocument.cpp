@@ -763,7 +763,6 @@ void BanglaDocument::findWord(QPoint &start, QPoint &end, const QString &wd, con
 //inserts a lot of letters in a given line. Looks out for and handles newlines
 bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll)
 {
-	//cout << line << "," << docLineIndex << endl << flush ;
 
 	int totlines = (int)documentLine.count();
 	if(line > totlines)
@@ -778,33 +777,24 @@ bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll)
 
 	documentLineMemoryMoveTo(currline);
 
-	//int currline_ = line ;
-	//QValueList<BanglaLine>::Iterator currline = documentLine.at(line);
-
 	int currcol = col ;
-
 	BanglaLetterList::ConstIterator i ;
-	//for(int i = 0 ; i < (int)bll.count() ; i++)
 	for(i = bll.begin() ; i != bll.end() ; ++i)
 	{
 
 		if((*i).unicode == "\n")
 		{
 			//use splitline to keep things watertight...
-			//documentLine[currline].insert(currcol , oneLine);
 			(*documentLineAt(currline)).insert(currcol , oneLine);
 
 			oneLine.clear();
-			//splitLine(currline, documentLine[currline].letterCount());
-			splitLine(currline, (*documentLineAt(currline)).letterCount());
+			splitLine(currline, (*documentLineAt(currline)).letterCount()) + 1;
 
 			currline++;
-			//currline_++ ;
 			currcol = 0 ;
 		}
 		else
 		{
-			//oneLine += (*i) ; //bll[i] ;
 			oneLine.append((*i));
 		}
 	}
@@ -812,14 +802,12 @@ bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll)
 	if(!oneLine.isEmpty())
 	{
 
-		//documentLine[currline].insert(currcol , oneLine);
 		(*documentLineAt(currline)).insert(currcol , oneLine);
 
-
 		QPoint paracol(col, currline);
-		//QPoint paracol(col, currline_);
 		QPoint linecol = paragraph2line(paracol);
-		wrapParagraph(line, linecol.y());
+
+		wrapParagraph(currline, linecol.y());
 	}
 
 	return true ;
@@ -966,6 +954,7 @@ void BanglaDocument::copyScreenLine(int line, BanglaLetterList &bll)
 //function::splitLine
 //creates a new line after line with the letters from col onwards
 //handles word wrapping, and updating of the paragraph identities
+//returns the value of the last screenline entered + 1
 bool BanglaDocument::splitLine(int para, int col)
 {
 	QPoint paracol(col, para );

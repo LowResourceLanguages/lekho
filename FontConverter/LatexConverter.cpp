@@ -22,14 +22,16 @@
 #include <iostream.h>
 LatexConverter::LatexConverter()
 {
-	ushort _ref[] = {0x09b0, 0x09cd};
+	ushort _mophola[] = {0x09cd, 0x09ae};
 	ushort _jawphola[] = {0x09cd, 0x09df};
+	ushort _lophola[] = {0x09cd, 0x09b2};
 	ushort _rawphola[] = {0x09cd, 0x09b0};
 	ushort _kar[] = {0x09be,0x09bf,0x09c0,0x09c1,0x09c2,0x09c3,0x09c7,
 		0x09c8,0x09cb,0x09cc};
 
-	reph.setUnicodeCodes(_ref,2);
+	mophola.setUnicodeCodes(_mophola,2);
 	jawphola.setUnicodeCodes(_jawphola,2);
+	lophola.setUnicodeCodes(_lophola,2);
 	rawphola.setUnicodeCodes(_rawphola,2);
 	kar.setUnicodeCodes(_kar, 10);
 
@@ -37,7 +39,7 @@ LatexConverter::LatexConverter()
 
 /*
  * input file format
- * <latexCandrabindu> <latexHashanto> <latexReph> <latexJawphola> <latexRawphola>
+ * <latexCandrabindu> <latexHashanto> <latexMaphala> <latexJawphola> <latexRawphola>
  * <akar> <hoshoi> <dirghoi> <hoshou> <dirghou> <rri> <ekar> <oikar> <righthalfofoukar>
  *
  * <number of codes> <unicode> <unicode>.... <#of screencodes> <code> <code> ..
@@ -54,11 +56,13 @@ bool LatexConverter::initialiseConverter(QTextStream& file)
 
 	file >> latexHashonto ;
 
-	//file >> latexReph ;
+	file >> latexMophola ;
 
 	file >> latexJawphola ;
 
 	file >> latexRawphola ;
+
+	file >> latexLophola ;
 
 	for(int i = 0 ; i < 9 ; i++)
 	{
@@ -110,7 +114,6 @@ bool LatexConverter::loadCodeFileLine(QTextStream& file)
 	//}
 	file >> latexCode ;
 
-	//cout << latexCode << endl ;
 	//delete[] u;
 
 	CodeTreeElement::addToTree(convert, unicodeCode, latexCode);
@@ -142,11 +145,12 @@ QString LatexConverter::unicode2latex(QString uc)
 
 	//take out vowel modifier, jawfola or ref.
 	bool candrabinduPresent = false,
-		 hashontoPresent = false ,
-		 rephPresent = false,
-		 jawpholaPresent = false,
-		 rawpholaPresent = false,
-		 karPresent = false;
+		hashontoPresent = false ,
+		mopholaPresent = false,
+		lopholaPresent = false,
+		jawpholaPresent = false,
+		rawpholaPresent = false,
+		karPresent = false;
 
 	//take out the kar
 	if(kar.find(uc.right(1)) > -1)
@@ -187,16 +191,20 @@ QString LatexConverter::unicode2latex(QString uc)
 		uc = uc.left(uc.length()-2);
 	}
 
-	/*
-	//take out the ref from the unicode string,
-	//insert adarshalipi equivalent in out
-	if(uc.left(2) == reph)
+	//take out mophola
+	if(uc.right(2).find(mophola) > -1)
 	{
-		rephPresent = true ;
-		uc = uc.right(uc.length()-2);
-		//out += fontReph;
+		mopholaPresent = true ;
+		uc = uc.left(uc.length()-2);
 	}
-	*/
+
+	//take out lophola
+	if(uc.right(2).find(lophola) > -1)
+	{
+		lopholaPresent = true ;
+		uc = uc.left(uc.length()-2);
+	}
+
 
 	//if there is a zwnj at the end, take it out and add a hashanta at the end
 	//unless it has a special form eg. khondottha
@@ -216,8 +224,7 @@ QString LatexConverter::unicode2latex(QString uc)
 		}
 	}
 
-	//the main juktakkhor, for latex we handle it this...
-	//QString temp = CodeTreeElement::getLeaf(convert, uc);
+	//the main juktakkhor, for latex we handle it thus...
 	for(int i = 0 ; i < (int)uc.length() ; i++)
 	{
 		if(uc[i].unicode() == 0x09cd)
@@ -231,30 +238,23 @@ QString LatexConverter::unicode2latex(QString uc)
 				out += "Z" ;	//couldn't find it
 		}
 	}
-	/*
-	if(temp.isEmpty())
-	{
-		if(out.isEmpty())
-			out += QChar(0x5e);
-	}
-	else
-	{
-		out += temp ;
-	}
-	*/
-
-	/*
-	//put in the reph
-	if(rephPresent)
-	{
-		out.append(latexReph);
-	}
-	*/
 
 	//put in candrabindu
 	if(candrabinduPresent)
 	{
 		out.append(latexCandrabindu);
+	}
+
+	//put in mophola
+	if(mopholaPresent)
+	{
+		out.append(latexMophola);
+	}
+
+	//put in lophola
+	if(lopholaPresent)
+	{
+		out.append(latexLophola);
 	}
 
 	//put in the rawphola

@@ -33,8 +33,8 @@ class LatexConverter
 {
 protected:
 	CodeTreeElement convert ;					//for decoding juktakkhor
-	QString reph, jawphola, rawphola, kar ;				//unicode strings for these
-	QString latexCandrabindu, latexHashonto, latexReph, latexJawphola,
+	QString mophola, jawphola, lophola, rawphola, kar ;				//unicode strings for these
+	QString latexCandrabindu, latexHashonto, latexMophola, latexJawphola, latexLophola,
 			latexRawphola ;	//the codes for these in bangtex
 	QStringList	latexKar ;
 

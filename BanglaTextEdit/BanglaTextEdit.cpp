@@ -677,10 +677,10 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 			end.y(), end.x(),
 			text);
 
-	bool banglaMode = false ;
+	bool banglaMode = true ;
 	QString latex = "";
-	QString banglaFontStart = "{\\bng ",
-		fontFinish = "}" ;
+	QString englishLatexStart = "{\\tt ",
+		latexFinish = "}" ;
 
 	//for(int i = 0 ; i < (int)text.count() ; i++)
 	BanglaLetterList::Iterator i ;
@@ -694,7 +694,7 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 			if(!banglaMode)
 			{
 			banglaMode = true ;
-			latex += banglaFontStart ;
+			//latex += latexFinish ;
 			}
 		}
 		else
@@ -702,7 +702,7 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 			if(banglaMode)
 			{
 			banglaMode = false ;
-			latex += fontFinish ;
+			//latex += englishLatexStart ;
 			}
 		}
 
