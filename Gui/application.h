@@ -96,14 +96,15 @@ private slots:
 
 	void setWordWrap(bool ww);
 	void setCursorBlink(bool cb);
+	void setSyntaxHighlighting(bool);
+
 	void chooseEnglishFont();
 	void chooseBanglaFont();
 	void chooseForeground();
 	void chooseBackground();
+	void chooseSyntaxColor();
 
 	void setTabWidth();
-    //void insertLatex(int id);
-    //void insertHtml(int id);
 
 	void keyMapHelp();
 	void about();

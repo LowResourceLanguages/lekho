@@ -36,7 +36,6 @@
 #include <BanglaSegment.h> //the function that takes a unicode stream and chops it up into bangla letters
 #include <BanglaLine.h>
 #include <FontConverter.h>
-#include <Highlight.h>
 #include <LatexConverter.h>
 
 #include <qrect.h>
@@ -122,6 +121,7 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name, bool _readonly)
 	cursorBlinkOn() ;
 
 	highlightColor = QColor("yellow");
+	syntaxHighlightingOn = true ;
 }
 
 BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontSize, bool _readonly )
@@ -199,6 +199,7 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 	cursorBlinkOn() ;
 
 	highlightColor = QColor("yellow");
+	syntaxHighlightingOn = true ;
 }
 
 BanglaTextEdit::~BanglaTextEdit()
@@ -273,6 +274,12 @@ void BanglaTextEdit::setColors(QColor fg, QColor bg)
 {
 	foreground = fg ;
 	background = bg ;
+	viewport()->update();
+}
+
+void BanglaTextEdit::setSyntaxColor(QColor syn)
+{
+	highlightColor = syn ;
 	viewport()->update();
 }
 
@@ -1051,7 +1058,7 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 	char *hiliteStr = new char[ theTextForHighlight.count() ] ;
 
 	//parse for highlighting
-	highlight( theTextForHighlight, hiliteStr );
+	doljatra.highlight( theTextForHighlight, hiliteStr );
 	int currentLetter = 0 ;
 
 	for(int i = startLine ; i <= endLine ; i++)
@@ -1126,14 +1133,13 @@ void BanglaTextEdit::paintLine(QPainter *p, int x, int y, int lineHeight, const 
 	int segmentWidth = 0 ;
 	p->setFont(banglaFont);
 
-	//for(int i = 0 ; i < (int)text.count() ; i++)
 	BanglaLetterList::ConstIterator i;
 	for(i = text.begin() ; i != text.end() ; ++i)
 	{
-		if( (currentLetter != NULL) & (hiliteStr != NULL ))
+		if( (currentLetter != NULL) & (hiliteStr != NULL ) & (syntaxHighlightingOn) )
 		{
 		//addition for syntax highlighting
-		if( hiliteStr[ *currentLetter] == 0x01)
+		if( hiliteStr[ *currentLetter] == LEKHO_HIGHLIGHT)
 		{
 			if( !highLightMode )
 			{
@@ -2058,6 +2064,12 @@ void BanglaTextEdit::cursorBlinkOn()
 void BanglaTextEdit::cursorBlinkOff()
 {
 	theCursor.blinkOn = false ;
+}
+
+void BanglaTextEdit::setSyntaxHighlighting( bool syn)
+{
+	syntaxHighlightingOn = syn ;
+	viewport()->update();
 }
 
 //history (redo-undo) ops

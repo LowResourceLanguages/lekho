@@ -63,11 +63,13 @@ bool LekhoPrefs::load(const QString &filename)
 	englishFont.setPointSize(fntSize);
 	foreground.setNamedColor(theFile->getString("foreground_color","#dedede"));
 	background.setNamedColor(theFile->getString("background_color","#000000")) ;
+	syntaxColor.setNamedColor(theFile->getString("syntax_color","#00ff00")) ;
 
 	//advanced
 	theFile->setGroup("advanced");
 	cursorBlink = theFile->getBool("cursor_blinks",true);
 	wordWrap = theFile->getBool("word_wrap",true);
+	syntaxHighlighting = theFile->getBool("syntax_highlighting",true);
 
 	return true ; 	//do checks later
 }
@@ -107,11 +109,13 @@ bool LekhoPrefs::save(const QString &filename)
 	theFile->setNumber("english_font_size",englishFont.pointSize());
 	theFile->setString("foreground_color",foreground.name());
 	theFile->setString("background_color",background.name());
+	theFile->setString("syntax_color",syntaxColor.name());
 
 	//advanced
 	theFile->setGroup("advanced");
 	theFile->setBool("cursor_blinks",cursorBlink);
 	theFile->setBool("word_wrap",wordWrap);
+	theFile->setBool("syntax_highlighting",syntaxHighlighting);
 
 	theFile->flush();
 	//theFile->writeData();

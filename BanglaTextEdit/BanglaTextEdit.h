@@ -49,6 +49,7 @@
 
 #include <BanglaDocument.h>
 #include <FontConverter.h>
+#include <Highlight.h>
 #include <LatexConverter.h>
 #include <LekhoRedoUndo.h>
 #include <SearchDictionary.h>
@@ -118,6 +119,8 @@ protected:
 					//the character the mouse is over every time you move it...
 
 	LekhoRedoUndo	history ;	//redoundo history
+	Highlight	doljatra ;	//syntax highlighting
+	bool		syntaxHighlightingOn ;
 
 	// Initializing functions ////////////////////////////////////////////////////
 public:
@@ -136,6 +139,7 @@ public:
 
 	//set colors
 	void setColors(QColor fg, QColor bg);
+	void setSyntaxColor(QColor syn) ;
 	QColor getForegroundColor() {return foreground ; }
 	QColor getBackgroundColor() {return background ; }
 
@@ -251,6 +255,7 @@ public slots:
 	void wordWrapOff();
 	void cursorBlinkOn();
 	void cursorBlinkOff();
+	void setSyntaxHighlighting( bool ) ;
 
 	void top();	//go to document start ;
 

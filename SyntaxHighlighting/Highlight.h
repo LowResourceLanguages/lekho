@@ -32,6 +32,8 @@ BanglaTextEdit uses a counter to keep track of the chars
 
 
 #include <qstring.h>
+#include <qstringlist.h>
+
 #include <BanglaLetter.h>
 /*
 LATEX
@@ -40,11 +42,20 @@ LATEX
 
 HTML
 <xx>
-
 */
+
+const ushort LEKHO_NO_HIGHLIGHT = 0x01 ;
+const ushort LEKHO_HIGHLIGHT = 0x02 ;
+
 //Returns a QString whose length = #of segmented letters in section of document passed
 //if there are more than one unicode chars in the string, replace it by a blank
+class Highlight
+{
+	QStringList	regExp ;
 
-void highlight(BanglaLetterList &bll, char *hiliteStr, bool latexMode = true ) ;
+public:
+	Highlight() ;
 
+	void highlight(BanglaLetterList &bll, char *hiliteStr ) ;
+};
 #endif //#ifndef HIGHLIGHT_H

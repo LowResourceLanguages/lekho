@@ -31,11 +31,23 @@ HTML
 <xx>
 
 */
+
+Highlight::Highlight()
+{
+	regExp += "[\\{\\}$\\[\\]]" ;
+	//regExp += "\\{[a-zA-Z0-9\\.\\-\\s]+\\}";
+	regExp += "\\\\[a-zA-Z0-9]+";
+	regExp += "%+";
+	regExp += "<[^<>]+>";
+}
+
+
+//WARNING - the more patterns you have the slower will the syntax coloring be...
 //VERY hacked...
 //Returns a QString whose length = #of segmented letters in section of document passed
 //if there are more than one unicode chars in the string, replace it by a blank
 //if latexMode = false, we do html highlighting
-void highlight(BanglaLetterList &text, char *hilite , bool latexMode)
+void Highlight::highlight(BanglaLetterList &text, char *hilite )
 {
 	QString theText ;
 	//turn the bll into a QString
@@ -52,78 +64,25 @@ void highlight(BanglaLetterList &text, char *hilite , bool latexMode)
 	//	delete[] hilite ;
 
 	//hilite = new char[ theText.length() ] ;
-	for(int i = 0 ; i < (int)theText.length() ; i++)
-		hilite[i] = 'a' ;
+	for(int j = 0 ; j < (int)theText.length() ; j++)
+		hilite[j] = LEKHO_NO_HIGHLIGHT ;
 
-
-	int counter = 0 , index = 0, len = 0;
-	//if( latexMode )
-	//either look for latex strings
+	QRegExp		syntax ;
+	for(int k = 0 ; k < (int)regExp.count() ; k++)
 	{
-		QRegExp latex1("[\\{\\}$\\[\\]]"),
-		//QRegExp latex1("\\{[a-zA-Z0-9\\.\\-\\s]+\\}"),
-			latex2("\\\\[a-zA-Z0-9]+"),
-			latex3("%[a-zA-Z0-9]+") ;
+		syntax.setPattern( regExp[ k ] ) ;
+		int counter = 0 , index = 0, len = 0;
 		while( counter < (int)theText.length() )
 		{
-			index = latex1.match(theText, counter, &len );
+			index = syntax.match(theText, counter, &len );
 			if(index > -1)
 			{
 				counter = index ;
 				for( ; counter < (index + len) ; counter++ )
-					hilite[ counter ] = 0x01 ;
+					hilite[ counter ] = LEKHO_HIGHLIGHT ;
 			}
 			else
 				counter = theText.length() ;
 		}
-
-		counter = 0 ; index = 0 ; len = 0 ;
-		while( counter < (int)theText.length() )
-		{
-			index = latex2.match(theText, counter, &len );
-			if(index > -1)
-			{
-				counter = index ;
-				for( ; counter < (index + len) ; counter++ )
-					hilite[ counter ] = 0x01 ;
-			}
-			else
-				counter = theText.length() ;
-		}
-
-		counter = 0 ; index = 0 ; len = 0 ;
-		while( counter < (int)theText.length() )
-		{
-			index = latex3.match(theText, counter, &len );
-			if(index > -1)
-			{
-				counter = index ;
-				for( ; counter < (index + len) ; counter++ )
-					hilite[ counter ] = 0x01 ;
-			}
-			else
-				counter = theText.length() ;
-		}
-
-
-	}
-	//else
-	//or html strings
-	{
-		QRegExp html("<[^<>]+>") ;
-		counter = 0 ; index = 0 ; len = 0 ;
-		while( counter < (int)theText.length() )
-		{
-			index = html.match(theText, counter, &len );
-			if(index > -1)
-			{
-				counter = index ;
-				for( ; counter < (index + len) ; counter++ )
-					hilite[ counter ] = 0x01 ;
-			}
-			else
-				counter = theText.length() ;
-		}
-
 	}
 }

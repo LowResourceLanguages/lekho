@@ -242,6 +242,7 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     //Options
     QPopupMenu * options = new QPopupMenu( this );
 
+    //word warp
     QAction * action = new QAction( tr("WordWrap"), tr("&WordWrap"), 0, this );
     action->setToggleAction(true);
     action->setOn( true );
@@ -249,26 +250,35 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     action->addTo( options );
     action->setOn( thePref.wordWrap );
 
-    options->insertSeparator();
-
-    options->insertItem( "&Bangla font", this, SLOT(chooseBanglaFont()) );
-    options->insertItem( "&English font", this, SLOT(chooseEnglishFont()) );
-    options->insertItem( "f&oreground color", this, SLOT(chooseForeground()) );
-    options->insertItem( "b&ackground color", this, SLOT(chooseBackground()) );
-    options->insertSeparator();
-
-    //options->advanced
-
     //cursor blink
-    QPopupMenu *advanced = new QPopupMenu( this );
     action = new QAction( tr("Cursor blink"), tr("C&ursor blink"), 0, this );
     action->setToggleAction(true);
     action->setOn( true );
     connect( action, SIGNAL( toggled(bool) ), this , SLOT( setCursorBlink(bool) ) );
-    action->addTo( advanced );
+    action->addTo( options );
     action->setOn( thePref.cursorBlink );
 
-    options->insertItem( "&Advanced", advanced);
+    //syntax highlighting
+    action = new QAction( tr("Syntax highlighting"), tr("S&yntax colouring"), 0, this );
+    action->setToggleAction(true);
+    action->setOn( true );
+    connect( action, SIGNAL( toggled(bool) ), this , SLOT( setSyntaxHighlighting(bool) ) );
+    action->addTo( options );
+    action->setOn( thePref.syntaxHighlighting );
+
+    options->insertSeparator();
+
+    QPopupMenu *colors = new QPopupMenu( this );
+    colors->insertItem( "f&oreground color", this, SLOT(chooseForeground()) );
+    colors->insertItem( "b&ackground color", this, SLOT(chooseBackground()) );
+    colors->insertItem( "s&yntax color", this, SLOT(chooseSyntaxColor()) );
+    options->insertItem( "&Colours", colors);
+
+
+    QPopupMenu *fontsel = new QPopupMenu( this );
+    fontsel->insertItem( "&Bangla font", this, SLOT(chooseBanglaFont()) );
+    fontsel->insertItem( "&English font", this, SLOT(chooseEnglishFont()) );
+    options->insertItem( "F&onts", fontsel);
 
 
     //help
@@ -304,6 +314,7 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     e->setFonts(thePref.banglaFont, thePref.englishFont);
     e->setColors(thePref.foreground, thePref.background);
+    e->setSyntaxColor(thePref.syntaxColor);
 
     //in case BanglaTextEdit wants to talk to us, it can do so via this...
     connect(e, SIGNAL(statusBarMessage(const QString&)), this, SLOT(statusBarMessage(const QString&)));
@@ -912,6 +923,13 @@ void ApplicationWindow::setCursorBlink(bool cb)
 		e->cursorBlinkOff();
 }
 
+void ApplicationWindow::setSyntaxHighlighting(bool cb)
+{
+	thePref.syntaxHighlighting = cb ;
+	e->setSyntaxHighlighting( cb ) ;
+}
+
+
 void ApplicationWindow::chooseBanglaFont()
 {
 	bool ok;
@@ -957,6 +975,14 @@ void ApplicationWindow::chooseBackground()
 
 	e->setColors(thePref.foreground, thePref.background);
 }
+
+void ApplicationWindow::chooseSyntaxColor()
+{
+	thePref.syntaxColor = QColorDialog::getColor(thePref.syntaxColor);
+
+	e->setSyntaxColor(thePref.syntaxColor);
+}
+
 
 void ApplicationWindow::setTabWidth()
 {

@@ -58,10 +58,12 @@ struct LekhoPrefs
 	QFont	banglaFont,
 		englishFont ;
 	QColor	foreground,
-		background ;
+		background,
+		syntaxColor ;
 
 	bool	cursorBlink,
-		wordWrap  ;
+		wordWrap,
+		syntaxHighlighting  ;
 
 	LekhoPrefs() { theFile = NULL ; }
 
