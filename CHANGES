@@ -1,6 +1,9 @@
 All changes referenced to v1.0
 
 v1.1
+2002.11.04
+1. Fixed bug in BanglaTextEdit.cpp in keyboard event handler that didn't take into account buffered input for english
+
 2002.11.02
 1. lekho now accepts commandline arguments to mean files which it opens in new windows - Barda's suggestion.
 

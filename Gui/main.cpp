@@ -61,7 +61,6 @@ int main( int argc, char ** argv )
     	fileList.append( a.argv()[i] );
 
     ApplicationWindow * mw = new ApplicationWindow( fileList );
-    //mw->setCaption( "Lekho" );
     mw->show();
     a.connect( &a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()) );
 

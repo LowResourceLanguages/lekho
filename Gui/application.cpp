@@ -56,6 +56,7 @@
 #include <qtoolbutton.h>
 #include <qwhatsthis.h>
 
+#include "lekho.xpm"
 #include "filesave.xpm"
 #include "fileopen.xpm"
 #include "fileprint.xpm"
@@ -85,7 +86,9 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     fudgeHtmlOn = false ;
 
-    QPixmap openIcon, saveIcon, printIcon;
+    QPixmap lekhoIcon, openIcon, saveIcon, printIcon;
+    lekhoIcon = QPixmap( lekho );
+    this->setIcon(lekhoIcon);
 
     lekhorc = QDir::homeDirPath() + "/.lekhorc";
     //read in prefs. some prefs affect how we set our defaults...
@@ -922,7 +925,11 @@ void ApplicationWindow::closeEvent( QCloseEvent* ce )
     }
 }
 
-
+/*
+void ApplicationWindow::manual()
+{
+}
+*/
 void ApplicationWindow::about()
 {
     QMessageBox::about( this, "Lekho : About",

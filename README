@@ -6,8 +6,8 @@ FEATURES
 THANKS
 
 NOTE** 
-1. A detailed user manual in bangla is available in examples\help.txt
-A user manual in english in examples\help_en.txt. My bangla is rusty and help_en.txt may be more "pretty" as far as language goes. Thanks to Progga for going over the help.txt file and suggesting corrections.
+1. A detailed user manual in bangla is available in examples\help.txt 
+A user manual in english can be found in examples\help_en.txt. My bangla is rusty and help_en.txt may be more "pretty" as far as language goes. Thanks to Progga for going over the help.txt file and suggesting corrections.
 2. A changelog is available in CHANGES
 
 INSTALLATION
@@ -16,7 +16,7 @@ WINDOWS
 
 Installing the executable:
 
-1. Ensure you have the following two .dll files where your system can seem them eg. in c:\windows\system\ or in the directory where you put the lekho executable lekho.exe
+1. Ensure you have the following two .dll files where your system can see them eg. in c:\windows\system\ or in the directory where you put the lekho executable lekho.exe
 	a)	msvcrt.dll and 
 	b)	qt-mt230nc.dll
 
@@ -108,7 +108,7 @@ PERSONALISING THE ROMANISATION RULES
 
 Take a look at the files in the .lekho/ directory. The files kar.txt, jukto.txt and shor.txt contain the romanisation rules. You need to keep a unicode chart for
 bangla open by you as you change the first column of each entry in each file to suit you preferences for the transliteration rules. For instance to get the
-"onnushor" symbol (à¦) the default rule is you type "NNG"
+"onnushor" symbol (ï¿½ the default rule is you type "NNG"
 You probably don't like that. So you open up the file "jukto.txt" and look at the relevant line, which is
 NNG 1 0982
 which tells Lekho that hitting NNG should insert the single unicode character 0x0982. You would like to use the keystroke "~" to do the job. Just change

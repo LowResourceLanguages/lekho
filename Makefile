@@ -186,6 +186,7 @@ $(OBJ_DIR)/main.o: Gui/main.cpp Gui/application.h
 $(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
 		include/bangla.h \
 		include/startup.h \
+		Gui/lekho.xpm \
 		Gui/filesave.xpm \
 		Gui/fileopen.xpm \
 		Gui/fileprint.xpm

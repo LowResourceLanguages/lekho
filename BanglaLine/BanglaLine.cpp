@@ -75,6 +75,7 @@ bool BanglaLine::insert(int col, const BanglaLetterList &bll)
 	{
 		--i;
 		col_ = letter.insert(col_, *i);
+		lineWidth += (*i).width ;
 	}
 /*
 	BanglaLetterList::ConstIterator i = bll.end() ;

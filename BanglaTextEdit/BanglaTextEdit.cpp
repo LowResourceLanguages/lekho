@@ -62,10 +62,11 @@ inline bool isTab(const QChar &text)
 	else return(false);
 }
 
-BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
+BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name, bool _readonly)
 //	    : QScrollView(parent, name, WRepaintNoErase|WResizeNoErase|WPaintClever|WNorthWestGravity )
 	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
 {
+	readonly = _readonly ;
 
 #ifdef Q_WS_X11
 	//otherwise on X11 systems Lekho can't paste to other apps
@@ -115,9 +116,12 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
 
 }
 
-BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontSize )
+BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontSize, bool _readonly )
 	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
 {
+
+	readonly = _readonly ;
+
 #ifdef Q_WS_X11
 	//otherwise on X11 systems Lekho can't paste to other apps
 	QApplication::clipboard()->setSelectionMode(true);
@@ -286,6 +290,14 @@ bool BanglaTextEdit::initialiseParser(QTextStream &kar, QTextStream &jukto, QTex
 int BanglaTextEdit::insert (int para, int col, const QString &text)
 //, bool indent , bool checkNewLine , bool removeSelected)
 {
+
+	if( readonly )
+		return 0 ;
+
+	//QPoint pc(col, para) ;
+	//QPoint linecol = theDoc.paragraph2line( pc );
+	//firstLineToDraw = linecol.y() ;
+
 	BanglaLetterList bll ;
 	QValueList<QString> segmentedText ; segment(text, segmentedText);
 
@@ -331,6 +343,13 @@ int BanglaTextEdit::insert (int para, int col, const QString &text)
 //function::del
 void BanglaTextEdit::del(int para1, int col1, int para2, int col2 )
 {
+	if( readonly )
+		return ;
+		
+	//QPoint pc(col1, para1) ;
+	//QPoint linecol = theDoc.paragraph2line( pc );
+	//firstLineToDraw = linecol.y() ;
+
 	BanglaLetterList bll ;
     	setModified( true );
 	theDoc.del(para1, col1, para2, col2, bll);
@@ -717,8 +736,10 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
  */
 void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 {
-	int maxPaintWidth = viewport()->width();
+	//p->flush();
+	//p->end();
 
+	int maxPaintWidth = viewport()->width();
 
 	if (oldWidth != maxPaintWidth)
 	{
@@ -730,8 +751,6 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 		cursorDraw();
 	}
 
-	p->setPen(foreground);
-	p->setBackgroundColor(background);
 
 	int	lineHeight = theDoc.getLineHeight(),
 		startLine = (int)(float(cy)/(float)lineHeight),
@@ -740,6 +759,14 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 
 	//leettle hack here, + 20 for safety
 	resizeContents( theDoc.getMaxLineWidth() + 20, lineHeight * theDoc.totalScreenLines());
+
+	//QPixmap pm(theDoc.getMaxLineWidth() + 20, lineHeight * theDoc.totalScreenLines());
+	//QPainter *p = new QPainter ;
+	//p->begin(&pm, this );
+
+
+	p->setPen(foreground);
+	p->setBackgroundColor(background);
 
 
 	bool selectionInView = false ;
@@ -751,6 +778,12 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 			selectionInView = true ;
 
 	}
+
+	//if( firstLineToDraw > startLine)
+	//{
+	//	startLine = firstLineToDraw ;
+	//	curry = startLine*lineHeight ;
+	//}
 
 	for(int i = startLine ; i <= endLine ; i++)
 	{
@@ -786,6 +819,8 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 
 	}
 
+	//firstLineToDraw = 0 ;	//reset it. Only insert or delete should set it to anythng less...
+
 	//draw the cursor
         if (theCursor.cursorOn && viewport()->hasFocus())
         {
@@ -798,10 +833,14 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 			//p->drawRect(cursorRect);
 			p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
 		else
-			p->fillRect(cursorRect,QBrush(QBrush::Dense5Pattern));
+			p->fillRect(cursorRect,QBrush(QBrush::Dense3Pattern));
+			//p->fillRect(cursorRect,QBrush(QBrush::HorPattern));
 		p->setRasterOp(CopyROP);
         }
 
+	//p->end();
+        //bitBlt(this, 0, 0, &pm);
+	//delete p ;
 }
 
 //draws one line of text in bangla and english
@@ -858,8 +897,8 @@ void BanglaTextEdit::paintLineSegment(QPainter *p, int x, int y, int segmentWidt
 {
 	if( screenText.length() == 0) return ;
 
-	p->drawText( x, y, segmentWidth, lineHeight , AlignLeft | AlignTop, screenText);
-
+	//p->drawText( x, y, segmentWidth, lineHeight , AlignLeft | AlignTop, screenText);
+	p->drawText( x, y, segmentWidth, lineHeight , AlignCenter | DontClip , screenText);
 }
 
 //function::delSelected()
@@ -868,7 +907,7 @@ void BanglaTextEdit::delSelected()
 {
 	if(!hasSelText)
 		return ;
-		
+
 	cursorErase();
 	del(paracolSelStart.y(),paracolSelStart.x(),paracolSelEnd.y(),paracolSelEnd.x()-1);
 	hasSelText = false ;
@@ -1013,7 +1052,8 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 				{
 					cursorErase();
 					insert (theCursor.paracol.y(), theCursor.paracol.x(), event->text());
-					theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
+					for(int howmanycharacters = 0 ; howmanycharacters < (int)event->text().length() ; howmanycharacters++)
+						theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 					cursorDraw();
 				}
 				else
@@ -1447,12 +1487,12 @@ QRect BanglaTextEdit::calculateCursorRect()
 	if( partialCodeInserted )
 	{
 		theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
-		QRect crs(theCursor.xy.x(), theCursor.xy.y() , 5 , theDoc.getLineHeight());
+		QRect crs(theCursor.xy.x(), theCursor.xy.y() , 1 , theDoc.getLineHeight());
 		theDoc.moveCursor( Key_Left, theCursor.xy, theCursor.paracol);
 		return crs;
 	}
 	else
-		return QRect(theCursor.xy.x(), theCursor.xy.y() , 5 , theDoc.getLineHeight());
+		return QRect(theCursor.xy.x(), theCursor.xy.y() , 1 , theDoc.getLineHeight());
 }
 
 

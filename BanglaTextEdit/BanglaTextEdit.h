@@ -69,6 +69,8 @@ class BanglaTextEdit : public QScrollView
 	Q_OBJECT
 
 protected:
+	bool	readonly ;	//if true then we can't write or paste on the scrollview...
+
 	LekhoCursor theCursor ;
 	QPoint paracolSelStart, paracolSelEnd ,	//the selection para/col
 		xySelStart , xySelEnd ,
@@ -97,6 +99,7 @@ protected:
 	bool modified ;		//has the document been modified
 
 	int cursorLine, cursorCol ;	//cursorLine and cursorCol in document coordinates
+		//firstLineToDraw ;	//attempt to reduce flicker...
 
 	QString space, tab ;
 
@@ -108,8 +111,8 @@ protected:
 	// Initializing functions ////////////////////////////////////////////////////
 public:
 	//BanglaTextEdit ( const QString &text, const QString &context = QString::null, QWidget *parent = 0, const char *name = 0 );
-	BanglaTextEdit( QWidget *parent=0, QString name=0);
-	BanglaTextEdit( BanglaTextEdit *bte, QString name=0, QWidget *parent=0, int maxFontSize = 1000 );
+	BanglaTextEdit( QWidget *parent=0, QString name=0, bool _readonly = false );
+	BanglaTextEdit( BanglaTextEdit *bte, QString name=0, QWidget *parent=0, int maxFontSize = 1000, bool _readonly = false );
 	virtual ~BanglaTextEdit();
 
 	//set tab width
