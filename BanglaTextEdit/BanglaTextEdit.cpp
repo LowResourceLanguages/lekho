@@ -687,8 +687,28 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 	return(latex);
 }
 
-
-
+	contents
+	|-----------------------|
+	|			|
+	|			|
+	|	viewport	|
+	|    |------------|------------contentsY()
+	|    |		  |	|
+	|    |		  |	|
+	|    |	update zone	|
+	|    |	|-------|--------------cy
+	|    |	|	| |	|
+	|    |	|ch  *--|-|-----|------------- pixmap has to be blitted here
+	|    |	|    cw	| |	|
+	|    |	|-------| |	|
+	|    |--|---------|	|
+	|    |	|		|
+	|----|--|---------------|
+	     |  |
+	     |  |
+	     |  cx
+	     |
+	contentsX()
 
 //function::drawContents
 /*
