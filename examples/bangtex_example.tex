@@ -1,28 +1,48 @@
-\documentclass[12pt]{barticle}
+\documentclass[15pt]{barticle}
 
 \textwidth=12cm
 \textheight=18cm
 \oddsidemargin=0mm
 \evensidemargin=0mm
 \tolerance=10000
-
+\renewcommand{\baselinestretch}{1.2}
 \begin{document}
 
-This is an example of how to use lekho and bangtex together. Please read the bantex manuals for details on how to use bangtex itself. Lekho removes the burden of having to read romanised bangla with asterix marks in the old way of typing bangla in bangtex.
+This is an example of how to use lekho and bangtex together\footnote{Please read the bantex manuals for details on how to use bangtex itself}. 
 
-To write bangla in a primarily english document use {\verb {\bng..} } to enclose the bangla part (depicted here as ..), e.g.
+Lekho removes the burden of having to read romanised bangla with asterix marks in the old way of typing bangla in bangtex.
+
+To write bangla in a primarily english document use \verb!{\bng xx}! to enclose the bangla part (depicted here as xx), 
+
+The following code\\
+\verb!{\bng! 
+{\bng এই ভাবে} \verb!{\tt \LaTeX file}! {\bng এ বাংলা এবং ইংরাজি মেলান যায়} \verb!}!
+
+will produce\\
 {\bng
-এই ভাবে {\tt \LaTeX } এ বাংলা এবং ইংরাজি মেলান যায়
+এই ভাবে {\tt \LaTeX ~file} এ বাংলা এবং ইংরাজি মেলান যায়
 }
 
-This was produced by the following code
-{\verb {\bng\\এই ভাবে {\tt \LaTeX} এ বাংলা এবং ইংরাজি মেলান যায়}\\}
+To write english in a primarily bangla document start off with \verb!\bng! at the very begining. The whole document is then in bangtex mode. Insert English by typing \verb!\tt{ xx }!, {\tt xx} being the English part.
 
-To write english in a primarily bangla document 
-\bng
+...\\
+\verb!\begin{document}!\\
+\verb!\bng!\\
+...\\
+\verb!{\tt This is the English part}!\\
+...\\
+\verb!\end{document}!
 
-আমার নাম {\LBng কার্তিক শবযান্তা} আমি চঁাদে থাকি, কাব্য  লিখি, ক্লাসিক্‌ পরিক্ষা দিই, এবং পাগলের স্বরে চিত্‌কার করি। 
+\framebox{\parbox[t]{10cm}{\it Remember, in {\bng লেখ} hitting ctrl-L will export the current file into a bangtex file. The first time you hit ctrl-L {\bng লেখ} will ask for a file name}}
 
-{\tt Though the previous sentence doesn't make much sense it shows you how to use bangtex from lekho. This para shows you how to insert english into a bangtex document}
+\noindent The following lines are just a test to see if the {\bng যুক্তাক্ষর} work :\\
+{\lbng শবযান্তা\\
+চঁাদে\\
+কাব্য\\
+ক্লাসিক্‌\\
+পরিক্ষা\\
+স্বরে\\
+চিত্‌কার\\
+}
 
 \end{document}
