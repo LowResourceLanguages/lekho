@@ -21,6 +21,11 @@
 
 #include <bangla.h>
 
+/*
+NOTE: This function never rearranges the letters, ecept in one case - if the chondrobindu is put after the kar
+then the chondrobindu is moved ahead of the kar..
+*/
+
 //QValueList<QString> segment(const QString &a)
 void segment(const QString &a, QValueList<QString> &out)
 {
@@ -56,15 +61,30 @@ void segment(const QString &a, QValueList<QString> &out)
 		else
 		{
 			//a kar always means the letter has ended
+			//except when some people put a chondrobindu at the end !
 			if(kar.find(a[i]) > -1)
 			{
+				if(a[i+1] == candrabindu)	//chondrobindo after
+				{
+					temp += candrabindu ;
+					temp += a[i++];
+				}
+				else
+					temp += a[i] ;
+
+				out.append(temp);
+				temp = "";
+			/*
 				temp += a[i] ;
 				out.append(temp);
 				temp = "";
+			*/
 			}
 			else
-				//a vowel always stands alone, unless there's a chondrobindu
-				//basically an exception for aa^
+			/*
+				//a vowel always stands alone,
+				//unless there's a chondrobindu
+				//or a jawphola (exception for a actually)
 				if(vowel.find(a[i]) > -1)
 				{
 					if(!temp.isEmpty())
@@ -75,9 +95,14 @@ void segment(const QString &a, QValueList<QString> &out)
 					if(a[i+1] == candrabindu)	//chondrobindo after
 						out.append(QString(a[i++])+candrabindu);
 					else
+					if(a[i+1] ==
+					{
+
+					}
+					else
 						out.append(QString(a[i]));
 				}
-				else
+				else*/
 					//this must be a consonant,ligature or zwnj
 					if( a[i] == ligature )//out of step here, ignore
 					{

@@ -922,7 +922,7 @@ void ApplicationWindow::about()
 			"It can export to html and bangtex\n"
 			"Please see help.txt (bangla) and help_en.txt (english)\n"
 			"to learn how to operate the program\n"
-			"This is version 1.0\n"
+			"This is version 1.1\n"
 			"Comments and suggestions to kghose@users.sourceforge.net");
 }
 
