@@ -553,23 +553,28 @@ void ApplicationWindow::print()
 
 	printer->setMinMax(1,6500);
 
-	//has ther use set the pages
+	//has the user set the pages
 	if(startPage == 0) startPage = 1 ;
 	if(endPage == 0) endPage = 6500 ;	//basically - all the pages
 
 	bool 	firstPrint = true ;	//don't want to wordWrap document every time we print a page...
 
 	for(int copy = 0 ; copy < printer->numCopies(); copy++)
-	for(int i = startPage - 1 ; i <= endPage - 1; i++)
 	{
-		if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
+		if(!e->print( &p , startPage - 1 , firstPrint, pageWidth, pageHeight,
 			leftMargin, rightMargin,
 			topMargin, bottomMargin))
 			break ;
 
-		printer->newPage();
+		for(int i = startPage ; i <= endPage - 1; i++)
+		{
+			printer->newPage();
+			if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
+				leftMargin, rightMargin,
+				topMargin, bottomMargin))
+				break ;
+		}
 	}
-
     }
 #endif
 }
