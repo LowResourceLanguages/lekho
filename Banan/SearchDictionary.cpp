@@ -104,7 +104,7 @@ bool	SearchDictionary::lookUpWord(const QString &wd) 	//basic search, will elabo
 }
 
 //mutate words and see if they are in dict
-void	SearchDictionary::findValidMutants(QString &wd, QStringList &mutantList)
+void	SearchDictionary::findValidMutants(const QString &wd, QStringList &mutantList)
 {
 
 	cout << "Generating mutants" << endl ;

@@ -487,7 +487,7 @@ void BanglaTextEdit::replaceAll(const QStringList &w)
 void BanglaTextEdit::findWrongWord()
 {
 	QString wrongWord ;
-	QStringList suggestions ;
+	QStringList suggestions , suggestionsScreenFont ;
 
 	findNextWrongWord( wrongWord , suggestions ) ;
 	emit foundWrongWord( wrongWord ) ;
@@ -496,7 +496,6 @@ void BanglaTextEdit::findWrongWord()
 	if(suggestions.count() > 0)
 	{
 		//clumsy but necessary, pass the screen font version too so that we can see it
-		QStringList suggestionsScreenFont ;
 		for(int i = 0 ; i < (int)suggestions.count() ; i++)
 		{
 			QStringList segmentedText ;
@@ -511,8 +510,16 @@ void BanglaTextEdit::findWrongWord()
 			suggestionsScreenFont.append( screenFontText);
 		}
 
-		emit suggestionList( suggestions , suggestionsScreenFont);
 	}
+	else
+	{
+		//fool it...
+		suggestions.append( wrongWord );
+		suggestionsScreenFont.append("---");
+	}
+
+	emit suggestionList( suggestions , suggestionsScreenFont);
+
 /*
 	//the mutant list.... just testing
 	for(int i = 0 ; i < (int)suggestions.count() ; i++)
@@ -614,6 +621,43 @@ void BanglaTextEdit::replaceWrongWordWith(const QString &wd)
 
 	viewport()->update();
 }
+
+void BanglaTextEdit::checkWord(const QString &wd )
+{
+	QString dictMsg ;
+	QStringList suggestions ;
+
+	banan->findValidMutants(wd, suggestions);
+
+	if( banan->getMessage( dictMsg ) )
+		emit statusBarMessage( dictMsg );
+
+	if( banan->getError( dictMsg ) )
+		emit errorMessage( dictMsg ) ;
+
+	//the mutant list, if you want it
+	if(suggestions.count() > 0)
+	{
+		//clumsy but necessary, pass the screen font version too so that we can see it
+		QStringList suggestionsScreenFont ;
+		for(int i = 0 ; i < (int)suggestions.count() ; i++)
+		{
+			QStringList segmentedText ;
+			segment(suggestions[i], segmentedText);
+
+			QString screenFontText ;
+
+			QStringList::ConstIterator i ;
+			for(i = segmentedText.begin() ; i != segmentedText.end() ; ++i)
+				screenFontText += lipi->unicode2screenFont((*i));
+
+			suggestionsScreenFont.append( screenFontText);
+		}
+
+		emit suggestionList( suggestions , suggestionsScreenFont);
+	}
+}
+
 
 //get an existing one
 bool BanglaTextEdit::screenFontConverterInit(FontConverter *fc)

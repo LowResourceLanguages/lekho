@@ -258,6 +258,9 @@ public slots:
 	//and replaces it with this one
 	void replaceWrongWordWith(const QString &wd);
 
+	//checks this word for spelling and suggests mutants
+	void checkWord(const QString &wd );
+
 	// clipboard ops ////////////////////////////////////////////////////////////
 	void clipBoardOp(int id);
 	void clipboardChanged();

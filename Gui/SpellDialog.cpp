@@ -45,19 +45,22 @@ SpellDialog::SpellDialog(BanglaTextEdit *bte, QString name, QWidget *parent)// ,
 	suggestionList = new QStringList() ;
 
 
-	QPushButton *skipbtn = new QPushButton("&Skip",this) ;
+	QPushButton *skipbtn = new QPushButton("&Next",this) ;
 	QPushButton *replacebtn = new QPushButton("&Replace",this) ;
+	QPushButton *checkbtn = new QPushButton("&Check",this) ;
 	QPushButton *topbtn = new QPushButton("&Top",this) ;
 
 	skipbtn->setGeometry(5,3,90,30);
 	replacebtn->setGeometry(5,35,90,30);
-	topbtn->setGeometry(5,67,90,30);
+	checkbtn->setGeometry(5,67,90,30);
+	topbtn->setGeometry(5,99,90,30);
 
 	connect( findedit, SIGNAL(returnPressed()), this, SLOT(findPressed()));
 	connect( skipbtn, SIGNAL(clicked()), this, SLOT(findPressed()));
 	connect( replaceedit, SIGNAL(returnPressed()), this, SLOT(replacePressed()));
 	connect( replacebtn, SIGNAL(clicked()), this, SLOT(replacePressed()));
 	connect( topbtn, SIGNAL(clicked()), this, SLOT(topPressed()));
+	connect( checkbtn, SIGNAL(clicked()), this, SLOT(checkPressed()));
 	connect( suggestionBox , SIGNAL(highlighted(int)), this, SLOT(suggestionSelected(int)) );
 
 	findedit->show();findedit->setFocus();
@@ -106,4 +109,10 @@ void SpellDialog::replacePressed()
 void SpellDialog::topPressed()
 {
 	emit	top();
+}
+
+void SpellDialog::checkPressed()
+{
+	replaceedit->flush();
+	emit	checkWord( replaceedit->unicode() );
 }

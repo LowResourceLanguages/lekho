@@ -812,6 +812,8 @@ void ApplicationWindow::spellCheck()
 	connect(e, SIGNAL( suggestionList(const QStringList & , const QStringList &) ), fd , SLOT( setSuggestionList(const QStringList &, const QStringList &) ) );
 	connect(fd, SIGNAL(replace(const QString &)), e, SLOT(replaceWrongWordWith(const QString &)) );
 	connect(fd, SIGNAL(top()), e, SLOT(top()) );
+	connect(fd, SIGNAL( checkWord(const QString &) ), e, SLOT( checkWord(const QString & ) ) );
+
 }
 
 

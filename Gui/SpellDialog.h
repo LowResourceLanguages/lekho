@@ -49,6 +49,7 @@ private slots:
 	void findPressed();
 	void replacePressed();
 	void topPressed();
+	void checkPressed();
 	void wordFound(const QString &wd) ;
 	void setSuggestionList(const QStringList &suggestions , const QStringList &suggestionsScreenFont);
 	void suggestionSelected(int i);
@@ -57,6 +58,7 @@ signals:
 	void findNext();
 	void replace(const QString &wd);
 	void top();
+	void checkWord(const QString &wd );
 };
 
 #endif
