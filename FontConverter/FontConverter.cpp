@@ -132,7 +132,6 @@ QString FontConverter::unicode2screenFont(QString uc)
 {
 	QString out;
 	QChar thisKar ;
-//	QChar candrabindu(0x0981), ligature(0x09cd), zwnj(0x200c);
 	QChar candrabindu(0x0981), zwnj(0x200c);
 
 	//take out vowel modifier, jawfola or ref.

@@ -138,7 +138,6 @@ ApplicationWindow::ApplicationWindow()
     //File
     QPopupMenu * file = new QPopupMenu( this );
 
-
     file->insertItem( "&New", this, SLOT(newDoc()), CTRL+Key_N );
 
     int id;
@@ -154,6 +153,7 @@ ApplicationWindow::ApplicationWindow()
     file->setWhatsThis( id, fileSaveText );
 
     file->insertSeparator();
+
 
     id = file->insertItem( "Export screenfont &html", this, SLOT(HTMLexport()), CTRL+Key_H );
     //file->setWhatsThis( id, htmlExportText );
@@ -240,10 +240,7 @@ ApplicationWindow::ApplicationWindow()
     statusBar()->message( "HINT : Press ESC to change language") ; //, 2000 );
 
     setGeometry(thePref.pos);
-    //resize( 450, 600 );
 
-
-    //printDebug();
 }
 
 
