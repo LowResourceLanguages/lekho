@@ -24,12 +24,103 @@
 
 bool LekhoPrefs::load(const QString &filename)
 {
-	Preferences theFile(filename,"lekho", "0.0");	//all verisons should use same file
+	//if(theFile != NULL)
+	//delete theFile ;
+	theFile = new Preferences(filename,"lekho", "0.0");	//all versions should use same file
+
+	//start up stuff, including position and parser files...
+	theFile->setGroup("startup");
+	initFile = theFile->getString("lekhorc",filename) ;	//generally .lekhorc
+	initDir = theFile->getString("initdir",".lekho/"); 		//directory where our startup files are e.g. .lekho
+	modifierFileName = theFile->getString("karchinno","kar.txt");	//kar
+	modifiableFileName = theFile->getString("banjonborno","jukto.txt");	//jukto/banjon
+	unmodifiableFileName = theFile->getString("shoroborno","shor.txt");	//shoroborno
+	screenfontFileName = theFile->getString("screenfont","adarshalipi.txt");	//unicode->screenfont rules file
+	latexFileName = theFile->getString("latex","bangtex.txt");	//unicode->screenfont rules file
+
+	dictDir = theFile->getString("banan directory","Dict/");	//spellings
+
+	pos.setX(theFile->getNumber("xpos",10));
+	pos.setY(theFile->getNumber("ypos",10));
+	pos.setWidth(theFile->getNumber("width",600));
+	pos.setHeight(theFile->getNumber("height",600));
+
+	//working directories etc.
+	theFile->setGroup("directories");
+	workingDir = theFile->getString("workingdir","./");	//where we look for our text files
+	htmlDir = theFile->getString("htmldir","./");		//remember where we stored out html export
+	latexDir = theFile->getString("latexdir","./");	//remember where we stored our latex exports
+
+	//appearance
+	theFile->setGroup("appearance");
+	QString fntName = theFile->getString("bangla_font","AdarshalipiExp");
+	int fntSize = theFile->getNumber("bangla_font_size",15);
+	banglaFont.setFamily(fntName) ;
+	banglaFont.setPointSize(fntSize);
+	fntName = theFile->getString("english_font","Arial");
+	fntSize = theFile->getNumber("english_font_size",12);
+	englishFont.setFamily(fntName) ;
+	englishFont.setPointSize(fntSize);
+	foreground.setNamedColor(theFile->getString("foreground_color","#dedede"));
+	background.setNamedColor(theFile->getString("background_color","#000000")) ;
+	syntaxColor.setNamedColor(theFile->getString("syntax_color","#00ff00")) ;
+
+	//advanced
+	theFile->setGroup("advanced");
+	cursorBlink = theFile->getBool("cursor_blinks",true);
+	wordWrap = theFile->getBool("word_wrap",true);
+	syntaxHighlighting = theFile->getBool("syntax_highlighting",true);
+
+	return true ; 	//do checks later
 }
 
 bool LekhoPrefs::save(const QString &filename)
 {
+//	theFile->setString("lekhorc",initFile) ;	//generally .lekhorc
 
+	//start up stuff, including position and parser files...
+	theFile->setGroup("startup");
+	theFile->setString("lekhorc",initFile) ;	//generally .lekhorc
+	theFile->setString("initdir",initDir); 		//directory where our startup files are e.g. .lekho
+	theFile->setString("karchinno",modifierFileName);	//kar
+	theFile->setString("banjonborno",modifiableFileName);	//jukto/banjon
+	theFile->setString("shoroborno",unmodifiableFileName);	//shoroborno
+	theFile->setString("screenfont",screenfontFileName);	//unicode->screenfont rules file
+	theFile->setString("latex",latexFileName);		//unicode->bangtex
+
+	theFile->setString("banan directory", dictDir);		//unicode->bangtex
+
+	theFile->setNumber("xpos",pos.x());
+	theFile->setNumber("ypos",pos.y());
+	theFile->setNumber("width",pos.width());
+	theFile->setNumber("height",pos.height());
+
+	//working directories etc.
+	theFile->setGroup("directories");
+	theFile->setString("workingdir",workingDir);	//where we look for our text files
+	theFile->setString("htmldir",htmlDir);		//remember where we stored out html export
+	theFile->setString("latexdir",latexDir);	//remember where we stored our latex exports
+
+	//appearance
+	theFile->setGroup("appearance");
+	theFile->setString("bangla_font", banglaFont.family() );
+	theFile->setNumber("bangla_font_size",banglaFont.pointSize());
+	theFile->setString("english_font", englishFont.family() );
+	theFile->setNumber("english_font_size",englishFont.pointSize());
+	theFile->setString("foreground_color",foreground.name());
+	theFile->setString("background_color",background.name());
+	theFile->setString("syntax_color",syntaxColor.name());
+
+	//advanced
+	theFile->setGroup("advanced");
+	theFile->setBool("cursor_blinks",cursorBlink);
+	theFile->setBool("word_wrap",wordWrap);
+	theFile->setBool("syntax_highlighting",syntaxHighlighting);
+
+	theFile->flush();
+	//theFile->writeData();
+
+	return true ;	//will do check later...
 }
 
 /*
@@ -59,7 +150,8 @@ QTextStream& operator << (QTextStream& pipe , LekhoPrefs& thePref)
 
 	return pipe ;
 }
-
+*/
+/*
 QTextStream& operator >> (QTextStream& pipe , LekhoPrefs& thePref)
 {
 	QString dummy, bFont, eFont ;

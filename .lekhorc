@@ -1,34 +1,35 @@
-[initfile]
-.lekhorc
-[initdir]
-.lekho/
-[modifierfile]
-kar.txt
-[modifiablefile]
-jukto.txt
-[unmodifiablefile]
-shor.txt
-[screenfontfile]
-adarshalipi.txt
-[workingdir]
-../v1.0/examples/
-[htmldir]
-html
-[latexdir]
-latex
-[posx]
-10
-[posy]
-100
-[height]
-400
-[width]
-600
-[banglafont]
-AdarshaLipiExp 20 
-[englishfont]
-arial 15 
-[foreground]
-0 0 0
-[background]
-255 255 255 
+<!DOCTYPE preferences>
+<preferences application="lekho" version="0.0" >
+ <group name="advanced" >
+  <option key="cursor_blinks" value="false" />
+  <option key="word_wrap" value="true" />
+ </group>
+ <group name="appearance" >
+  <option key="background_color" value="#000000" />
+  <option key="bangla_font" value="Adarshalipinormal" />
+  <option key="bangla_font_size" value="18" />
+  <option key="english_font" value="Fixed [Misc]" />
+  <option key="english_font_size" value="18" />
+  <option key="foreground_color" value="#55ffff" />
+  <option key="lekhorc" value=".lekhorc" />
+ </group>
+ <group name="directories" >
+  <option key="htmldir" value="/home/kghose/Lekho/v1.0/examples" />
+  <option key="latexdir" value="/home/kghose/C++/Lekho/tex" />
+  <option key="workingdir" value="/home/kghose/C++/Lekho/v1.0/examples" />
+ </group>
+ <group name="startup" >
+  <option key="banan directory" value="/home/kghose/Dict/" />
+  <option key="banjonborno" value="jukto.txt" />
+  <option key="height" value="679" />
+  <option key="initdir" value="/home/kghose/.lekho/" />
+  <option key="karchinno" value="kar.txt" />
+  <option key="latex" value="bangtex.txt" />
+  <option key="lekhorc" value="/home/kghose/.lekhorc" />
+  <option key="screenfont" value="adarshalipi.txt" />
+  <option key="shoroborno" value="shor.txt" />
+  <option key="width" value="625" />
+  <option key="xpos" value="243" />
+  <option key="ypos" value="0" />
+ </group>
+</preferences>

@@ -1,6 +1,6 @@
 /*
-*  lekho will ultimately be a full fledged bangla word processor
-*  Copyright (C) 2001 Kaushik Ghose kghose@wam.umd.edu
+*  lekho is a simle bangla unicode editor
+*  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -79,11 +79,11 @@ protected:
 		MODIF
 	};
 
-	CodeTreeElement modifiable,	//shoroborno, consonants and conjuncts
-			unmodifiable,	//banjonborno, cant have kar stuck to them
-			modifier;	//kar vowel sounds added to consonants or ligatures
+	CodeTreeElement *modifiable,	//shoroborno, consonants and conjuncts
+			*unmodifiable,	//banjonborno, cant have kar stuck to them
+			*modifier;	//kar vowel sounds added to consonants or ligatures
 
-	CodeTreeElement* codeTreePointer ;	//where we are now on the transliteration tree
+	CodeTreeElement *codeTreePointer ;	//where we are now on the transliteration tree
 
 	ParserState 	state ,		//the state of this machine
 			lastState ;	//previous state, only needed with escape sequences
@@ -97,10 +97,11 @@ protected:
 public:
 
 	Parser();
+	Parser(Parser *);
 	~Parser();
 
 protected:
-	void	addToTree(CodeTreeElement &C, QString letter, QString u);
+	void	addToTree(CodeTreeElement *C, QString letter, QString u);
 	bool	loadCodeFileLine(QTextStream &file, TreeIdentifier id);
 
 public:
@@ -132,6 +133,10 @@ public:
 
 	void forceBangla();
 	void forceEnglish();
+
+	void keyMapUnModifiable(QStringList &key, QStringList &code);
+	void keyMapModifier(QStringList &key, QStringList &code);
+	void keyMapConjunct(QStringList &key, QStringList &code);
 
 public:
 	friend QTextStream& operator << (QTextStream &pipe , Parser& P);

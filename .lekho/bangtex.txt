@@ -1,0 +1,67 @@
+NN :/ M Y R L W a i ii u uu rR e oi ou
+
+1	0964	.
+1	0965	..
+1	0982	NNG
+1	0983	{h}
+1	0985	A
+1	0986	Aa
+1	0987	I
+1	0988	II
+1	0989	U
+1	098a	UU
+1	098b	RR
+1	098c	9
+1	098f	E
+1	0990	OI
+1	0993	O
+1	0994	OU
+1	0995	k
+1	0996	kh
+1	0997	g
+1	0998	gh
+1	0999	NG
+1       099a   	c
+1       099b    ch
+1       099c    j
+1       099d    jh
+1       099e    NJ
+1       099f    T
+1       09a0    Th
+1       09a1    D
+1       09a2    Dh
+1       09a3    N
+1       09a4    t
+1       09a5    th
+1       09a6    d
+1       09a7    dh
+1       09a8    n
+1       09aa    p
+1       09ab    ph
+1       09ac    b
+1       09ad    bh
+1       09ae    m
+1       09af    J
+1       09b0    r
+1       09b2    l
+1       09b6    sh
+1       09b7    Sh
+1       09b8    s
+1       09b9    H
+1       09dc    rh
+1       09dd    rhh
+1       09df    y
+1       09e6    0
+1       09e7    1
+1       09e8    2
+1       09e9    3
+1       09ea    4
+1       09eb    5
+1       09ec    6
+1       09ed    7
+1       09ee    8
+1       09ef    9
+3	09a4	09cd	200c	t//
+3	0995	09cd	09b7	kK
+	
+

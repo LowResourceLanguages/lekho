@@ -24,33 +24,17 @@
 
 //#include<iostream.h>
 
-#include<qfont.h>
-#include<qtextstream.h>
-#include<qcolor.h>
+#include<preferences.h>
 
-/*
-const char
-		INITFILE[]	= "[initfile]" ,
-		INITDIR[]	= "[initdir]" ,
-		KARNAME[]	= "[modifierfile]" ,
-		JUKTONAME[]	= "[modifiablefile]" ,
-		SHORNAME[]	= "[unmodifiablefile]" ,
-		SCREENFONTFILE[]= "[screenfontfile]" ,
-		WORKINGDIR[]	= "[workingdir]",
-		HTMLDIR[]	= "[htmldir]" ,
-		LATEXDIR[]	= "[latexdir]" ,
-		X[]		= "[posx]" ,
-		Y[]		= "[posy]" ,
-		HEIGHT[]	= "[height]" ,
-		WIDTH[]		= "[width]" ,
-		BANGLAFONT[]	= "[banglafont]" ,
-		ENGLISHFONT[]	= "[englishfont]" ,
-		FOREGROUND[]	= "[foreground]" ,
-		BACKGROUND[]	= "[background]" ;
-*/
+#include<qcolor.h>
+#include<qfont.h>
+#include<qrect.h>
+#include<qtextstream.h>
+
 //just a structure to encapsulate lekho directories, start up files etc. etc.
 struct LekhoPrefs
 {
+	Preferences *theFile ;
 
 	QString	initFile,	//generally .lekhorc
 		initDir,	//directory where our startup files are e.g. .lekho
@@ -60,16 +44,28 @@ struct LekhoPrefs
 		modifiableFileName,	//jukto/banjon
 		unmodifiableFileName,	//shoroborno
 		screenfontFileName,	//unicode->screenfont rules file
+		latexFileName,		//unicode->latex
 
 		workingDir,	//where we look for our text files
 		htmlDir,	//remember where we stored out html export
-		latexDir;	//remember where we stored our latex exports
+		latexDir,	//remember where we stored our latex exports
 
-	int	x,y, width, height ;
+		dictDir ;	//spellings directory
+
+	//int	x,y, width, height ;
+	QRect	pos ;
+
 	QFont	banglaFont,
 		englishFont ;
 	QColor	foreground,
-		background ;
+		background,
+		syntaxColor ;
+
+	bool	cursorBlink,
+		wordWrap,
+		syntaxHighlighting  ;
+
+	LekhoPrefs() { theFile = NULL ; }
 
 	bool	load(const QString& );
 	bool	save(const QString& );

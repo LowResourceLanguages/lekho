@@ -1,6 +1,6 @@
 /*
-*  lekho will ultimately be a full fledged bangla word processor
-*  Copyright (C) 2001 Kaushik Ghose kghose@wam.umd.edu
+*  lekho is a simple bangla unicode editor
+*  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -26,14 +26,36 @@
 
 Parser::Parser()
 {
+	modifiable	= new CodeTreeElement();//shoroborno, consonants and conjuncts
+	unmodifiable	= new CodeTreeElement() ;	//banjonborno, cant have kar stuck to them
+	modifier	= new CodeTreeElement();
+
 	state = WAIT_BANGLA ;
 	lastState = state ;
-	codeTreePointer = &modifiable ;
+	codeTreePointer = modifiable ;
 	//breakJuktakkhor = 'x';
 	makeJuktakkhor = '/' ;
 
 	codeStack = "";
 	completeCharacterAvailable = false ;
+}
+
+Parser::Parser(Parser *p)
+{
+	modifiable	= p->modifiable ;//shoroborno, consonants and conjuncts
+	unmodifiable	= p->unmodifiable ;	//banjonborno, cant have kar stuck to them
+	modifier	= p->modifier ;
+
+	state = WAIT_BANGLA ;
+	lastState = state ;
+	codeTreePointer = modifiable ;
+	//breakJuktakkhor = 'x';
+	makeJuktakkhor = '/' ;
+
+	codeStack = "";
+	completeCharacterAvailable = false ;
+
+
 }
 
 Parser::~Parser()
@@ -71,15 +93,15 @@ bool Parser::loadCodeFileLine(QTextStream &file, TreeIdentifier id)
 	switch(id)
 	{
 	case MOD:
-		CodeTreeElement::addToTree(modifiable, letter, code);
+		CodeTreeElement::addToTree((*modifiable), letter, code);
 		break;
 
 	case UNMOD:
-		CodeTreeElement::addToTree(unmodifiable, letter, code);
+		CodeTreeElement::addToTree((*unmodifiable), letter, code);
 		break;
 
 	case MODIF:
-		CodeTreeElement::addToTree(modifier, letter, code);
+		CodeTreeElement::addToTree((*modifier), letter, code);
 		break;
 	}
 
@@ -152,7 +174,7 @@ bool Parser::parseThis(QChar c)
 		break ;
 
 	case WAIT_BANGLA:
-		codeTreePointer = &modifiable ;
+		codeTreePointer = modifiable ;
 
 		/*
 		if( c == breakJuktakkhor )	//signals break in juktkkhor
@@ -161,14 +183,14 @@ bool Parser::parseThis(QChar c)
 		}
 		*/
 
-		modBranch = modifiable.validNextChar(c) ;
-		unmodBranch = unmodifiable.validNextChar(c) ;
+		modBranch = modifiable->validNextChar(c) ;
+		unmodBranch = unmodifiable->validNextChar(c) ;
 		//partialCodeAvailable = false ;
 
 		//it's a consonant/consonant complex
 		if(modBranch > -1)
 		{
-			codeTreePointer = modifiable.getChildPointer(modBranch) ;
+			codeTreePointer = modifiable->getChildPointer(modBranch) ;
 			state = MODIFIABLE ;
 			//partialCodeAvailable = true;
 		}
@@ -178,7 +200,7 @@ bool Parser::parseThis(QChar c)
 			//yes it is a vowel
 			if(unmodBranch > -1)
 			{
-				codeTreePointer = unmodifiable.getChildPointer(unmodBranch) ;
+				codeTreePointer = unmodifiable->getChildPointer(unmodBranch) ;
 				state = UNMODIFIABLE ;
 				//partialCodeAvailable = true;
 			}
@@ -202,7 +224,7 @@ bool Parser::parseThis(QChar c)
 			{
 				codeStack += codeTreePointer->getCode();
 				completeCharacterAvailable = true ;
-				codeTreePointer = &modifiable ;
+				codeTreePointer = modifiable ;
 				state = WAIT_BANGLA ;
 				//now go on parsing afresh
 				validInput = parseThis(c);
@@ -210,7 +232,7 @@ bool Parser::parseThis(QChar c)
 			//not a valid code. give up
 			else
 			{
-				codeTreePointer = &modifiable;
+				codeTreePointer = modifiable;
 				state = WAIT_BANGLA ;
 			}
 		}
@@ -240,18 +262,18 @@ bool Parser::parseThis(QChar c)
 				if(c == makeJuktakkhor)
 				{
 					codeStack += QChar(Ligature) ;
-					codeTreePointer = &modifiable ;
+					codeTreePointer = modifiable ;
 				}
 				else
 				{
 					//OK, so what's next is it a vowel, in which case we have
 					//to put a modifier else we need to parse it afresh
-					modifierBranch = modifier.validNextChar(c) ;
+					modifierBranch = modifier->validNextChar(c) ;
 
 					//it is a vowel modifier
 					if(modifierBranch > -1)
 					{
-						codeTreePointer = modifier.getChildPointer(modifierBranch) ;
+						codeTreePointer = modifier->getChildPointer(modifierBranch) ;
 						state = MODIFIER ;
 					}
 					//it's not a vowel modifier, parse it
@@ -289,7 +311,7 @@ bool Parser::parseThis(QChar c)
 		//no, no longer a vowel possibly a new construct.
 		else
 		{
-			//the vowel moodifier so far was invalid 
+			//the vowel moodifier so far was invalid
 			if(codeTreePointer->isCodeDummy())
 			{
 				//well, we at least had the other thing
@@ -306,7 +328,7 @@ bool Parser::parseThis(QChar c)
 			else
 			{
 				//put the code on the stack, we have a complete unit
-				codeStack += codeTreePointer->getCode();		
+				codeStack += codeTreePointer->getCode();
 
 				//now, one exception. if this is a candrabindu, we could still add
 				//a "real" vowel modifier...
@@ -319,7 +341,7 @@ bool Parser::parseThis(QChar c)
 				}
 				else
 				{
-					codeTreePointer = &modifier ;
+					codeTreePointer = modifier ;
 					state = MODIFIER ;
 					//now go on parsing afresh
 					validInput = parseThis(c);
@@ -337,7 +359,7 @@ bool Parser::parseThis(QChar c)
 
 void Parser::reset()
 {
-	codeTreePointer = &modifiable ;
+	codeTreePointer = modifiable ;
 	if(state != WAIT_INGREJI)
 	{
 		state = WAIT_BANGLA;
@@ -371,8 +393,8 @@ QString Parser::getCode()
 	return(tempCodeStack);
 }
 
-//returns the partial code 
-QString Parser::getPartialCode()	
+//returns the partial code
+QString Parser::getPartialCode()
 {
 	if(isPartialCodeAvailable())
 	{
@@ -387,7 +409,7 @@ void Parser::flushStack()
 	if(isPartialCodeAvailable())
 	{
 		codeStack += codeTreePointer->getCode();
-		codeTreePointer = &modifiable ;
+		codeTreePointer = modifiable ;
 		completeCharacterAvailable = true;
 	}
 	if(isBangla())	state = WAIT_BANGLA;
@@ -427,11 +449,27 @@ void Parser::forceEnglish()
 	state = WAIT_INGREJI;
 }
 
+
+void Parser::keyMapUnModifiable(QStringList &key, QStringList &code)
+{
+	unmodifiable->theTree(key, code);
+}
+
+void Parser::keyMapModifier(QStringList &key, QStringList &code)
+{
+	modifier->theTree(key, code);
+}
+
+void Parser::keyMapConjunct(QStringList &key, QStringList &code)
+{
+	modifiable->theTree(key, code);
+}
+
 QTextStream& operator << (QTextStream& pipe , Parser& P)
 {
-	pipe	<< "Modifiers " << P.modifier << endl
-		<< "Modifiable" << P.modifiable << endl
-		<< "Unmodifiable" << P.unmodifiable << endl;
+	pipe	<< "Modifiers " << *(P.modifier) << endl
+		<< "Modifiable" << *(P.modifiable) << endl
+		<< "Unmodifiable" << *(P.unmodifiable) << endl;
 	return(pipe);
 }
 /*

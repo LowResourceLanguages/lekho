@@ -1,0 +1,12 @@
+1. have a statistics popup - show the frequency of each letter in the document, words in the document etc.
+
+Stuff I'll do, some day. The further down an item is on the list the further that day is from today..
+
+spell check [done]
+undo/redo   [done]
+mail send off (can do with qt's mail prog..)
+invoke latex and compile latex docs
+have a latex/html toolbar for GUI inserts of such tags
+have a preview pane for latex/html
+highlight latex/html tags [done]
+read various keymap formats like X, Ekushey etc.

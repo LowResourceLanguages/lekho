@@ -1,0 +1,106 @@
+v1.16
+2003.01.26
+1. Added license.cpp to show date and time of compile
+2. Lekho cursor colour is now foreground colour
+3. export to html now says utf-8 instead of utf8 (thanks Taneem)
+4. Makefile now makes in /tmp (thanks Progga)
+
+v1.15
+2003.01.04
+1. debugged syntax highlighting, now in options...
+
+2003.01.04
+1. shift_ins now pastes
+2. Syntax highlighting ! Crude, for latex and html. Not configurable..
+
+2003.01.01 (শুভ নব বর্ষ !)
+1. Various changes to get a parser engine reset appropriately (eg. when initiating a spell check, or loading a file...)
+ 
+2002.12.27
+1. Now spellcheck replaces and find and replace ops are also covered by undo/redo
+2. Fixed multiline undo/redo problem (was in BanglaDocument, multiline delete wasn't returning carriage returns...)
+3. Undo/redo remembers when you saved a file and when you have undone/redone to the saved point it flags it...
+4. Lekho has new command line options
+-text <caption> <"text"> will start lekho with caption "caption" and text "text"
+
+
+2002.12.26
+1. YEEEHAH ! Implemented redo/undo. Seems to work bug free (TM) but needs further testing(TM)[small bug in deleting, found and fixed almost immediately]
+2. Added "i" ending rule to the grammatical normalisation
+3. added flushBangla to the paste functions
+4. fixed bug in drawContents that caused segfault if you resized the window fast enough (neg values to drawing area....)
+5. Implemented greying out of undo/redo buttons if no undo/redo available
+6. Killed bug in redo (deleting one less char than needed)
+
+2002.12.25
+1. Spell checker now uses "compressed files" to speed up loading and economize on space
+2. Uses dummy files through out the bangla range to prevent "file not found messages" 
+
+2002.12.24
+1. improved spell checker so that it now implements "grammatical normalisation"
+
+2002.12.15
+1. changed bangtex.txt such that onnushor now appears as {h} avoids complications with 't'
+
+2002.12.05
+1. Modifying document causes a * to appear in the window caption...
+
+v1.1
+2002.12.03
+1. Played with print function to make margins 10% of the page dimension for linux. All fixed for windows as usual. Lekho isn't designed to produce pretty printouts - its designed to produce functional ones..
+
+2002.12.02
+1. YES ! Hacked print function to work (sort of) in windows.
+However the font size is fixed as are the margins, and you can't print to file (which is a QT issue, if you have win QT 3.0 maybe it works !)
+2. Fixed oversight in screenFont (BanglaTextEdit.cpp) that messed up newlines.. 
+
+2002.12.01
+1. Enabled spell checker...
+
+2002.11.16
+1. Enabled double buffering to remove flicker during typing
+2. Corrected insidous bug (bangla.h, BanglaCR) that sent a \n as screenFont. This was only discovered when I turned wordwrap off and saw the effects (since turning word wrap off returns the whole line, which includes a bangla CR if the line is English - look at the code for paintLine in BanglaTextEdit)
+3. Refined scroll to cursor code
+4. Enabled keymap display feature
+
+2002.11.09
+1. Fixed bug in multiline insert (BanglaDocument::insert)
+2. Added screen font code for ra-hashanto
+3. Windows version of Lekho now has icon too
+4. added screen font code for ontosto jay-e reph
+
+2002.11.08
+1. Made icon and logo for lekho - pretty cool :) 
+
+2002.11.07
+1. fixed bug in BanglaDocument.cpp for multi line deletes...
+
+2002.11.04
+1. Fixed bug in BanglaTextEdit.cpp in keyboard event handler that didn't take into account buffered input for english
+
+2002.11.02
+1. lekho now accepts commandline arguments to mean files which it opens in new windows - Barda's suggestion.
+
+2002.10.31
+1. Fixed bug in changing screen font that didn't handle tabs
+2. Modified shor.txt so that by typing * in front of a kar you can now type in a kar that hangs alone...
+
+
+****
+1. save as html and save as utf16 added to file options. Utf16 is self explanatory, save as html basically adds on some html tags like <br> to line ends and some default headers, its useful for me because I can type up a bangla page in plain text and save it as a moderately passable webpage as is.
+
+2. in the export to screen font there is an option to not use automatic headers (see point 1). This means you can type up a webpage in bangla unicode (writing your own headers) and export it to screenfont and Lekho won't add an automatic header to the file if you tell it not to. 
+
+3. Fixed delete bangtex bug in destructor of BanglaTextEdit. Destructor no longer tries to delete bangtex if it hasn't been allocated
+
+2002.10.15
+3. Fixed bug in segmenting that didn't take into account jawphola for a
+
+4. Added section in segmenting to take into account chondrobindu after kar
+
+5. Modified shor.txt to input a-jawphola-akar and a-jawphola-akar-chondrobindu
+
+2002.10.02
+1. Added html export
+2. expanded adarshalipi.txt
+3. added bangtex support !

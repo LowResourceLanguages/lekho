@@ -1,6 +1,6 @@
 /*
-*  lekho will ultimately be a full fledged bangla word processor
-*  Copyright (C) 2001 Kaushik Ghose kghose@wam.umd.edu
+*  lekho is a simple bangla unicode editor
+*  Copyright (C) 2002 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -30,14 +30,14 @@ changelog
 
 CodeTreeElement::CodeTreeElement()	//when the man says do nuthin', do nothin'
 {
-	letter = '*';
+	letter = ' ';
 	code = "";
 	numChildren = 0;
 	depth = 0;
 	childElement = NULL ;
 }
 
-CodeTreeElement::CodeTreeElement(QChar c, int d, 
+CodeTreeElement::CodeTreeElement(QChar c, int d,
 								 QString u="")
 {
 	letter = c ;
@@ -58,13 +58,16 @@ void CodeTreeElement::copy(CodeTreeElement &C)
 	depth = C.depth ;
 
 	code = C.code ;
-	
+
 	numChildren = C.numChildren ;
 
-	
+	//hack
+	if(childElement != NULL)
+		delete[] childElement ;
+
 	childElement = new CodeTreeElement [ numChildren ];
 	for(int i = 0 ; i < numChildren ; i++)
-		childElement[i].copy(C.getChild(i));		
+		childElement[i].copy(C.getChild(i));
 }
 
 CodeTreeElement::~CodeTreeElement()
@@ -77,7 +80,7 @@ void CodeTreeElement::addToTree(CodeTreeElement &C, QString letter, QString code
 	CodeTreeElement *temp = NULL;
 
 	int len = letter.length();
-	
+
 	int ch = C.validNextChar(letter[0]) ;
 	//letter exists
 	if(ch > -1)
@@ -90,7 +93,7 @@ void CodeTreeElement::addToTree(CodeTreeElement &C, QString letter, QString code
 		C.addChild(letter[0],"");	//dummy code goes in
 		temp = C.getChildPointer(C.howManyChildren() -1);
 	}
-	
+
 	for(int i = 1 ; i < len ; i++)
 	{
 		ch = temp->validNextChar(letter[i]);
@@ -154,7 +157,7 @@ QString CodeTreeElement::getLeaf(CodeTreeElement &C, QString in)
 }
 
 //return letter
-QChar CodeTreeElement::getLetter()				
+QChar CodeTreeElement::getLetter()
 {
 	return(letter);
 }
@@ -174,12 +177,16 @@ QString CodeTreeElement::getCode()
 //accessing the tree
 
 //add a child node
-void CodeTreeElement::addChild(QChar c, QString u)		
+void CodeTreeElement::addChild(QChar c, QString u)
 {
+	//shameless hack
+	bool flagDelete = false ;
+
 	CodeTreeElement* tempChild ;
 	//need to hold the previous children temporarily
 	if(numChildren > 0)
 	{
+		flagDelete = true ;
 		tempChild = new CodeTreeElement [ numChildren ];
 		for(int i = 0 ; i < numChildren ; i++)
 			tempChild[i].copy(childElement[i]);
@@ -198,6 +205,8 @@ void CodeTreeElement::addChild(QChar c, QString u)
 	childElement[ numChildren - 1 ].letter = c ;
 	childElement[ numChildren - 1 ].code = u ;
 
+	if( flagDelete )
+		delete[] tempChild ;
 }
 
 
@@ -242,6 +251,36 @@ CodeTreeElement* CodeTreeElement::getChildPointer(int n)
 	else
 		return(&childElement[0]);	//just don't ty this..
 }
+
+
+//public - you call this
+//return a nice qstringlists presenting the keys and the respective codes...
+void CodeTreeElement::theTree(QStringList &key, QStringList &code)
+{
+	QString root("") ;
+	theTree(this , root, key, code) ;
+}
+
+//private - I call this recursively, neat huh ?
+void CodeTreeElement::theTree(CodeTreeElement *C, QString &root, QStringList &key, QStringList &code)
+{
+	if( !C->code.isEmpty())
+	{
+//		if(root.isEmpty())
+//			key.append( C->letter );
+//		else
+		key.append( root + C->letter );
+		code.append( C->code ) ;
+	}
+
+	QString thisRoot = root + C->letter ;
+
+	for(int i = 0 ; i < C->numChildren ; i++)
+	{
+		theTree( C->getChildPointer(i), thisRoot, key, code);
+	}
+}
+
 
 //try to print it nicely...
 QTextStream& operator<<(QTextStream& pipe , CodeTreeElement &C)

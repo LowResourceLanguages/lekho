@@ -1,6 +1,6 @@
 /*
-*  Lekho v1.0 will be a simple editor for bangla in unicode that will export
-*  to bangtex
+*  Lekho v1.0 is simple editor for bangla in unicode that exports
+*  to html bangtex
 *  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 FontConverter::FontConverter()
 {
 	ushort _ref[] = {0x09b0, 0x09cd};
-	ushort _jawphola[] = {0x09cd, 0x09df};
+	ushort _jawphola[] = {0x09cd, 0x09af};
 	ushort _rawphola[] = {0x09cd, 0x09b0};
 	ushort _kar[] = {0x09be,0x09bf,0x09c0,0x09c1,0x09c2,0x09c3,0x09c7,
 		0x09c8,0x09cb,0x09cc};
@@ -132,7 +132,18 @@ QString FontConverter::unicode2screenFont(QString uc)
 {
 	QString out;
 	QChar thisKar ;
-	QChar candrabindu(0x0981), ligature(0x09cd), zwnj(0x200c);
+	QChar candrabindu(0x0981), zwnj(0x200c);
+
+	//sometimes the whole letter has a specific glyph (e.g. like ta+ra)
+	//or ra - hashanta
+	//find that if it exists
+	QString _temp = CodeTreeElement::getLeaf(convert, uc);
+	if(!_temp.isEmpty())
+	{
+		return(_temp) ;
+	}
+
+	//sigh ! we have to break it up and compose it...
 
 	//take out vowel modifier, jawfola or ref.
 	bool candrabinduPresent = false,
@@ -164,6 +175,14 @@ QString FontConverter::unicode2screenFont(QString uc)
 		uc = uc.left(uc.length()-2);
 	}
 
+	//some times (I LOVE bangla!) at this stage the character has a whole form, instead of rawphola..
+	_temp = CodeTreeElement::getLeaf(convert, uc);
+	if(!_temp.isEmpty())
+	{
+		out += _temp ;
+		uc ="";
+	}
+	else
 	//take out rawfola
 	if(uc.right(2).find(rawphola) > -1)
 	{
@@ -203,7 +222,7 @@ QString FontConverter::unicode2screenFont(QString uc)
 	if(temp.isEmpty())
 	{
 		if(out.isEmpty())
-			out += QChar(0x5e);
+			out += " ";//a blank looks prettier //QChar(0x5e);
 	}
 	else
 	{

@@ -1,14 +1,15 @@
 NNG	1	0982
 H	1	0983
+Rri	1	098b
 Li	1	098c
 k	1	0995
 kh	1	0996
-kK	3	0996	09cd	09a3
+kK	3	0995	09cd	09b7
 g	1	0997
 gh	1	0998
 ng	1	0999
-ch	1	099a
-chh	1	099b
+c	1	099a
+ch	1	099b
 j	1	099c
 jh	1	099d
 ny	1	099e
@@ -18,6 +19,7 @@ D	1	09a1
 Dh	1	09a2
 N	1	09a3
 t	1	09a4
+tt      3       09a4    09cd    200d
 th	1	09a5
 d	1	09a6
 dh	1	09a7
@@ -37,5 +39,4 @@ h	1	09b9
 rh	1	09dc
 rhh	1	09dd
 y	1	09df
-\	1	200c
-
+\       1       200c
