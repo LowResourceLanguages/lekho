@@ -36,6 +36,7 @@
 #include <BanglaSegment.h> //the function that takes a unicode stream and chops it up into bangla letters
 #include <BanglaLine.h>
 #include <FontConverter.h>
+#include <Highlight.h>
 #include <LatexConverter.h>
 
 #include <qrect.h>
@@ -120,6 +121,7 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name, bool _readonly)
 
 	cursorBlinkOn() ;
 
+	highlightColor = QColor("yellow");
 }
 
 BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontSize, bool _readonly )
@@ -195,6 +197,8 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 	hasSelText = false ;
 
 	cursorBlinkOn() ;
+
+	highlightColor = QColor("yellow");
 }
 
 BanglaTextEdit::~BanglaTextEdit()
@@ -1037,16 +1041,26 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 
 	}
 
+	//stuff for syntax highlighting
+	BanglaLetterList theTextForHighlight ;
+	for(int ij = startLine ; ij <= endLine ; ij++)
+	{
+		BanglaLetterList theText;
+		theDoc.copyScreenLine(ij, theTextForHighlight);
+	}
+	char *hiliteStr = new char[ theTextForHighlight.count() ] ;
+
+	//parse for highlighting
+	highlight( theTextForHighlight, hiliteStr );
+	int currentLetter = 0 ;
+
 	for(int i = startLine ; i <= endLine ; i++)
 	{
 		BanglaLetterList theText;
 		theDoc.copyScreenLine(i, theText);
 
-		//erase original line (the bit on the screen)
-	//	p->eraseRect(cx, curry, cx + maxPaintWidth , lineHeight);
-
 		//paint newline
-		paintLine(p, 0, curry, lineHeight, theText);
+		paintLine(p, 0, curry, lineHeight, theText, &currentLetter, hiliteStr);
 
 		//hack, if text is selected then highlight it...
 		if(selectionInView)
@@ -1071,6 +1085,11 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 
 	}
 
+
+
+	//if( hiliteStr != NULL )
+		delete[] hiliteStr ;
+
 	//draw the cursor
         if (theCursor.cursorOn && viewport()->hasFocus())
         {
@@ -1094,14 +1113,15 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 
 //draws one line of text in bangla and english
 //keeps building up a buffer in a language until the language flips, then it flushes
-void BanglaTextEdit::paintLine(QPainter *p, int x, int y, int lineHeight, const BanglaLetterList& text)
+void BanglaTextEdit::paintLine(QPainter *p, int x, int y, int lineHeight, const BanglaLetterList& text,
+				int *currentLetter, char *hiliteStr )
 {
 	int cx = x ;
 	//text contains a single screen line(or less), in whatever script can be directly
 	//printed
 
 
-	bool banglaMode = true ;
+	bool banglaMode = true , highLightMode = false ;
 	QString theScreenText = "";
 	int segmentWidth = 0 ;
 	p->setFont(banglaFont);
@@ -1110,12 +1130,41 @@ void BanglaTextEdit::paintLine(QPainter *p, int x, int y, int lineHeight, const 
 	BanglaLetterList::ConstIterator i;
 	for(i = text.begin() ; i != text.end() ; ++i)
 	{
+		if( (currentLetter != NULL) & (hiliteStr != NULL ))
+		{
+		//addition for syntax highlighting
+		if( hiliteStr[ *currentLetter] == 0x01)
+		{
+			if( !highLightMode )
+			{
+				//flush the non highlighted part
+				paintLineSegment(p, cx, y, segmentWidth, lineHeight, theScreenText ) ;
+				cx += segmentWidth ;
+				p->setPen( highlightColor ) ;
+				highLightMode = true ;
+				theScreenText = "";
+				segmentWidth = 0 ;
+			}
+		}
+		else if( highLightMode )
+			{
+				//flush the non highlighted part
+				paintLineSegment(p, cx, y, segmentWidth, lineHeight, theScreenText ) ;
+				cx += segmentWidth ;
+				p->setPen( foreground ) ;
+				highLightMode = false ;
+				theScreenText = "";
+				segmentWidth = 0 ;
+			}
+		(*currentLetter)++ ;
+		}
+
 		//bangla starts. Flush whatever was there before and switch to bangla
 		if( isBangla( (*i).unicode[0].unicode() ) )
 		{
 			if(!banglaMode )
 			{
-			paintLineSegment(p, cx, y, segmentWidth, lineHeight, theScreenText) ;
+			paintLineSegment(p, cx, y, segmentWidth, lineHeight, theScreenText ) ;
 			cx += segmentWidth ;
 			p->setFont(banglaFont);
 			banglaMode = true ;
@@ -1127,7 +1176,7 @@ void BanglaTextEdit::paintLine(QPainter *p, int x, int y, int lineHeight, const 
 		{
 			if(banglaMode)
 			{
-			paintLineSegment(p, cx, y, segmentWidth, lineHeight, theScreenText) ;
+			paintLineSegment(p, cx, y, segmentWidth, lineHeight, theScreenText ) ;
 			cx += segmentWidth ;
 			p->setFont(englishFont);
 			banglaMode = false ;
@@ -1137,8 +1186,10 @@ void BanglaTextEdit::paintLine(QPainter *p, int x, int y, int lineHeight, const 
 		}
 		theScreenText += (*i).screenFont ;
 		segmentWidth += (*i).width ;
+
 	}
 	paintLineSegment(p, cx, y, segmentWidth, lineHeight, theScreenText) ;
+	p->setPen( foreground ) ;
 }
 
 
@@ -1184,6 +1235,12 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 
 	switch (event->key())
 	{
+		case	Key_Insert:
+			//making it even more comaptible: shift_ins pastes
+			if(shiftPress)
+				paste() ;
+			break;
+
 		case 	Key_Escape:
 			if(hasSelText)
 				hasSelText = false ;

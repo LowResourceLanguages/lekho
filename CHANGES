@@ -1,6 +1,10 @@
 v1.15
+2003.01.04
+1. shift_ins now pastes
+2. Syntax highlighting ! Crude, for latex and html. Not configurable..
+
 2003.01.01 (শুভ নব বর্ষ !)
-1. Varius changes to get a parser engine reset appropriately (eg. when initiating a spell check, or loading a file...)
+1. Various changes to get a parser engine reset appropriately (eg. when initiating a spell check, or loading a file...)
  
 2002.12.27
 1. Now spellcheck replaces and find and replace ops are also covered by undo/redo

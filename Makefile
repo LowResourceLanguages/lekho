@@ -29,7 +29,7 @@ CXXFLAGS = -pipe -Wall -W -g -O4
 #CXXFLAGS = -pipe -Wall -W -O3
 LEXFLAGS = 
 YACCFLAGS= -d
-INCPATH  = -IGui -IBanglaLetter -IBanglaLine -IBanglaDocument -IBanglaTextEdit -IBanglaSegment -IFontConverter -ICodeTreeElement -IBanan -IParser -Iinclude -I$(QTDIR)/include -I$(QTDIR)/mkspecs/default
+INCPATH  = -IGui -IBanglaLetter -IBanglaLine -IBanglaDocument -IBanglaTextEdit -IBanglaSegment -IFontConverter -ICodeTreeElement -IBanan -ISyntaxHighlighting -IParser -Iinclude -I$(QTDIR)/include -I$(QTDIR)/mkspecs/default
 LINK     = g++
 LFLAGS   = 
 LIBS     = $(SUBLIBS) -Wl,-rpath,$(QTDIR)/lib -L$(QTDIR)/lib -L/usr/X11R6/lib -lqt -lXext -lX11 -lm
@@ -67,6 +67,7 @@ HEADERS = Gui/application.h \
 		FontConverter/LatexConverter.h \
 		CodeTreeElement/CodeTreeElement.h \
 	  	Banan/SearchDictionary.h \
+	  	SyntaxHighlighting/Highlight.h \
 		include/preferences.h \
 		include/lekhoprefs.h \
 		include/bangla.h \
@@ -88,6 +89,7 @@ SOURCES = Gui/main.cpp \
 		FontConverter/LatexConverter.cpp \
 		CodeTreeElement/CodeTreeElement.cpp \
 	  	Banan/SearchDictionary.cpp \
+	  	SyntaxHighlighting/Highlight.cpp \
 		include/preferences.cpp \
 		include/lekhoprefs.cpp \
 		include/bangla.cpp \
@@ -109,6 +111,7 @@ OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/LatexConverter.o \
 		$(OBJ_DIR)/CodeTreeElement.o \
 		$(OBJ_DIR)/SearchDictionary.o \
+		$(OBJ_DIR)/Highlight.o \
 		$(OBJ_DIR)/preferences.o \
 		$(OBJ_DIR)/lekhoprefs.o \
 		$(OBJ_DIR)/bangla.o \
@@ -220,6 +223,9 @@ $(OBJ_DIR)/SpellDialog.o: Gui/SpellDialog.cpp Gui/SpellDialog.h BanglaTextEdit/B
 
 $(OBJ_DIR)/SearchDictionary.o: Banan/SearchDictionary.cpp Banan/SearchDictionary.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/SearchDictionary.o Banan/SearchDictionary.cpp
+
+$(OBJ_DIR)/Highlight.o: SyntaxHighlighting/Highlight.cpp SyntaxHighlighting/Highlight.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/Highlight.o SyntaxHighlighting/Highlight.cpp
 
 $(OBJ_DIR)/BanglaLine.o: BanglaLine/BanglaLine.cpp BanglaLine/BanglaLine.h BanglaLetter/BanglaLetter.h include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLine.o BanglaLine/BanglaLine.cpp

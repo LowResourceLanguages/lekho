@@ -101,7 +101,7 @@ protected:
 	//LatexConverter bangtex ;
 
 	QFont banglaFont, englishFont ;
-	QColor foreground, background ;
+	QColor foreground, background, highlightColor ;
 
 	int 	oldWidth,	//remember the old width. If this changes, have to re word wrap...
 		tabWidth ;
@@ -187,7 +187,7 @@ public:
 protected:
 
 	void drawContents(QPainter *p, int cx, int cy, int cw, int ch);
-	void paintLine(QPainter *p, int x, int y, int lineHeight, const BanglaLetterList& text);
+	void paintLine(QPainter *p, int x, int y, int lineHeight, const BanglaLetterList& text, int *curLett= NULL, char *hiliteStr= NULL);
 	void paintLineSegment(QPainter *p, int x, int y, int segmentWidth, int lineHeight, const QString &screenText);
 
 	// interface ops (keyboard/mouse) ////////////////////////////////////////////
@@ -286,7 +286,7 @@ public slots:
 	//if an op interrupts your typing and may change cursor position
 	//call this to prevent foul ups with the keystroke parser
 	void flushParser() { keyPressEventFlushBangla(); }
-	
+
 signals:
 
 	void documentModified( bool );

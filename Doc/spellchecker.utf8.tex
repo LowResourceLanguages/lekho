@@ -5,8 +5,8 @@
 
 \include{minibangla}
 
-%\textwidth=12cm
-%\textheight=18cm
+\textwidth=6in
+\textheight=8in
 %\oddsidemargin=0mm
 %\evensidemargin=0mm
 %\tolerance=10000
@@ -20,10 +20,7 @@
 \section{Basic spellcheck}
 The spell checker does a basic hash like lookup by assigning words begining with one letter to the same bin. It then does a binary search in this bin to see if the word exists. If it does, then the work is over. When there is no match, if the checker is being run in a noninteractive mode, the word is flagged and the checker moves on. If the checker is being used in an interactive mode the fun begins... 
 
-\section{Substitution suggestion}
-What the spellchecker does is to suggest words in the dictionary that would "best fit" the wrongly spelled word. The best fit is decided by an algorithm that looks at the (wrongly spelled) word and creates variants of it ("mutants") according to some rules. These mutants are checked against the dictionary, if they fit they are put into the suggestion list.
-
-\subsection{Grammatical normalisation}
+\section{Grammatical normalisation}
 We sometimes add/modify the endings of words depending on the part of speech the word is being used as. For instance \begin{itemize}
 \item {\lbng ব্যবহার} $\rightarrow$ {\lbng ব্যবহারের}
 \item {\lbng চাবি} $\rightarrow$ {\lbng চাবির}
@@ -38,9 +35,8 @@ We sometimes add/modify the endings of words depending on the part of speech the
 \item {\lbng চলে} $\rightarrow$ {\lbng চলেনা}
 \item {\lbng আমি} $\rightarrow$ {\lbng আমিই}
 \end{itemize}
-The checker has a list of endings which it checks against the ending of the word sent to it. If one of the endings match, the spellchecker removes the ending, checks it against the dictionary, generates mutants and adds on the removed ending to the suggestions. If it did not do this then, for example, the word {\bng চাবিটা} would be flagged as incorrect, even though it is correctly spelled.
+The checker has a list of endings which it checks against the ending of the word sent to it. If one of the endings match, the spellchecker removes the ending and uses this ``normalised'' form to do spell check and mutant generation (see later section). If it did not do this then, for example, the word {\bng চাবিটা} would be flagged as incorrect, even though it is correctly spelled.
 
-\pagebreak
 The normalisation endings list is
 {\lbng 
 \begin{itemize}
@@ -60,12 +56,15 @@ The normalisation endings list is
 }
 where ``-'' stands for one letter and ``*'' stands for any group of letters
 
+\section{Substitution suggestion}
+What the spellchecker does is to suggest words in the dictionary that would "best fit" the wrongly spelled word. The best fit is decided by an algorithm that looks at the (wrongly spelled) word and creates variants of it ("mutants") according to some rules. These mutants are checked against the dictionary, if they fit they are put into the suggestion list.
+
+
 \subsection{Mutation rules}
 In {\bng বাংলা} some of the easier ways to make spelling mistakes is to substiute the wrong "kar" (vowel modifier) eg. {\bng ি} for {\bng ী} , or to use the wrong letter variant of a sound, like {\bng জ} for {\bng য},  {\bng ষ} for {\bng স} etc. 
 The mutation rules are basically a set of equivalents - like a soundex - that give the algorithm a list of substitutions it can use for each letter.
 %In addition to this if a consonant conjunct is a double like {\bng ন্ন} the checker tries to use jawphola ie. {\bng ন্য} and vice versa
 
-\pagebreak
 \subsection{List of mutation rules}
 {\lbng
 \begin{itemize}

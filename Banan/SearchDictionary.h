@@ -118,7 +118,7 @@ new rule to add - o and ya
 			ke[] = {0x0995, 0x09c7},
 			o[] = {0x0993},
 			na[] = {0x09a8, 0x09be},
-			i[] = {0x0987};
+			i_[] = {0x0987};
 
 		soundexElement.setUnicodeCodes(e,1);
 		endings.append(soundexElement);
@@ -153,7 +153,7 @@ new rule to add - o and ya
 		soundexElement.setUnicodeCodes(na,2);
 		endings.append(soundexElement);
 
-		soundexElement.setUnicodeCodes(i,1);
+		soundexElement.setUnicodeCodes(i_,1);
 		endings.append(soundexElement);
 
 
