@@ -21,15 +21,15 @@
  <group name="startup" >
   <option key="banan directory" value="Dict/" />
   <option key="banjonborno" value="jukto.txt" />
-  <option key="height" value="618" />
+  <option key="height" value="579" />
   <option key="initdir" value=".lekho/" />
   <option key="karchinno" value="kar.txt" />
   <option key="latex" value="bangtex.txt" />
   <option key="lekhorc" value=".lekhorc" />
   <option key="screenfont" value="adarshalipi.txt" />
   <option key="shoroborno" value="shor.txt" />
-  <option key="width" value="475" />
-  <option key="xpos" value="415" />
-  <option key="ypos" value="80" />
+  <option key="width" value="581" />
+  <option key="xpos" value="175" />
+  <option key="ypos" value="40" />
  </group>
 </preferences>

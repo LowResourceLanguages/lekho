@@ -1,4 +1,4 @@
-"লেখ" program ব্যবহার  সংক্ষিপ্ত নিয়মাবলী।
+"লেখ" program ব্যবহারের  সংক্ষিপ্ত নিয়মাবলী।
 
 ০। একটী  অনুরোধ  : লেখ এখন ও  experimental পরিস্থিতিতে, তাই আপনি যা লিখবেন, কিছু অন্তর save করে রাখবেন, যদি কিছু হয়...
 আপনার যদি এই program শম্পর্কে কিছু বলার থাকে kghose@users.sourceforge.net-এ মেইল পাঠান
@@ -79,7 +79,7 @@ opera 6	utf16
 
 খ)
 copy as character reference:
-এই উপায় বাংলা বা ইংরাজী বর্ণ গুল "&#xxxx" হিসাবে paste হয়। xxxx হচ্ছে একতা decimal নম্বর। এই অদভুত্‌ code গুলি যদি আপনি কোন html editor-এ paste করেন (e.g. netscape composer), তাহলে সেই webpage ঠিক browser (opera বা internet explorer 6) দিয়ে দেখলে বাংলা বর্ণগুল দেখতে পারবেন।
+এই উপায় বাংলা বা ইংরাজী বর্ণ গুল "&#xxxx" হিসাবে paste হয়। xxxx হচ্ছে একটা decimal নম্বর। এই অদভুত্‌ code গুলি যদি আপনি কোন html editor-এ paste করেন (e.g. netscape composer), তাহলে সেই webpage ঠিক browser (opera বা internet explorer 6) দিয়ে দেখলে বাংলা বর্ণগুল দেখতে পারবেন।
 
 গ)
 paste as romanised:

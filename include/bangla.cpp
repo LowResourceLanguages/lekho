@@ -42,13 +42,13 @@ void stripEnglish(QPoint &selStart, QPoint &selEnd, QString &wd)
 	}
 
 	//strip trailing english characters
-	for(int i = newWd.length() -1 ; i > -1 ; i--)
+	for(int j = (int)newWd.length() -1 ; j > -1 ; j--)
 	{
-		if(!isBangla(newWd[i])  | isPunctuation(wd[i]) )
+		if(!isBangla(newWd[j])  | isPunctuation(wd[j]) )
 			selEnd.setX(selEnd.x() - 1);
 		else
 		{
-			wd = newWd.left(i+1) ;
+			wd = newWd.left(j+1) ;
 			break;
 		}
 	}
@@ -64,7 +64,7 @@ void fudgeHtml(QString &text, bool isEncodingUtf8)
 QString
 
 preamble
-("<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ascii\">\n   <meta name=\"Author\" content=\"Me\">\n   <meta name=\"GENERATOR\" content=\"Lekho\">\n   <meta name=\"Keywords\" content=\"\">\n   <meta name=\"Classification\" content=\"\">\n   <title>\n   untitled\n   </title>\n</head>\n<body text=\"#FFFFFF\" bgcolor=\"#000000\" link=\"#FFFFCC\" vlink=\"#D3D3D3\" alink=\"#FF0000\">\n"),
+("<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=,ascii\">\n   <meta name=\"Author\" content=\"Me\">\n   <meta name=\"GENERATOR\" content=\"Lekho\">\n   <meta name=\"Keywords\" content=\"\">\n   <meta name=\"Classification\" content=\"\">\n   <title>\n   untitled\n   </title>\n</head>\n<body text=\"#FFFFFF\" bgcolor=\"#000000\" link=\"#FFFFCC\" vlink=\"#D3D3D3\" alink=\"#FF0000\">\n"),
 
 postamble
 ("</body>\n</html>");

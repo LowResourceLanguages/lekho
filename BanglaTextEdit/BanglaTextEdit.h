@@ -73,9 +73,9 @@ class BanglaTextEdit : public QScrollView
 
 protected:
 
-#ifdef _WS_WIN_
+//#ifdef _WS_WIN_
 	bool	lockRedrawDuringPrinting ;
-#endif	
+//#endif
 	
 	bool	readonly ;	//if true then we can't write or paste on the scrollview...
 
@@ -224,6 +224,10 @@ public:
 	//print it !
 	bool print(QPrinter *p ) ;
 
+protected:
+	bool print_private(QPrinter *p ) ;
+
+public:
 	//private helper functions
 	void print_PageBreaks(int w, int h, QValueList<int> &breaks);
 	bool print_Page(QPainter *printer, int &startLine, int &endLine);

@@ -68,13 +68,13 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name, bool _readonly)
 	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
 {
 
-#ifdef _WS_WIN_
+//#ifdef _WS_WIN_
 	lockRedrawDuringPrinting = false;
-#endif
+//#endif
 
 	readonly = _readonly ;
 
-	
+
 #ifdef Q_WS_X11
 	//otherwise on X11 systems Lekho can't paste to other apps
 	QApplication::clipboard()->setSelectionMode(true);
@@ -126,9 +126,9 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
 {
 
-#ifdef _WS_WIN_
+//#ifdef _WS_WIN_
 	lockRedrawDuringPrinting = false;
-#endif
+//#endif
 
 	readonly = _readonly ;
 
@@ -927,11 +927,11 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 {
 
-#ifdef _WS_WIN_
+//#ifdef _WS_WIN_
 	//just don't ask, just don't ask...
 	if(lockRedrawDuringPrinting)
 		return ;
-#endif
+//#endif
 
 
 	//protect our pixmap
@@ -1664,21 +1664,17 @@ bool BanglaTextEdit::print_Page(QPainter *p, int &startLine, int &endLine)
 	return true ;
 }
 
-//oooh, the windows printer is soooo hacked....
-//main print function
+//oooh, the printer is soooo hacked....
+//public print function wraps some window system specific stuff and some entry and exit inits
 bool BanglaTextEdit::print(QPrinter *printer)
 {
 #ifndef QT_NO_PRINTER
-
-	printer->setFullPage(true);
-
-	//margins
-	int 	VERTMARGINMM = 10,
-		HORIZMARGINMM = 25 ;
+	lockRedrawDuringPrinting = true ;
 
 #ifdef _WS_WIN_
 	//hack for windows printing. Really hack !
 	lockRedrawDuringPrinting = true ;
+
 
 	QFont 	printingBanglaFont = banglaFont,
 			printingEnglishFont = englishFont,
@@ -1697,6 +1693,26 @@ bool BanglaTextEdit::print(QPrinter *printer)
 	setFonts(printingBanglaFont, printingEnglishFont);
 #endif
 
+	bool return_val = print_private(printer);
+
+#ifdef _WS_WIN_
+	//hack for windows printing
+	setFonts(oldBanglaFont, oldEnglishFont);
+#endif
+
+	lockRedrawDuringPrinting = false;
+
+	return return_val ;
+#endif	//QT_NO_PRINTER
+}
+
+bool BanglaTextEdit::print_private(QPrinter *printer)
+{
+#ifndef QT_NO_PRINTER
+
+
+	printer->setFullPage(true);
+
 	//from application.cpp's constructor we've set the default page to potrait
 	//and have some default margins etc.
 	//lets compute the page extents from that.
@@ -1704,6 +1720,16 @@ bool BanglaTextEdit::print(QPrinter *printer)
 
 	int w_mm = printerMetrics.widthMM(), old_w_mm = w_mm ;
 	int h_mm = printerMetrics.heightMM(), old_h_mm = h_mm ;
+
+	//margins
+	int 	VERTMARGINMM = (int)( (float)h_mm/10. ),
+		HORIZMARGINMM = (int)( (float)w_mm/10. );
+
+#ifdef _WS_WIN_
+	//this looks good for windows...
+	VERTMARGINMM  = 10 ;
+	HORIZMARGINMM = 25 ;
+#endif
 
 	int 	//w = (int)(((float)w_mm)*72.0/25.4),
 		//h = (int)(((float)h_mm)*72.0/25.4),
@@ -1721,13 +1747,23 @@ bool BanglaTextEdit::print(QPrinter *printer)
 
     	if ( printer->setup( this ) )
     	{
-
-
 		w_mm = printerMetrics.widthMM();
 		h_mm = printerMetrics.heightMM();
 
 		if( (old_w_mm != w_mm) || (old_h_mm != h_mm) )
 		{
+			//margins
+#ifdef _WS_WIN_
+			//this looks good for windows...
+			HORIZMARGINMM = 25 ;
+#else
+			//for X11
+			VERTMARGINMM = (int)( (float)h_mm/10. ) ;
+			HORIZMARGINMM = (int)( (float)w_mm/10. );
+#endif
+
+
+
 			vertMar = (int)(VERTMARGINMM * printerMetrics.logicalDpiY() / 25.4) ;
 			horizMar = (int)(HORIZMARGINMM * printerMetrics.logicalDpiX() / 25.4) ;
 			w = (int)(((float)w_mm) * printerMetrics.logicalDpiX()/25.4) - 2 * horizMar ;
@@ -1743,14 +1779,7 @@ bool BanglaTextEdit::print(QPrinter *printer)
 		//init printer
 		QPainter p;
 		if( !p.begin( printer ) )               // paint on printer
-		{
-#ifdef _WS_WIN_
-			//hack for windows printing
-			setFonts(oldBanglaFont, oldEnglishFont);
-			lockRedrawDuringPrinting = false;
-#endif
 			return false ;
-		}
 
 #ifdef _WS_WIN_
 		//for windows
@@ -1795,14 +1824,7 @@ bool BanglaTextEdit::print(QPrinter *printer)
 
 			int page = startPage ;
 			if(!print_Page(&p, breaks[page], breaks[page+1]))
-			{
-#ifdef _WS_WIN_
-				//hack for windows printing
-				setFonts(oldBanglaFont, oldEnglishFont);
-				lockRedrawDuringPrinting = false;
-#endif
 				return false;
-			}
 
 			emit statusBarMessage( "Printing page " + QString::number(page+1) + " of "
 				+ QString::number(pageCount) +
@@ -1817,14 +1839,7 @@ bool BanglaTextEdit::print(QPrinter *printer)
 				printer->newPage();
 
 				if(!print_Page(&p, breaks[page], breaks[page+1]))
-				{
-#ifdef _WS_WIN_
-					//hack for windows printing
-					setFonts(oldBanglaFont, oldEnglishFont);
-					lockRedrawDuringPrinting = false;
-#endif
 					return false;
-				}
 
 				emit statusBarMessage( "Printing page " + QString::number(page+1) + " of "
 					+ QString::number(pageCount) +
@@ -1834,13 +1849,6 @@ bool BanglaTextEdit::print(QPrinter *printer)
 		}
 
 	}
-
-#ifdef _WS_WIN_
-	//hack for windows printing
-	setFonts(oldBanglaFont, oldEnglishFont);
-	lockRedrawDuringPrinting = false;
-#endif
-
 
 	return true ;
 #endif	//QT_NO_PRINTER
