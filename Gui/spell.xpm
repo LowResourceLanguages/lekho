@@ -1,5 +1,5 @@
 /* XPM */
-static char *spell[]={
+static const char *spell[]={
 "32 32 8 1",
 "f c None",
 "e c #008000",

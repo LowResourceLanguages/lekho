@@ -27,6 +27,11 @@ p/ra = প + র + আ = প্রা
 
 To get hoshonto type '/' followd by '\'. Thus
 hak/\ka nuDel/\ = হাক্‌কা নুডেল্‌।
+4-1/3.
+লেখ has spell checking capability. It uses Barda's bwedit word list and a simple spell checking engine to find wrongly spelt বাংলা words in the document. The spell checker currently only works with বাংলা words, ignoring everything else. Typing a word in the "replace" edit box and then pressing "check" will check that word for correctness. Hit F2, press the "ক/ম" icon on the tool bar or go to edit->spell to try this out.
+
+4-2/3
+লেখ has a find and replace tool, pressing F3 brings this up. Also pressing the eye icon or going to edit->find will do the same thing.
 
 5. "Word wrap" is the process whereby lines that are wider than the current window width are broken up (but not in the middle of a word) such that the line "wraps around" the window to the next screen line. If you don't want this, go to Options->word wrap and click on it. This is a toggle switch
 

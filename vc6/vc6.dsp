@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "$(QTDIR)\include" /I "..\Gui" /I "..\BanglaLetter" /I "..\BanglaLine" /I "..\BanglaDocument" /I "..\BanglaTextEdit" /I "..\BanglaSegment" /I "..\FontConverter" /I "..\CodeTreeElement" /I "..\Parser" /I "..\include" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QT_DLL" /D "QT_THREAD_SUPPORT" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "$(QTDIR)\include" /I "..\Gui" /I "..\BanglaLetter" /I "..\BanglaLine" /I "..\BanglaDocument" /I "..\BanglaTextEdit" /I "..\BanglaSegment" /I "..\FontConverter" /I "..\CodeTreeElement" /I "..\Parser" /I "..\include" /I "..\Banan" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "QT_DLL" /D "QT_THREAD_SUPPORT" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -163,11 +163,23 @@ SOURCE=..\Gui\moc_FindDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\Gui\moc_SpellDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\Parser\parser.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\include\preferences.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\Banan\SearchDictionary.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\Gui\SpellDialog.cpp
 # End Source File
 # Begin Source File
 
@@ -185,7 +197,7 @@ SOURCE=..\Gui\application.h
 
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build - Moc'ing $(InputName).h ...
-InputDir=\c++\lekho\windowsrelease_v1.05\src\Gui
+InputDir=\c++\lekho\winrel_v1.1\src\Gui
 InputPath=..\Gui\application.h
 InputName=application
 
@@ -198,7 +210,7 @@ InputName=application
 
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build - Moc'ing $(InputName).h ...
-InputDir=\c++\lekho\windowsrelease_v1.05\src\Gui
+InputDir=\c++\lekho\winrel_v1.1\src\Gui
 InputPath=..\Gui\application.h
 InputName=application
 
@@ -234,7 +246,7 @@ SOURCE=..\BanglaTextEdit\BanglaLineEdit.h
 
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build - Moc'ing $(InputName).h ...
-InputDir=\c++\lekho\windowsrelease_v1.05\src\BanglaTextEdit
+InputDir=\c++\lekho\winrel_v1.1\src\BanglaTextEdit
 InputPath=..\BanglaTextEdit\BanglaLineEdit.h
 InputName=BanglaLineEdit
 
@@ -247,7 +259,7 @@ InputName=BanglaLineEdit
 
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build - Moc'ing $(InputName).h ...
-InputDir=\c++\lekho\windowsrelease_v1.05\src\BanglaTextEdit
+InputDir=\c++\lekho\winrel_v1.1\src\BanglaTextEdit
 InputPath=..\BanglaTextEdit\BanglaLineEdit.h
 InputName=BanglaLineEdit
 
@@ -271,7 +283,7 @@ SOURCE=..\BanglaTextEdit\BanglaTextEdit.h
 
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build - Moc'ing $(InputName).h ...
-InputDir=\c++\lekho\windowsrelease_v1.05\src\BanglaTextEdit
+InputDir=\c++\lekho\winrel_v1.1\src\BanglaTextEdit
 InputPath=..\BanglaTextEdit\BanglaTextEdit.h
 InputName=BanglaTextEdit
 
@@ -284,7 +296,7 @@ InputName=BanglaTextEdit
 
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build - Moc'ing $(InputName).h ...
-InputDir=\c++\lekho\windowsrelease_v1.05\src\BanglaTextEdit
+InputDir=\c++\lekho\winrel_v1.1\src\BanglaTextEdit
 InputPath=..\BanglaTextEdit\BanglaTextEdit.h
 InputName=BanglaTextEdit
 
@@ -308,7 +320,7 @@ SOURCE=..\Gui\FindDialog.h
 
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build - Moc'ing $(InputName).h ...
-InputDir=\c++\lekho\windowsrelease_v1.05\src\Gui
+InputDir=\c++\lekho\winrel_v1.1\src\Gui
 InputPath=..\Gui\FindDialog.h
 InputName=FindDialog
 
@@ -321,7 +333,7 @@ InputName=FindDialog
 
 # PROP Ignore_Default_Tool 1
 # Begin Custom Build - Moc'ing $(InputName).h ...
-InputDir=\c++\lekho\windowsrelease_v1.05\src\Gui
+InputDir=\c++\lekho\winrel_v1.1\src\Gui
 InputPath=..\Gui\FindDialog.h
 InputName=FindDialog
 
@@ -356,6 +368,43 @@ SOURCE=..\Parser\parser.h
 # Begin Source File
 
 SOURCE=..\include\preferences.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\Banan\SearchDictionary.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\Gui\SpellDialog.h
+
+!IF  "$(CFG)" == "vc6 - Win32 Release"
+
+# PROP Ignore_Default_Tool 1
+# Begin Custom Build - Moc'ing $(InputName).h ...
+InputDir=\c++\lekho\winrel_v1.1\src\Gui
+InputPath=..\Gui\SpellDialog.h
+InputName=SpellDialog
+
+"$(InputDir)\moc_$(InputName).cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	%qtdir%\bin\moc.exe $(InputDir)\$(InputName).h -o $(InputDir)\moc_$(InputName).cpp
+
+# End Custom Build
+
+!ELSEIF  "$(CFG)" == "vc6 - Win32 Debug"
+
+# PROP Ignore_Default_Tool 1
+# Begin Custom Build - Moc'ing $(InputName).h ...
+InputDir=\c++\lekho\winrel_v1.1\src\Gui
+InputPath=..\Gui\SpellDialog.h
+InputName=SpellDialog
+
+"$(InputDir)\moc_$(InputName).cpp" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
+	%qtdir%\bin\moc.exe $(InputDir)\$(InputName).h -o $(InputDir)\moc_$(InputName).cpp
+
+# End Custom Build
+
+!ENDIF 
+
 # End Source File
 # Begin Source File
 

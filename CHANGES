@@ -1,7 +1,12 @@
 
 v1.1
+2002.12.02
+1. YES ! Hacked print function to work (sort of) in windows.
+However the font size is fixed as are the margins, and you can't print to file (which is a QT issue, if you have win QT 3.0 maybe it works !)
+2. Fixed oversight in screenFont (BanglaTextEdit.cpp) that messed up newlines.. 
+
 2002.12.01
-1. Enabling spell checker...
+1. Enabled spell checker...
 
 2002.11.16
 1. Enabled double buffering to remove flicker during typing

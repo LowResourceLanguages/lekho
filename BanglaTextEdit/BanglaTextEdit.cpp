@@ -67,8 +67,14 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name, bool _readonly)
 //	    : QScrollView(parent, name, WRepaintNoErase|WResizeNoErase|WPaintClever|WNorthWestGravity )
 	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
 {
+
+#ifdef _WS_WIN_
+	lockRedrawDuringPrinting = false;
+#endif
+
 	readonly = _readonly ;
 
+	
 #ifdef Q_WS_X11
 	//otherwise on X11 systems Lekho can't paste to other apps
 	QApplication::clipboard()->setSelectionMode(true);
@@ -119,6 +125,10 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name, bool _readonly)
 BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent, int maxFontSize, bool _readonly )
 	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
 {
+
+#ifdef _WS_WIN_
+	lockRedrawDuringPrinting = false;
+#endif
 
 	readonly = _readonly ;
 
@@ -828,10 +838,10 @@ QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 			theScreenText += fontFinish ;
 			}
 		}
-		if((*i).unicode[0].unicode() != 0x09)
+		if( ((*i).unicode[0].unicode() != 0x09) & ((*i).unicode[0].unicode() != '\n') )
 			theScreenText += (*i).screenFont ;
 		else
-			//exception for tabs....
+			//exception for tabs and newlines....
 			theScreenText += (*i).unicode[0];
 	}
 
@@ -916,6 +926,13 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 //function::drawContents
 void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 {
+
+#ifdef _WS_WIN_
+	//just don't ask, just don't ask...
+	if(lockRedrawDuringPrinting)
+		return ;
+#endif
+
 
 	//protect our pixmap
 	if(cw == 0) return ;
@@ -1078,7 +1095,8 @@ void BanglaTextEdit::paintLineSegment(QPainter *p, int x, int y, int segmentWidt
 	if( screenText.length() == 0) return ;
 
 	//p->drawText( x, y, segmentWidth, lineHeight , AlignLeft | AlignTop, screenText);
-	p->drawText( x, y, segmentWidth, lineHeight , AlignCenter | DontClip , screenText);
+	//p->drawText( x, y, segmentWidth, lineHeight , AlignCenter | DontClip , screenText);
+	p->drawText( x, y, segmentWidth, lineHeight , AlignLeft | DontClip , screenText);
 }
 
 //function::delSelected()
@@ -1654,13 +1672,28 @@ bool BanglaTextEdit::print(QPrinter *printer)
 
 	printer->setFullPage(true);
 
-#ifdef _WS_WIN_
-	//hack for windows printing
-	QFont 	printingBanglaFont = banglaFont,
-		printingEnglishFont = englishFont ;
+	//margins
+	int 	VERTMARGINMM = 10,
+		HORIZMARGINMM = 25 ;
 
-	printingBanglaFont.setPointSize(QFontInfo(banglaFont).pointSize() * 4) ;
-	printingEnglishFont.setPointSize(QFontInfo(englishFont).pointSize() * 4) ;
+#ifdef _WS_WIN_
+	//hack for windows printing. Really hack !
+	lockRedrawDuringPrinting = true ;
+
+	QFont 	printingBanglaFont = banglaFont,
+			printingEnglishFont = englishFont,
+			oldBanglaFont = banglaFont,
+			oldEnglishFont = englishFont ;
+
+	//for windows we don't have the luxury of making different font sizes
+	//since windows printing is a bit of a hack...
+	int 	PTSIZEBNG = 72,
+		PTSIZEENG = 72 ;
+
+	//printingBanglaFont.setPointSize(QFontInfo(banglaFont).pointSize() * SCALE) ;
+	//printingEnglishFont.setPointSize(QFontInfo(englishFont).pointSize() * SCALE) ;
+	printingBanglaFont.setPointSize( PTSIZEBNG ) ;
+	printingEnglishFont.setPointSize( PTSIZEENG ) ;
 	setFonts(printingBanglaFont, printingEnglishFont);
 #endif
 
@@ -1674,8 +1707,8 @@ bool BanglaTextEdit::print(QPrinter *printer)
 
 	int 	//w = (int)(((float)w_mm)*72.0/25.4),
 		//h = (int)(((float)h_mm)*72.0/25.4),
-		vertMar = (int)(10 * printerMetrics.logicalDpiY() / 25.4),
-		horizMar = (int)(10 * printerMetrics.logicalDpiX() / 25.4),
+		vertMar = (int)(VERTMARGINMM * printerMetrics.logicalDpiY() / 25.4),
+		horizMar = (int)(HORIZMARGINMM * printerMetrics.logicalDpiX() / 25.4),
 		w = (int)(((float)w_mm) * printerMetrics.logicalDpiX()/25.4) - 2 * horizMar ,
 		h = (int)(((float)h_mm) * printerMetrics.logicalDpiY()/25.4) - 2 * vertMar;
 
@@ -1695,8 +1728,8 @@ bool BanglaTextEdit::print(QPrinter *printer)
 
 		if( (old_w_mm != w_mm) || (old_h_mm != h_mm) )
 		{
-			vertMar = (int)(10 * printerMetrics.logicalDpiY() / 25.4) ;
-			horizMar = (int)(10 * printerMetrics.logicalDpiX() / 25.4) ;
+			vertMar = (int)(VERTMARGINMM * printerMetrics.logicalDpiY() / 25.4) ;
+			horizMar = (int)(HORIZMARGINMM * printerMetrics.logicalDpiX() / 25.4) ;
 			w = (int)(((float)w_mm) * printerMetrics.logicalDpiX()/25.4) - 2 * horizMar ;
 			h = (int)(((float)h_mm) * printerMetrics.logicalDpiY()/25.4) - 2 * vertMar ;
 
@@ -1713,12 +1746,19 @@ bool BanglaTextEdit::print(QPrinter *printer)
 		{
 #ifdef _WS_WIN_
 			//hack for windows printing
-			setFonts(banglaFont, englishFont);
+			setFonts(oldBanglaFont, oldEnglishFont);
+			lockRedrawDuringPrinting = false;
 #endif
 			return false ;
 		}
 
+#ifdef _WS_WIN_
+		//for windows
+		p.setWindow(-horizMar/2. , 0, w + 2 * horizMar, h + 2 * vertMar);
+#else
+		//for X11
 		p.setWindow(-horizMar, -vertMar, w + 2 * horizMar, h + 2 * vertMar);
+#endif
 
 		int 	startPage = printer->fromPage() ,
 			endPage = printer->toPage() ;
@@ -1758,7 +1798,8 @@ bool BanglaTextEdit::print(QPrinter *printer)
 			{
 #ifdef _WS_WIN_
 				//hack for windows printing
-				setFonts(banglaFont, englishFont);
+				setFonts(oldBanglaFont, oldEnglishFont);
+				lockRedrawDuringPrinting = false;
 #endif
 				return false;
 			}
@@ -1779,7 +1820,8 @@ bool BanglaTextEdit::print(QPrinter *printer)
 				{
 #ifdef _WS_WIN_
 					//hack for windows printing
-					setFonts(banglaFont, englishFont);
+					setFonts(oldBanglaFont, oldEnglishFont);
+					lockRedrawDuringPrinting = false;
 #endif
 					return false;
 				}
@@ -1790,12 +1832,15 @@ bool BanglaTextEdit::print(QPrinter *printer)
 				page += SIGN ;
 			}
 		}
+
 	}
 
 #ifdef _WS_WIN_
 	//hack for windows printing
-	setFonts(banglaFont, englishFont);
+	setFonts(oldBanglaFont, oldEnglishFont);
+	lockRedrawDuringPrinting = false;
 #endif
+
 
 	return true ;
 #endif	//QT_NO_PRINTER

@@ -72,6 +72,11 @@ class BanglaTextEdit : public QScrollView
 	Q_OBJECT
 
 protected:
+
+#ifdef _WS_WIN_
+	bool	lockRedrawDuringPrinting ;
+#endif	
+	
 	bool	readonly ;	//if true then we can't write or paste on the scrollview...
 
 	LekhoCursor theCursor ;

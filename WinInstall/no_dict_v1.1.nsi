@@ -1,24 +1,29 @@
-; lekhov1.05.nsi
+; no_dict_v1.1.nsi
 ;
 ; This script is based on example1.nsi, but adds uninstall support
 ; and (optionally) start menu shortcuts.
 ;
-; This is the full install. It has EVERYTHING
-; The qt and mscvrt dll, the fonts, and the source code, all you need is windows...
+; This creates full_install_v1.1.exe
+; It has
+; qt-mt230nc.dll 
+; msvcrtd dll, 
+; fonts, 
+; source code, 
+; all you need is windows and the dictionary...
 ; 
 
 ; The name of the installer
-Name "Lekho v1.05"
+Name "Lekho v1.1 - no dictionary"
 
 ; The file to write
-OutFile "full_install.exe"
+OutFile "no_dict_v1.1.exe"
 
 ;check sum...
 CRCCheck on
 
 ;before you start, take a look at the winreadme...
 Function .onInit
-MessageBox MB_OK "Before installing please take a look at the winreadme.txt file."
+MessageBox MB_OK "This installs Lekho without the dictionary$\n$\nNOTES:$\nIf you get an error while the installer is installing the fonts$\nclick ignore.$\nAfter installing goto settings->control panel->fonts$\nand click open the fonts folder$\nThis refreshes the font list immediately,$\nand lets you work with Lekho right away.$\n$\nAfter installing please take a look at the winreadme.txt file."
 FunctionEnd
 
 
@@ -32,16 +37,16 @@ InstallDir $PROGRAMFILES\Lekho
 
 ; Registry key to check for directory (so if you install again, it will 
 ; overwrite the old one automatically)
-InstallDirRegKey HKLM SOFTWARE\Lekho_v1.05 "Install_Dir"
+InstallDirRegKey HKLM SOFTWARE\Lekho_v1.1 "Install_Dir"
 
 ; The text to prompt the user to enter a directory
-ComponentText "This will install lekho on your computer. By default all components are installed. Click on a component to deselect/select it. If you have never installed lekho before, just keep the default selection."
+ComponentText "This will install lekho on your computer. The dictionary is not included. Click on a component to deselect/select it. If you have never installed lekho before, just keep the default selection."
 
 ; The text to prompt the user to enter a directory
-DirText "Choose a directory to install in to:"
+DirText "Choose a directory to install Lekho in to:"
 
 ; The stuff to install
-Section "Lekho v1.05 (required)"
+Section "Lekho v1.1 (required)"
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
   ; Put files there
@@ -59,10 +64,10 @@ Section "Lekho v1.05 (required)"
   File /r ".lekho"	;
 
   ; Write the installation path into the registry
-  WriteRegStr HKLM SOFTWARE\Lekho_v1.05 "Install_Dir" "$INSTDIR"
+  WriteRegStr HKLM SOFTWARE\Lekho_v1.1 "Install_Dir" "$INSTDIR"
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Lekho_v1.05" "DisplayName" "Lekho v1.05 (remove only)"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Lekho_v1.05" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Lekho_v1.1" "DisplayName" "Lekho v1.1 (remove only)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Lekho_v1.1" "UninstallString" '"$INSTDIR\uninstall.exe"'
   WriteUninstaller "uninstall.exe"
 SectionEnd
 
@@ -91,7 +96,6 @@ Section "Bangla fonts"
   ; Put file there
   File /r "fonts"
 SectionEnd
-
 
 ;examples
 Section "example files"
@@ -130,19 +134,21 @@ SectionEnd
 Section "Start Menu Shortcuts"
   CreateDirectory "$SMPROGRAMS\Lekho"
   CreateShortCut "$SMPROGRAMS\Lekho\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\Lekho\LekhoKeyMap.lnk" "$INSTDIR\lekho.exe" "-keymap" "$INSTDIR\lekho.exe" 0
+  CreateShortCut "$SMPROGRAMS\Lekho\LekhoHelp.lnk" "$INSTDIR\lekho.exe" "examples\help.txt" "$INSTDIR\lekho.exe" 0
   CreateShortCut "$SMPROGRAMS\Lekho\Lekho.lnk" "$INSTDIR\lekho.exe" "" "$INSTDIR\lekho.exe" 0
 SectionEnd
 
 
 ; uninstall stuff
 
-UninstallText "This will uninstall Lekho v1.05. It will also remove any configuration files in the install directory. Hit uninstall to continue."
+UninstallText "This will uninstall Lekho v1.1. It will also remove any configuration files in the install directory. Hit uninstall to continue."
 
 ; special uninstall section.
 Section "Uninstall"
   ; remove registry keys
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Lekho_v1.05"
-  DeleteRegKey HKLM SOFTWARE\Lekho_v1.05
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Lekho_v1.1"
+  DeleteRegKey HKLM SOFTWARE\Lekho_v1.1
   DeleteRegKey HKCR "LekhoFile"
 
   ; remove files  

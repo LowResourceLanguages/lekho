@@ -597,7 +597,7 @@ void ApplicationWindow::saveAsHTML()
 	if( QMessageBox::warning( this, "Lekho",
                                  "File Exists, Overwrite?",
                                  "No", "Yes", 0,
-                                 0, 0 ) == 0 )
+                                 1, 0 ) == 0 )
 	{
 		return;
 	}
@@ -687,7 +687,7 @@ void ApplicationWindow::HTMLexport()
     QString text = e->screenFont();
 
     if(fudgeHtmlOn)
-        fudgeHtml(text);	//if you have any headers beware....
+    	fudgeHtml(text);	//if you have any headers beware....
 
     QFile f( htmlname );
     if ( !f.open( IO_WriteOnly ) )
@@ -726,7 +726,7 @@ void ApplicationWindow::HTMLexportAs()
 					"Do you want Lekho to enhance the text you are exporting\n"
 					"with html headers and line breaks ?",
 					"Yes", "No", "Cancel",
-					0, 1 ) )
+					0, 1) )
 	{
 		case 0:
 			fudgeHtmlOn = true ;

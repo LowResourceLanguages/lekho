@@ -14,9 +14,9 @@
   <option key="lekhorc" value=".lekhorc" />
  </group>
  <group name="directories" >
-  <option key="htmldir" value="./" />
+  <option key="htmldir" value="/home/kghose/Lekho/v1.0/examples" />
   <option key="latexdir" value="./" />
-  <option key="workingdir" value="/home/kghose/Lekho/v1.0/examples" />
+  <option key="workingdir" value="examples" />
  </group>
  <group name="startup" >
   <option key="banan directory" value="Dict/" />
