@@ -61,9 +61,9 @@ wordwrap একটা লম্বা লাইনকে ছোট ছোট ভ
 
 ক)
 utf-8, utf-16 হচ্ছে encoding-এর উপায়:
-আপনি যদি শুধু লেখ নিএই কাজ করেন, তাহলে আপনাকে শুধু মনে রাখতে হবে জে utf-8 এ copy করলে utf-8 এই paste করতে হবে এবং utf-16 এ copy করলে utf-16 এই paste করতে হবে, তানা হলে হিজিবিজি paste হবে। (বন্ধুকে বলবেন "আমি ফরাশি তে কথা বলব, ফরাশি পড়ে আয়" কিনতু আশলে আপনি কথা ফার্সিতে বললেন, এ হয়না...)
+আপনি যদি শুধু লেখ নিএই কাজ করেন, তাহলে আপনাকে শুধু মনে রাখতে হবে জে utf-8 এ copy করলে utf-8 এই paste করতে হবে এবং utf-16 এ copy করলে utf-16 এই paste করতে হবে, তানা হলে হিজিবিজি paste হবে। (বন্ধুকে বলবেন "আমি ফরাসী তে কথা বলব, ফরাসী পড়ে আয়" কিনতু আসলে আপনি কথা ফার্সিতে বললেন, এ হয়না...)
 
-আমি এই দুট উপায় রেখেছি যেহেতু বিভিন্য program clipboard থেকে জিনিস paste করতে বিভিন্য উপায় ব্যবহার করে।
+আমি এই দূটো উপায় রেখেছি যেহেতু বিভিন্য program clipboard থেকে জিনিস paste করতে বিভিন্য উপায় ব্যবহার করে।
 
 আমি একটু গবেশনা করে বার কোরেছি কন কন program থেকে clipboard-এ কি format-এ copy হয়।
 
@@ -73,15 +73,15 @@ opera 6	utf16
 
 খ)
 copy as character reference:
-এই উপায় বাংলা বা ইংরাজি বর্ণ গুল "&#xxxx" হিশাবে paste হয়। xxxx হচ্ছে একতা decimal নম্বর। এই ওদভুত code গুলি যদি আপনি কোন html editor-এ paste করেন (e.g. netscape composer), তাহলে শেই webpage ঠিক browser (opera বা internet explorer 6) দিয়ে দেখলে বাংলা বর্ণগুল দেখতে পারবেন।
+এই উপায় বাংলা বা ইংরাজী বর্ণ গুল "&#xxxx" হিশাবে paste হয়। xxxx হচ্ছে একতা decimal নম্বর। এই ওদভুত code গুলি যদি আপনি কোন html editor-এ paste করেন (e.g. netscape composer), তাহলে সেই webpage ঠিক browser (opera বা internet explorer 6) দিয়ে দেখলে বাংলা বর্ণগুল দেখতে পারবেন।
 
 গ)
 paste as romanised:
-এই উপায় ব্যাবহার করবেন জখন আপনার কিছু বাংলা কথা ইংরেজিতে phonetically লেখা আছে, ধরুন আপনার বন্ধু আপনাকে ইমাইল পাঠিয়েছে "tui kemon aachish ?" লিখে। আপনি এই লেখাটি নির্দিশ্ত করে copy করে লেখর windowতে মাউস এনে টিপলেন "paste from romanised", screen-এ ফুটে উঠল "তুই কেমোন আচিশ ?"। উপায় টা নির্ভুলত নয়ই, কিন্তু মটা মটি কাজ করে।  
+এই উপায় ব্যাবহার করবেন যখন আপনার কিছু বাংলা কথা ইংরেজীতে phonetically লেখা আছে, ধরুন আপনার বন্ধু আপনাকে ইমাইল পাঠিয়েছে "tui kemon aachish ?" লিখে। আপনি এই লেখাটি নির্দিষ্ট করে copy করে লেখর windowতে মাউস এনে টিপলেন "paste from romanised", screen-এ ফুটে উঠল "তুই কেমোন আচিশ ?"। উপায় টা নির্ভুলত নয়ই, কিন্তু মটা মটি কাজ করে।  
 
 ঘ)
 export html 
-এই উপায় দিয়ে আপনি লেখাটা webpage হিশাবে save কোরতে পারেন। export হয় adarshalipi font-এ। এই webpage, জে কোন browser-এ দেখা যায়, adarshalipi font থাকলেই হোল। যেমন, help_lipi.html এই ফাইল (help.txt) থেকে বানান হয়ছে export html ব্যভার করে।
+এই উপায় দিয়ে আপনি লেখাটা webpage হিশাবে save কোরতে পারেন। export হয় adarshalipi font-এ। এই webpage, যে কোন browser-এ দেখা যায়, adarshalipi font থাকলেই হোলো। যেমন, help_lipi.html এই ফাইল (help.txt) থেকে বানান হয়চে export html ব্যভার করে।
 
 ঙ)
 export latex
