@@ -97,8 +97,6 @@ private:
 	bool	revealUnicode ;		//if this is set true, the status bar shows you the unicode value of
 					//the character the mouse is over every time you move it...
 
-	//clipboard stuff
-	//QClipboard *cb ;
 
 	// Initializing functions ////////////////////////////////////////////////////
 public:
@@ -180,6 +178,11 @@ public:
 	int insert(int para, int col, const QString &text); //, bool indent = FALSE, bool checkNewLine = TRUE, bool removeSelected = TRUE );
 	void del(int para1, int col1, int para2, int col2 );
 	void splitLine(int para, int col);
+
+	//experimental stage...
+	//find ops
+	void highlightWord(const QString &wd); //, bool onlySelected = false);
+
 
 public slots:
 

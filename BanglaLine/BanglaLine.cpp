@@ -20,7 +20,7 @@
 
 //BanglaLine.cpp
 #include <BanglaLine.h>
-
+#include <lekhostream.h>
 
 BanglaLine::BanglaLine()
 {
@@ -289,6 +289,63 @@ void BanglaLine::changeFont(QFont &banglaFont, QFont &englishFont)
 
 		lineWidth += (*i).width ;
 	}
+}
+
+QPoint BanglaLine::findWord(const QString &wd, int startCol, int endCol)
+{
+	QString thisWord ;
+	//unicodeVersionOfLine ;
+	//unicodeVersionOfLine += (*i).unicode ;
+	//return( unicodeVersionOfLine.find(wd) );
+	QPoint wordLoc(-1,-1);
+
+	BanglaLetterList::Iterator i = letter.at(startCol),
+				theEnd ;
+	if((endCol < 0) || (endCol == letter.count() -1))
+		theEnd = letter.end();
+	else
+		theEnd = letter.at(endCol + 1) ;
+
+	int 	wordStart = startCol,
+		index = startCol  ;
+
+	for( ; i != theEnd ; ++i)
+	{
+		if( (*i).unicode == " " )//a space ! the word must be complete
+		{
+			if(thisWord.length() == wd.length())//there's a chance of a match here
+			{
+				if( thisWord == wd )
+				{
+					wordLoc.setX(wordStart);
+					wordLoc.setY(index -1);
+					return(wordLoc);
+				}
+			}
+			thisWord = "";
+			index++;
+
+			wordStart = index ;
+		}
+		else
+		{
+			thisWord += (*i).unicode ;
+			index++ ;
+		}
+	}
+
+
+	if(thisWord.length() == wd.length())//there's a chance of a match here
+	{
+		if( thisWord == wd )
+		{
+			wordLoc.setX(wordStart);
+			wordLoc.setY(index);	//we don't have spaces anymore...
+			return(wordLoc);
+		}
+	}
+
+	return(wordLoc);	//no luck
 }
 
 QTextStream& operator << (QTextStream& pipe , BanglaLine& bl)

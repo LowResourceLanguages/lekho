@@ -134,6 +134,11 @@ public:
 public:
 	// basic editing ops ///////////////////////////////////////////////////
 
+	//find the para and column corresponding to the first occurence of this word in the
+	//set portion of the document.
+	//return -1 in column if not found
+	void findWord(QPoint &start, QPoint &end, const QString &wd, const QPoint &paracolStart, const QPoint &paracolEnd);
+
 	//inserts letters starting at a given line. If the line is 1+ the last line
 	//a new line is added
 	bool insert(int line, int col, const BanglaLetterList& bll);	//handles newlines

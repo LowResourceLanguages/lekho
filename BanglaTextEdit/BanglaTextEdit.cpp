@@ -243,6 +243,35 @@ void BanglaTextEdit::splitLine(int para, int col)
 	viewport()->update();
 }
 
+//function::highlightWord
+void BanglaTextEdit::highlightWord(const QString &wd)
+{
+	QPoint paracolStart = theCursor.paracol ,
+		paracolEnd(theDoc.lettersInLine(theDoc.totalLines()-1)-1,
+			theDoc.totalLines()-1) ;
+	QPoint selStart, selEnd ;
+	theDoc.findWord(selStart, selEnd, wd, paracolStart, paracolEnd);
+
+	if( (selStart.x() > -1) && (selEnd.x() > -1) )
+	{
+		paracolSelStart = selStart ;
+		paracolSelEnd = selEnd;
+		paracolSelEnd.setX(paracolSelEnd.x() + 1 )  ;	//the leetele hack - see copy/paste etc.
+		hasSelText = true ;
+		xySelStart = theDoc.paracol2xy(paracolSelStart);
+		xySelEnd = theDoc.paracol2xy(paracolSelEnd);
+
+		cursorErase();
+		theCursor.xy = xySelStart ;
+		theCursor.paracol = paracolSelEnd ;
+		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+		cursorDraw();
+
+		viewport()->update();
+	}
+
+}
+
 bool BanglaTextEdit::screenFontConverterInit(QTextStream &file)
 {
 	if(!lipi.initialiseConverter(file))
@@ -601,6 +630,10 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 
 	switch (event->key())
 	{
+		case	Key_F8:
+			highlightWord("this");
+			break;
+
 		case 	Key_Escape:
 
 			keyPressEventFlushBangla();

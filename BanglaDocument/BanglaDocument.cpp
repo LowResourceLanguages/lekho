@@ -708,6 +708,58 @@ QPoint BanglaDocument::paragraph2line(QPoint &paragraph)
 
 	// basic editing ops ///////////////////////////////////////////////////
 
+//function::findWord
+//find the para and column corresponding to the first occurence of this word in the
+//set portion of the document.
+//return -1 in column if not found
+void BanglaDocument::findWord(QPoint &start, QPoint &end, const QString &wd, const QPoint &paracolStart, const QPoint &paracolEnd)
+{
+	int 	paraSt = paracolStart.y(),
+		paraNd = paracolEnd.y() ;
+		//wdCol ;
+	QPoint	wdCol(-1,-1) ;
+
+	documentLineMemoryMoveTo(paraSt);
+	wdCol = (*documentLineAt(paraSt)).findWord(wd, paracolStart.x()) ;
+	if(wdCol.x() > -1)
+	{
+		start.setY(paraSt);
+		end.setY(paraSt);
+
+		start.setX(wdCol.x());
+		end.setX(wdCol.y());
+
+		return ;
+	}
+
+	for(int i = paraSt + 1 ; i < paraNd ; i++)
+	{
+		documentLineMemoryMoveTo(i);
+		wdCol = (*documentLineAt(i)).findWord(wd) ;
+		if(wdCol.x() > -1)
+		{
+			start.setY(i);
+			end.setY(i);
+
+			start.setX(wdCol.x());
+			end.setX(wdCol.y());
+
+			return ;
+		}
+	}
+
+	wdCol = (*documentLineAt(paraNd)).findWord(wd, 0, paracolEnd.x()) ;
+	if(wdCol.x() > -1)
+	{
+		start.setY(paraNd);
+		end.setY(paraNd);
+
+		start.setX(wdCol.x());
+		end.setX(wdCol.y());
+	}
+
+}
+
 //inserts a lot of letters in a given line. Looks out for and handles newlines
 bool BanglaDocument::insert(int line, int col, const BanglaLetterList& bll)
 {

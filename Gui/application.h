@@ -107,7 +107,7 @@ private:
     LekhoPrefs thePref ;
     BanglaTextEdit *e ;
 
-    QString filename, htmlname, latexname;
+    QString filename, htmlname, latexname , lekhorc;
 
     //QDir working, latex, html ;
 };

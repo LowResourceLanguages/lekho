@@ -85,6 +85,12 @@ public:
 
 	void changeFont(QFont &banglaFont, QFont &englishFont);
 
+	//find the column corresponding to the first occurence of this word in this line in x
+	//and the last column of the word in y
+	//return -1 if not found
+	QPoint findWord(const QString &w, int startCol=0, int endCol=-1);
+
+
 public:
 	friend QTextStream& operator << (QTextStream& pipe , BanglaLine& b);
 //	friend ostream& operator << (ostream& pipe , BanglaLine& b);

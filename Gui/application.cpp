@@ -81,6 +81,7 @@ ApplicationWindow::ApplicationWindow()
 
     QPixmap openIcon, saveIcon, printIcon;
 
+    lekhorc = QDir::homeDirPath() + "/.lekhorc";
     //read in prefs. some prefs affect how we set our defaults...
     readPrefs();
 
@@ -247,7 +248,7 @@ ApplicationWindow::ApplicationWindow()
 ApplicationWindow::~ApplicationWindow()
 {
 	thePref.pos = geometry();
-	thePref.save(".lekhorc") ;
+	thePref.save(lekhorc) ;
 	delete printer;
 }
 
@@ -261,7 +262,18 @@ void ApplicationWindow::printDebug()
 void ApplicationWindow::readPrefs()
 {
     	statusBar()->message( "Loading prefs" );
-	thePref.load(".lekhorc");
+	if(QFile::exists(lekhorc))
+		thePref.load(lekhorc);
+	else
+	if(QFile::exists(".lekhorc"))
+	{
+		lekhorc = ".lekhorc" ;
+		thePref.load(lekhorc);
+	}
+	else
+	{
+		Qcerr << "couldn't find a .lekhorc file, faking one" << flush ;
+	}
 }
 
 void ApplicationWindow::initialiseParser()
