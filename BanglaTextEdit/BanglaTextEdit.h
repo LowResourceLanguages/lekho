@@ -56,7 +56,8 @@ inline bool isTab(const QChar &text);
 struct LekhoCursor
 {
 	int 	cursorTimerId ;
-	bool	cursorOn ;
+	bool	cursorOn,
+		blinkOn ;
 	QPoint	paracol,
 		xy ;
 };
@@ -69,7 +70,7 @@ private:
 	LekhoCursor theCursor ;
 	QPoint paracolSelStart, paracolSelEnd ,	//the selection para/col
 		xySelStart , xySelEnd ,
-		tempParacolSelStart , tempParacolSelEnd ;//needed to handle flipping of start and end posns...	
+		tempParacolSelStart , tempParacolSelEnd ;//needed to handle flipping of start and end posns...
 
 	bool hasSelText ;
 
@@ -183,6 +184,8 @@ public slots:
 
 	void wordWrapOn();
 	void wordWrapOff();
+	void cursorBlinkOn();
+	void cursorBlinkOff();
 
 	// clipboard ops ////////////////////////////////////////////////////////////
 private slots:

@@ -165,10 +165,27 @@ ApplicationWindow::ApplicationWindow()
     connect( action, SIGNAL( toggled(bool) ), this , SLOT( setWordWrap(bool) ) );
     action->addTo( options );
 
+    options->insertSeparator();
+
     options->insertItem( "&Bangla font", this, SLOT(chooseBanglaFont()) );
     options->insertItem( "&English font", this, SLOT(chooseEnglishFont()) );
     options->insertItem( "f&oreground color", this, SLOT(chooseForeground()) );
     options->insertItem( "b&ackground color", this, SLOT(chooseBackground()) );
+    options->insertSeparator();
+
+    //options->advanced
+
+    //cursor blink
+    QPopupMenu *advanced = new QPopupMenu( this );
+    delete action ;
+    action = new QAction( tr("Cursor blink"), tr("C&ursor blink"), 0, this );
+    action->setToggleAction(true);
+    action->setOn( true );
+    connect( action, SIGNAL( toggled(bool) ), this , SLOT( setCursorBlink(bool) ) );
+    action->addTo( advanced );
+
+
+    options->insertItem( "&Advanced...", advanced);
 
 
     //help
@@ -182,7 +199,6 @@ ApplicationWindow::ApplicationWindow()
     //insert the menus onto the menu bar in the order we want
     menuBar()->insertItem( "&File", file );
     menuBar()->insertItem( "&Options", options);
-
     menuBar()->insertItem( "&Help", help );
 
 
@@ -467,6 +483,14 @@ void ApplicationWindow::setWordWrap(bool ww)
 		e->wordWrapOn();
 	else
 		e->wordWrapOff();
+}
+
+void ApplicationWindow::setCursorBlink(bool cb)
+{
+	if(cb)
+		e->cursorBlinkOn();
+	else
+		e->cursorBlinkOff();
 }
 
 void ApplicationWindow::chooseBanglaFont()

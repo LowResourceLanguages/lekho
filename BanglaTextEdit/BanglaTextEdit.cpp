@@ -84,7 +84,7 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
 	partialCodeInserted = false ;
 
 	//set up cursor
-	theCursor.cursorTimerId = startTimer(500);
+	theCursor.cursorTimerId = startTimer(800);
 	if (theCursor.cursorTimerId == 0)
 	{
 		theCursor.cursorOn = TRUE;
@@ -101,7 +101,10 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
 	viewport()->update();
 
 	revealUnicode = true ;
-//	setMouseTracking(revealUnicode);
+
+	modified = false ;
+
+	cursorBlinkOn() ;
 }
 
 BanglaTextEdit::~BanglaTextEdit()
@@ -495,15 +498,16 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 	//draw the cursor
         if (theCursor.cursorOn)
         {
-            QRect cursorRect = calculateCursorRect();
+		QRect cursorRect = calculateCursorRect();
 
-	    p->setPen(foreground);
-            p->setRasterOp(NotXorROP);
-			if(viewport()->hasFocus())
-				p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
-			else
-				p->drawRect(cursorRect);
-            p->setRasterOp(CopyROP);
+		p->setPen(background);
+		p->setRasterOp(NotXorROP);
+
+		if(bangla.isBangla())
+			p->drawRect(cursorRect);
+		else
+			p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
+		p->setRasterOp(CopyROP);
         }
 
 }
@@ -1016,11 +1020,15 @@ void BanglaTextEdit::clipBoardOp(int id)
 
 void BanglaTextEdit::timerEvent(QTimerEvent *event)
 {
-	if(viewport()->hasFocus())
+//modified to only blink if told...
+
+	if(theCursor.blinkOn)
 	{
 		theCursor.cursorOn = !theCursor.cursorOn;
 		updateContents(calculateCursorRect());
 	}
+	else
+		theCursor.cursorOn = true ;
 }
 
 
@@ -1031,13 +1039,14 @@ QRect BanglaTextEdit::calculateCursorRect()
 	if( partialCodeInserted )
 	{
 		theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
-		QRect crs(theCursor.xy.x(), theCursor.xy.y() , 2 , theDoc.getLineHeight());
+		QRect crs(theCursor.xy.x(), theCursor.xy.y() , 5 , theDoc.getLineHeight());
 		theDoc.moveCursor( Key_Left, theCursor.xy, theCursor.paracol);
 		return crs;
 	}
 	else
-		return QRect(theCursor.xy.x(), theCursor.xy.y() , 2 , theDoc.getLineHeight());
+		return QRect(theCursor.xy.x(), theCursor.xy.y() , 5 , theDoc.getLineHeight());
 }
+
 
 void BanglaTextEdit::cursorErase()
 {
@@ -1065,4 +1074,14 @@ void BanglaTextEdit::wordWrapOff()
 	theDoc.wordWrapOff();
 	theDoc.moveCursor(Qt::Key_unknown, theCursor.xy, theCursor.paracol);
 	viewport()->update();
+}
+
+void BanglaTextEdit::cursorBlinkOn()
+{
+	theCursor.blinkOn = true ;
+}
+
+void BanglaTextEdit::cursorBlinkOff()
+{
+	theCursor.blinkOn = false ;
 }

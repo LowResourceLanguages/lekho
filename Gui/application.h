@@ -83,6 +83,7 @@ private slots:
     void print();
 
     void setWordWrap(bool ww);
+    void setCursorBlink(bool cb);
     void chooseEnglishFont();
     void chooseBanglaFont();
     void chooseForeground();
