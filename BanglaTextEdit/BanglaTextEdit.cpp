@@ -30,10 +30,12 @@
 #include <qclipboard.h>
 #include <qdragobject.h>
 
+#include <bangla.h>
 #include <BanglaTextEdit.h>
 #include <BanglaSegment.h> //the function that takes a unicode stream and chops it up into bangla letters
 #include <BanglaLine.h>
 #include <FontConverter.h>
+
 
 #include <qrect.h>
 #include <qmessagebox.h>
@@ -614,11 +616,12 @@ QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 	for(i = text.begin() ; i != text.end() ; ++i)
 	{
 		//bangla starts. Flush whatever was there before and switch to bangla
-		if( isBangla( (*i).unicode[0].unicode() )  && ((*i).unicode[0].unicode() != 0x20))
+		if( isBangla( (*i).unicode[0].unicode() )
+			&& ((*i).unicode[0].unicode() != 0x20)		//spaces
+			&& ((*i).unicode[0].unicode() != 0x09) )	//tabs
 		{
 			if(!banglaMode)
 			{
-			//out += theScreenText ;
 			banglaMode = true ;
 			theScreenText += banglaFontStart ;
 			}
@@ -631,7 +634,11 @@ QString BanglaTextEdit::screenFont(QPoint &start, QPoint &end)
 			theScreenText += fontFinish ;
 			}
 		}
-		theScreenText += (*i).screenFont ;
+		if((*i).unicode[0].unicode() != 0x09)
+			theScreenText += (*i).screenFont ;
+		else
+			//exception for tabs....
+			theScreenText += (*i).unicode[0];
 	}
 
 	return(theScreenText);

@@ -61,6 +61,7 @@ HEADERS = Gui/application.h \
 		CodeTreeElement/CodeTreeElement.h \
 		include/preferences.h \
 		include/lekhoprefs.h \
+		include/bangla.h \
 		Parser/parser.h
 SOURCES = Gui/main.cpp \
 		Gui/application.cpp \
@@ -75,6 +76,7 @@ SOURCES = Gui/main.cpp \
 		CodeTreeElement/CodeTreeElement.cpp \
 		include/preferences.cpp \
 		include/lekhoprefs.cpp \
+		include/bangla.cpp \
 		Parser/parser.cpp
 OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/application.o \
@@ -89,6 +91,7 @@ OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/CodeTreeElement.o \
 		$(OBJ_DIR)/preferences.o \
 		$(OBJ_DIR)/lekhoprefs.o \
+		$(OBJ_DIR)/bangla.o \
 		$(OBJ_DIR)/parser.o
 FORMS = 
 UICDECLS = 
@@ -172,7 +175,7 @@ $(OBJ_DIR)/main.o: Gui/main.cpp Gui/application.h
 	test -d $(OBJ_DIR)/ || mkdir -p $(OBJ_DIR)/
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/main.o Gui/main.cpp
 
-$(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
+$(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h include/bangla.h \
 		Gui/filesave.xpm \
 		Gui/fileopen.xpm \
 		Gui/fileprint.xpm
@@ -190,13 +193,13 @@ $(OBJ_DIR)/BanglaLetter.o: BanglaLetter/BanglaLetter.cpp
 $(OBJ_DIR)/BanglaDocument.o: BanglaDocument/BanglaDocument.cpp BanglaDocument/BanglaDocument.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaDocument.o BanglaDocument/BanglaDocument.cpp
 
-$(OBJ_DIR)/BanglaTextEdit.o: BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h
+$(OBJ_DIR)/BanglaTextEdit.o: BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaTextEdit.o BanglaTextEdit/BanglaTextEdit.cpp
 
 $(OBJ_DIR)/BanglaLineEdit.o: BanglaTextEdit/BanglaLineEdit.cpp BanglaTextEdit/BanglaLineEdit.h BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLineEdit.o BanglaTextEdit/BanglaLineEdit.cpp
 
-$(OBJ_DIR)/BanglaSegment.o: BanglaSegment/BanglaSegment.cpp BanglaSegment/BanglaSegment.h
+$(OBJ_DIR)/BanglaSegment.o: BanglaSegment/BanglaSegment.cpp BanglaSegment/BanglaSegment.h include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaSegment.o BanglaSegment/BanglaSegment.cpp
 
 $(OBJ_DIR)/FontConverter.o: FontConverter/FontConverter.cpp FontConverter/FontConverter.h
@@ -207,6 +210,9 @@ $(OBJ_DIR)/CodeTreeElement.o: CodeTreeElement/CodeTreeElement.cpp
 
 $(OBJ_DIR)/lekhoprefs.o: include/lekhoprefs.cpp include/lekhoprefs.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/lekhoprefs.o include/lekhoprefs.cpp
+
+$(OBJ_DIR)/bangla.o: include/bangla.cpp include/bangla.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/bangla.o include/bangla.cpp
 
 $(OBJ_DIR)/preferences.o: include/preferences.cpp  include/preferences.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/preferences.o include/preferences.cpp

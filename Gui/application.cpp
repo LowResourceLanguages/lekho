@@ -31,6 +31,7 @@
 #include <iostream.h>
 
 #include "application.h"
+#include <bangla.h>
 
 #include <qaction.h>
 #include <qaccel.h>
@@ -430,6 +431,8 @@ void ApplicationWindow::HTMLexport()
     }
 
     QString text = e->screenFont();
+    fudgeHtml(text);	//if you have any headers beware....
+
     QFile f( htmlname );
     if ( !f.open( IO_WriteOnly ) ) {
 	statusBar()->message( QString("Could not export html to %1").arg(htmlname),

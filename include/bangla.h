@@ -46,4 +46,11 @@ inline bool isBangla(const QChar &text)
 	return false ;
 }
 
+
+
+
+//small utility function used for html export
+//inserts a fake header and tab stops
+void fudgeHtml(QString &text) ;
+
 #endif

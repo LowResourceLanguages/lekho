@@ -46,11 +46,12 @@
 #include <lekhostream.h>
 
 #include <BanglaDocument.h>
+//#include <bangla.h>
 #include <FontConverter.h>
 #include <parser.h>
 
 //small utility functions
-inline bool isBangla(const QChar &text);
+//inline bool isBangla(const QChar &text);
 inline bool isTab(const QChar &text);
 
 struct LekhoCursor
