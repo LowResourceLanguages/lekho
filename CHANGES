@@ -4,6 +4,8 @@ v1.15
 2. Added "i" ending rule to the grammatical normalisation
 3. added flushBangla to the paste functions
 4. fixed bug in drawContents that caused segfault if you resized the window fast enough (neg values to drawing area....)
+5. Implemented greying out of undo/redo buttons if no undo/redo available
+6. Killed bug in redo (deleting one less char than needed)
 
 2002.12.25
 1. Spell checker now uses "compressed files" to speed up loading and economize on space

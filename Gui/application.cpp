@@ -42,6 +42,7 @@
 #include <qfile.h>
 #include <qfiledialog.h>
 #include <qfontdialog.h>
+#include <qiconset.h>
 #include <qimage.h>
 #include <qmenubar.h>
 #include <qmessagebox.h>
@@ -93,7 +94,8 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     fudgeHtmlOn = false ;
 
-    QPixmap lekhoIcon, openIcon, saveIcon, printIcon, findIcon, spellIcon, undoIcon, redoIcon;
+    QPixmap lekhoIcon, openIcon, saveIcon, printIcon, findIcon, spellIcon ;
+    QIconSet undoIcon, redoIcon;
     lekhoIcon = QPixmap( lekho );
     this->setIcon(lekhoIcon);
 
@@ -119,15 +121,19 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 	= new QToolButton( saveIcon, "Save File", QString::null,
 			   this, SLOT(save()), fileTools, "save file" );
 
-    undoIcon = QPixmap( undoxpm );
+    undoIcon = QIconSet( QPixmap( undoxpm ) );
     QToolButton * undo
 	= new QToolButton( undoIcon, "Undo", QString::null,
 			   this, SLOT(undo()), fileTools, "undo" );
+    undo->setEnabled( false ) ;
+    connect(e, SIGNAL( undoAvailable( bool ) ), undo, SLOT(setEnabled( bool )));
 
-    redoIcon = QPixmap( redoxpm );
+    redoIcon = QIconSet( QPixmap( redoxpm ) );
     QToolButton * redo
 	= new QToolButton( redoIcon, "Redo", QString::null,
 			   this, SLOT(redo()), fileTools, "redo" );
+    redo->setEnabled( false ) ;			   
+    connect(e, SIGNAL( redoAvailable( bool ) ), redo, SLOT(setEnabled( bool )));
 
     findIcon = QPixmap( findinfile );
     QToolButton * find

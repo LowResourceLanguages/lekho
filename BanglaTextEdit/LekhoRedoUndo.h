@@ -68,6 +68,14 @@ public:
 			delete top ;
 	}
 
+	void clear()
+	{
+		if(top != NULL)
+			delete top ;
+		top = NULL ;
+		current = top ;
+	}
+
 	//all ops, like cut (block delete) and paste can be defined at one go
 	void setop(bool isInsert_, QString &theText_, QPoint &paracolStart_, QPoint &paracolEnd_, uint letters_=0 );
 
@@ -98,21 +106,6 @@ public:
 		}
 	}
 
-/*
-	//okay, since we are setting the op, we can get rid of all below it.
-	void startNewOp()
-	{
-		//assume that  current contains the op we have just finished
-		if( current == NULL )	//something screwy here
-		{
-			if( top == NULL)	//ok, no stack at all
-				top = new LekhoRedoUndoUnit ;
-			current = top ;
-		}
-		else
-
-	}
-*/
 	//return the undo and redo ops and adjust current accordingly
 	LekhoRedoUndoOp undo() ;
 	LekhoRedoUndoOp redo() ;

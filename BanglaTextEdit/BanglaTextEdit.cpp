@@ -739,6 +739,10 @@ void BanglaTextEdit::setText(const QString &text)
 {
 	if(hasSelText)
 		hasSelText = false ;
+	history.clear();	//otherwise your document spends some time in the twilightzone...
+	emit undoAvailable(history.undoAvailable());
+	emit redoAvailable(history.redoAvailable());
+
 
 	ensureVisible(0, 0 , 10, 10) ;
 	theCursor.paracol = QPoint(0,0) ;
@@ -1136,7 +1140,7 @@ void BanglaTextEdit::delSelected()
 		return ;
 
 	cursorErase();
-	del(paracolSelStart.y(),paracolSelStart.x(),paracolSelEnd.y(),paracolSelEnd.x()-1);
+	del(paracolSelStart.y(),paracolSelStart.x(),paracolSelEnd.y(),paracolSelEnd.x()-1, false);
 	hasSelText = false ;
 
 	theCursor.paracol = paracolSelStart ;
@@ -1235,7 +1239,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			keyPressEventFlushBangla();
 			cursorErase();
 			del(theCursor.paracol.y(), theCursor.paracol.x(),
-		    		theCursor.paracol.y(), theCursor.paracol.x());
+		    		theCursor.paracol.y(), theCursor.paracol.x(), false);
 			cursorDraw();
 			break;
 
@@ -1251,7 +1255,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			cursorErase();
 			theDoc.moveCursor(Key_Left , theCursor.xy, theCursor.paracol);
 			del(theCursor.paracol.y(), theCursor.paracol.x(),
-			    theCursor.paracol.y(), theCursor.paracol.x());
+			    theCursor.paracol.y(), theCursor.paracol.x(), false );
 			cursorDraw();
 			break;
 
@@ -1296,7 +1300,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 
 	}
 
-	//another leetle hack -10
+	//another leetle hack
 	if( theCursor.xy.x() + theDoc.getLineHeight() < viewport()->width())
 		ensureVisible ( 10 , theCursor.xy.y() + theDoc.getLineHeight(), 10, theDoc.getLineHeight()) ;
 	else
@@ -1600,10 +1604,10 @@ void BanglaTextEdit::clipBoardOp(int id)
 	switch(id)
 	{
 	// Copy text into the clipboard
-	case 	CopyUtf8:
+	case CopyUtf8:
 		cb->setText( QString(unicode(paracolSelStart,paracolSelEnd).utf8()) );
 		break ;
-	case 	CopyUtf16:
+	case CopyUtf16:
 		cb->setText( unicode(paracolSelStart,paracolSelEnd) );
 		break ;
 	case CopyScreenFont:
@@ -2007,6 +2011,12 @@ void BanglaTextEdit::undo()
 			setModified( false ) ;
 	}
 
+	//another leetle hack
+	if( theCursor.xy.x() + theDoc.getLineHeight() < viewport()->width())
+		ensureVisible ( 10 , theCursor.xy.y() + theDoc.getLineHeight(), 10, theDoc.getLineHeight()) ;
+	else
+		ensureVisible ( theCursor.xy.x() , theCursor.xy.y() + theDoc.getLineHeight(), theDoc.getLineHeight() , theDoc.getLineHeight()) ;
+
 	emit undoAvailable(history.undoAvailable());
 	emit redoAvailable(history.redoAvailable());
 }
@@ -2028,11 +2038,17 @@ void BanglaTextEdit::redo()
 		else
 		{
 			del( redo_op.paracolStart.y(), redo_op.paracolStart.x(),
-				redo_op.paracolEnd.y(), redo_op.paracolEnd.x()-1, true);
+				redo_op.paracolEnd.y(), redo_op.paracolEnd.x(), true);//watch out ! no redo_op.paracolEnd.x()-1
 			theCursor.paracol = redo_op.paracolStart ;
 		}
 		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
 	}
+
+	//another leetle hack
+	if( theCursor.xy.x() + theDoc.getLineHeight() < viewport()->width())
+		ensureVisible ( 10 , theCursor.xy.y() + theDoc.getLineHeight(), 10, theDoc.getLineHeight()) ;
+	else
+		ensureVisible ( theCursor.xy.x() , theCursor.xy.y() + theDoc.getLineHeight(), theDoc.getLineHeight() , theDoc.getLineHeight()) ;
 
 	emit undoAvailable(history.undoAvailable());
 	emit redoAvailable(history.redoAvailable());
