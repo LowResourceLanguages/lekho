@@ -74,6 +74,8 @@ private slots:
 	void load( const QString &fileName );
 	void save();
 	void saveAs();
+	void saveAsHTML();
+	void saveAsUTF16();
 	void HTMLexport();
 	void HTMLexportAs();
 	void LaTeXexport();
@@ -109,14 +111,13 @@ public:
 
 
 private:
-//    QPopupMenu *copyMenu ;
 
     LekhoPrefs thePref ;
     BanglaTextEdit *e ;
 
     QString filename, htmlname, latexname , lekhorc;
 
-    //QDir working, latex, html ;
+    bool fudgeHtmlOn ;
 };
 
 

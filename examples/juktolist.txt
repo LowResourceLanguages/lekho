@@ -27,4 +27,4 @@ This file tests consonant conjunct displays
 ঙ + গ = ঙ্গ
 ঙ + ঘ = ঙ্ঘ
 ঙ + ম = ঙ্ম
-
+কঁ

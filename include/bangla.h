@@ -51,7 +51,7 @@ inline bool isBangla(const QChar &text)
 
 //small utility function used for html export
 //inserts a fake header and tab stops
-void fudgeHtml(QString &text) ;
+void fudgeHtml(QString &text, bool isEncodingUtf8 = false) ;
 
 //makes default files in working directory if it can't find em
 //makes lekhorc

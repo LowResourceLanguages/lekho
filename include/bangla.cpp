@@ -25,7 +25,7 @@
 
 //small utility function used for html export
 //inserts a fake header and line breaks and tabs for html
-void fudgeHtml(QString &text)
+void fudgeHtml(QString &text, bool isEncodingUtf8)
 {
 
 QString
@@ -35,6 +35,10 @@ preamble
 
 postamble
 ("</body>\n</html>");
+
+	//little hack to have header say charset = utf8
+	if(isEncodingUtf8)
+		preamble = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf8\">\n   <meta name=\"Author\" content=\"Me\">\n   <meta name=\"GENERATOR\" content=\"Lekho\">\n   <meta name=\"Keywords\" content=\"\">\n   <meta name=\"Classification\" content=\"\">\n   <title>\n   untitled\n   </title>\n</head>\n<body text=\"#FFFFFF\" bgcolor=\"#000000\" link=\"#FFFFCC\" vlink=\"#D3D3D3\" alink=\"#FF0000\">\n";
 
 	QString htmlTabSymbol ;
 	QChar tabSymbol(0x09);

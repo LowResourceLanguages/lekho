@@ -82,6 +82,8 @@ ApplicationWindow::ApplicationWindow()
 {
     printer = new QPrinter;
 
+    fudgeHtmlOn = false ;
+
     QPixmap openIcon, saveIcon, printIcon;
 
     lekhorc = QDir::homeDirPath() + "/.lekhorc";
@@ -155,6 +157,12 @@ ApplicationWindow::ApplicationWindow()
 
     id = file->insertItem( "Save &As...", this, SLOT(saveAs()) );
     file->setWhatsThis( id, fileSaveText );
+
+    id = file->insertItem( "Save as &Html...", this, SLOT(saveAsHTML()) );
+    //file->setWhatsThis( id, fileSaveText );
+
+    id = file->insertItem( "Save as &Utf16...", this, SLOT(saveAsUTF16()) );
+    //file->setWhatsThis( id, fileSaveText );
 
     file->insertSeparator();
 
@@ -506,6 +514,68 @@ void ApplicationWindow::saveAs()
     }
 }
 
+void ApplicationWindow::saveAsHTML()
+{
+
+    QString fn = QFileDialog::getSaveFileName( thePref.workingDir, QString::null,
+					       this );
+    if ( !fn.isEmpty() )
+    {
+    QString text = e->unicode();
+    QFile f( fn );
+    if ( !f.open( IO_WriteOnly ) ) {
+	statusBar()->message( QString("Could not write to %1").arg(fn),
+			      2000 );
+	return;
+    }
+
+	fudgeHtml(text,true);	//if you have any headers beware....
+				//true means make header say charset=utf8
+
+    QTextStream t( &f );
+    t.setEncoding(QTextStream::UnicodeUTF8);
+
+    t << text;
+    f.close();
+
+    statusBar()->message( QString( "File %1 saved with html tags added" ).arg( fn ), 2000 );
+
+    } else {
+	statusBar()->message( "Saving as HTML aborted", 2000 );
+    }
+
+}
+
+void ApplicationWindow::saveAsUTF16()
+{
+
+    QString fn = QFileDialog::getSaveFileName( thePref.workingDir, QString::null,
+					       this );
+    if ( !fn.isEmpty() )
+    {
+    QString text = e->unicode();
+    QFile f( fn );
+    if ( !f.open( IO_WriteOnly ) ) {
+	statusBar()->message( QString("Could not write to %1").arg(fn),
+			      2000 );
+	return;
+    }
+
+    QTextStream t( &f );
+    t.setEncoding(QTextStream::Unicode);
+
+    t << text;
+    f.close();
+
+    statusBar()->message( QString( "File %1 saved as utf16" ).arg( fn ), 2000 );
+
+    } else {
+	statusBar()->message( "Saving as utf16 aborted", 2000 );
+    }
+
+}
+
+
 void ApplicationWindow::HTMLexport()
 {
     if ( htmlname.isEmpty() ) {
@@ -514,7 +584,9 @@ void ApplicationWindow::HTMLexport()
     }
 
     QString text = e->screenFont();
-    fudgeHtml(text);	//if you have any headers beware....
+
+    if(fudgeHtmlOn)
+        fudgeHtml(text);	//if you have any headers beware....
 
     QFile f( htmlname );
     if ( !f.open( IO_WriteOnly ) ) {
@@ -544,6 +616,25 @@ void ApplicationWindow::HTMLexportAs()
 					       this );
     if ( !fn.isEmpty() ) {
 	htmlname = fn;
+
+	switch( QMessageBox::information( this, "Lekho : Export method",
+					"Do you want Lekho to enhance the text you are exporting\n"
+					"with html headers and line breaks ?",
+					"Yes", "No", "Cancel",
+					0, 1 ) )
+	{
+		case 0:
+			fudgeHtmlOn = true ;
+			break;
+		case 1:
+			fudgeHtmlOn = false ;
+			break;
+		case 2:
+		default: // just for sanity
+			return;
+			break;
+	}
+
 	HTMLexport();
     } else {
 	statusBar()->message( "Html export aborted", 2000 );
