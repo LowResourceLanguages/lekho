@@ -78,6 +78,7 @@ void SpellDialog::wordFound(const QString &wd)
 
 void SpellDialog::setSuggestionList(const QStringList &suggestions , const QStringList &suggestionsScreenFont)
 {
+	suggestionBox->clear();
 	suggestionBox->insertStringList( suggestionsScreenFont );
 
 	delete suggestionList ;

@@ -355,8 +355,8 @@ QPoint BanglaLine::findWord(const QString &wd, int startCol, int endCol)
 
 //finds next word from this column
 //if you start it in the middle of a word, it scans for a white space (== start of the word)
-//if it finds no white space scanning forward, it flags the end of the word as the para end
-//and then scans backwards for word start
+//if it finds no white space scanning forward, it flags the start and end of the word as the para end
+//signifing no word found...
 //returns the start and stop.
 QPoint BanglaLine::findNextWord(QString &wd, int startCol)
 {
@@ -382,6 +382,8 @@ QPoint BanglaLine::findNextWord(QString &wd, int startCol)
 	if( i == letter.end() )
 	{
 		wordEnd = index ;
+
+		/*
 		//now look backwards
 		//look for the start
 		index = startCol;
@@ -391,6 +393,7 @@ QPoint BanglaLine::findNextWord(QString &wd, int startCol)
 				break ;
 			index--;
 		}
+		*/
 		wordStart = index ;
 	}
 	else
@@ -405,7 +408,7 @@ QPoint BanglaLine::findNextWord(QString &wd, int startCol)
 		}
 
 		wordEnd = index - 1;
-		if(wordEnd >= letter.count() )
+		if(wordEnd >= (int)letter.count() )
 			wordEnd = letter.count() -1;
 	}
 

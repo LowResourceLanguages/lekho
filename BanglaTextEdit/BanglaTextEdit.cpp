@@ -538,6 +538,8 @@ void BanglaTextEdit::findNextWrongWord(QString &wd, QStringList &suggestions)
 	QString dictMsg ;
 
 	theDoc.findNextWord(selStart, selEnd, wd, paracolStart);
+	stripEnglish(selStart, selEnd, wd);
+
 	while( banan->lookUpWord( wd ) )
 	{
 
@@ -561,6 +563,7 @@ void BanglaTextEdit::findNextWrongWord(QString &wd, QStringList &suggestions)
 			paracolStart.setX( selEnd.x() + 1 ) ;
 
 		theDoc.findNextWord(selStart, selEnd, wd, paracolStart);
+		stripEnglish(selStart, selEnd, wd);
 	}
 
 	if( wordFound )

@@ -23,6 +23,39 @@
 
 #include<bangla.h>
 
+//strips non bangla letters and punctuation from a bangla string, repositions the x's of any QPoints passed to it
+//needed for spell checker
+//assuming they represent the start and stops of this word
+void stripEnglish(QPoint &selStart, QPoint &selEnd, QString &wd)
+{
+	//strip leading english characters
+	QString newWd ;
+	for(int i = 0 ; i < (int)wd.length() ; i++)
+	{
+		if(!isBangla(wd[i]) | isPunctuation(wd[i]))
+			selStart.setX(selStart.x() + 1);
+		else
+		{
+			newWd = wd.right(wd.length() - i) ;
+			break;
+		}
+	}
+
+	//strip trailing english characters
+	for(int i = newWd.length() -1 ; i > -1 ; i--)
+	{
+		if(!isBangla(newWd[i])  | isPunctuation(wd[i]) )
+			selEnd.setX(selEnd.x() - 1);
+		else
+		{
+			wd = newWd.left(i+1) ;
+			break;
+		}
+	}
+
+
+}
+
 //small utility function used for html export
 //inserts a fake header and line breaks and tabs for html
 void fudgeHtml(QString &text, bool isEncodingUtf8)

@@ -24,6 +24,8 @@
 #ifndef BANGLA_H
 #define BANGLA_H
 
+#include<qpoint.h>
+
 #include<BanglaLetter.h>
 
 const BanglaLetter BanglaCR("\n","",0);
@@ -56,7 +58,18 @@ inline bool isBanglaNumber(const QChar &text)
 		return false ;
 }
 
+//small utility function is this bangla punctuation ?
+inline bool isPunctuation(const QChar &text)
+{
+	if( (text.unicode() == 0x0964) | (text.unicode() == 0x0965) )
+		return true ;
+	else
+		return false ;
+}
 
+//strips non bangla letters from a bangla string, repositions the x's of any QPoints passed to it
+//assuming they represent the start and stops of this word
+void stripEnglish(QPoint &selStart, QPoint &selEnd, QString &wd);
 
 
 //small utility function used for html export

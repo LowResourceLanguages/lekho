@@ -151,13 +151,14 @@ void	SearchDictionary::findValidMutants(QString &wd, QStringList &mutantList)
 		}
 	}
 
+
 	delete[] alleleMatrix ;
 	delete[] mutaSite ;
 
 }
 
 //private recursion function to generate the mutants
-void	SearchDictionary::mutaGen( QString &mutant, int mutaLevel, int mutaCount,
+void	SearchDictionary::mutaGen(const QString &mutant, int mutaLevel, int mutaCount,
 			uint *mutaSite, QString *alleleMatrix, QStringList &mutantList)
 {
 	//find out if the caller of this function was operating on the last letter
@@ -166,11 +167,12 @@ void	SearchDictionary::mutaGen( QString &mutant, int mutaLevel, int mutaCount,
 		mutantList.append(mutant);
 	else
 	{
+		QString thisMutant( mutant ) ;
 		//go through mutants at this position and propagate the mutation
 		for(int i= 0 ; i < (int)alleleMatrix[ mutaLevel ].length() ; i++)
 		{
-			mutant.replace( mutaSite[ mutaLevel ], 1, alleleMatrix[ mutaLevel ].mid(i,1) );
-			mutaGen( mutant, mutaLevel+1, mutaCount, mutaSite, alleleMatrix, mutantList);
+			thisMutant.replace( mutaSite[ mutaLevel ], 1, alleleMatrix[ mutaLevel ].mid(i,1) );
+			mutaGen( thisMutant, mutaLevel+1, mutaCount, mutaSite, alleleMatrix, mutantList);
 		}
 	}
 }

@@ -139,7 +139,7 @@ public:
 	void	setDictDir(QString dd) { dictDir = dd ;}
 	bool	lookUpWord(const QString &wd) ;		//basic search, will elaborate later
 	void	findValidMutants(QString &wd, QStringList &mutantList) ;
-	void	mutaGen( QString &mutant, int mutaLevel, int mutaCount,
+	void	mutaGen(const QString &mutant, int mutaLevel, int mutaCount,
 			uint *mutaSite, QString *alleleMatrix, QStringList &mutantList);
  ;
 
