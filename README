@@ -82,7 +82,7 @@ PERSONALISING THE ROMANISATION RULES
 
 Take a look at the files in the .lekho/ directory. The files kar.txt, jukto.txt and shor.txt contain the romanisation rules. You need to keep a unicode chart for
 bangla open by you as you change the first column of each entry in each file to suit you preferences for the transliteration rules. For instance to get the
-"onnushor" symbol (� the default rule is you type "NNG"
+"onnushor" symbol ং the default rule is you type "NNG"
 You probably don't like that. So you open up the file "jukto.txt" and look at the relevant line, which is
 NNG 1 0982
 which tells Lekho that hitting NNG should insert the single unicode character 0x0982. You would like to use the keystroke "~" to do the job. Just change

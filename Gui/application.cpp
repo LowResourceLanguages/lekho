@@ -88,7 +88,6 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     printer = new QPrinter;
     printer->setOrientation( QPrinter::Portrait );
 
-
     fudgeHtmlOn = false ;
 
     QPixmap lekhoIcon, openIcon, saveIcon, printIcon, findIcon, spellIcon;
@@ -286,6 +285,8 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     connect(e, SIGNAL(statusBarMessage(const QString&)), this, SLOT(statusBarMessage(const QString&)));
     //and this...
     connect(e, SIGNAL(errorMessage(const QString&)), this, SLOT(errorMessage(const QString&)));
+    //and this...
+    connect(e, SIGNAL(documentModified( bool )), this, SLOT(documentModified( bool )));
 
     statusBar()->message( "HINT : Press ESC to change language") ; //, 2000 );
 
@@ -970,6 +971,20 @@ void ApplicationWindow::about()
 void ApplicationWindow::aboutQt()
 {
     QMessageBox::aboutQt( this, "Lekho : AboutQT" );
+}
+
+void ApplicationWindow::documentModified(bool mod)
+{
+	QString caption;
+	if( filename.isEmpty())
+		caption = "new bangla document" ;
+	else
+		caption = filename ;
+
+	if(mod)
+	    setCaption( caption + "*");
+	else
+	    setCaption( caption );
 }
 
 void ApplicationWindow::statusBarMessage(const QString& msg)

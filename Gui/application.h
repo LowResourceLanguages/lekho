@@ -108,6 +108,8 @@ private slots:
 	void aboutQt();
 
 public slots:
+
+    void documentModified( bool ) ;
     void statusBarMessage(const QString&) ;
     void errorMessage(const QString&) ;
 

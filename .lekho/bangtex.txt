@@ -3,7 +3,7 @@ NN :/ M Y R L W a i ii u uu rR e oi ou
 1	0964	.
 1	0965	..
 1	0982	NNG
-1	0983	h
+1	0983	{h}
 1	0985	A
 1	0986	Aa
 1	0987	I

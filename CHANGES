@@ -1,3 +1,9 @@
+v1.15
+2002.12.15
+1. changed bangtex.txt such that onnushor now appears as {h} avoids complications with 't'
+
+2002.12.05
+1. Modifying document causes a * to appear in the window caption...
 
 v1.1
 2002.12.03

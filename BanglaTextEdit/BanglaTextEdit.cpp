@@ -746,6 +746,7 @@ void BanglaTextEdit::setKeyMapAsText()
 void BanglaTextEdit::setModified(bool mod)
 {
 	modified = mod ;
+	emit documentModified( mod ) ;
 }
 
 bool BanglaTextEdit::isModified()
@@ -927,11 +928,9 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 {
 
-//#ifdef _WS_WIN_
 	//just don't ask, just don't ask...
 	if(lockRedrawDuringPrinting)
 		return ;
-//#endif
 
 
 	//protect our pixmap
@@ -1096,7 +1095,7 @@ void BanglaTextEdit::paintLineSegment(QPainter *p, int x, int y, int segmentWidt
 
 	//p->drawText( x, y, segmentWidth, lineHeight , AlignLeft | AlignTop, screenText);
 	//p->drawText( x, y, segmentWidth, lineHeight , AlignCenter | DontClip , screenText);
-	p->drawText( x, y, segmentWidth, lineHeight , AlignLeft | DontClip , screenText);
+	p->drawText( x, y, segmentWidth, lineHeight , AlignVCenter | AlignLeft | DontClip , screenText);
 }
 
 //function::delSelected()
@@ -1172,6 +1171,9 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			}
 			else
 			{
+				//related to redo/undo - this ends an insert/delete operation unit
+				//endCurrentOperation();
+
 				if(hasSelText)
 				{
 					hasSelText = false ;

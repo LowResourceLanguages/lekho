@@ -1,7 +1,7 @@
 /*
 *  Lekho v1.0 is a simple editor for bangla in unicode that exports
 *  to bangtex
-*  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
+*  Copyright (C) 2001,2002,2003 Kaushik Ghose kghose@wam.umd.edu
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -50,12 +50,12 @@
 #include <BanglaDocument.h>
 #include <FontConverter.h>
 #include <LatexConverter.h>
+//#inlcude <LekhoUndoRedo.h>
 #include <SearchDictionary.h>
 
 #include <parser.h>
 
 //small utility functions
-//inline bool isBangla(const QChar &text);
 inline bool isTab(const QChar &text);
 
 struct LekhoCursor
@@ -66,6 +66,7 @@ struct LekhoCursor
 	QPoint	paracol,
 		xy ;
 };
+
 
 class BanglaTextEdit : public QScrollView
 {
@@ -278,6 +279,8 @@ public slots:
 	void cut();
 
 signals:
+
+	void documentModified( bool );
 
 	void statusBarMessage(const QString& );
 	void errorMessage(const QString& );

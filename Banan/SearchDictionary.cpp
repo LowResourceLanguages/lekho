@@ -20,9 +20,7 @@
 
 /*
 This class does all the dictionary fucntions.
-It's main function is to take ina word and return soem information about it that is
-stored in the dictionary
-*/
++-*/
 #include <iostream.h>
 
 #include <bangla.h>
@@ -103,8 +101,14 @@ bool	SearchDictionary::lookUpWord(const QString &wd) 	//basic search, will elabo
 		return true;
 }
 
-//mutate words and see if they are in dict
+
 void	SearchDictionary::findValidMutants(const QString &wd, QStringList &mutantList)
+{
+	findValidMutants_private(wd, mutantList);
+}
+
+//mutate words and see if they are in dict, private fucnction
+void	SearchDictionary::findValidMutants_private(const QString &wd, QStringList &mutantList)
 {
 
 	cout << "Generating mutants" << endl ;

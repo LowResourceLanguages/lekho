@@ -33,7 +33,7 @@ class BanglaLetter
 public:
 	QString unicode,		//e.g. [0x0995, 0x09cc]
 		screenFont;		//the representation in say adarshalipi
-	int	width ;			//the width of the letter on screen
+	ushort	width ;			//the width of the letter on screen
 	//add other attributes if needed
 public:
 	BanglaLetter();

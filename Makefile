@@ -10,8 +10,9 @@
 #### leaving them as is won't harm you unless you already have ####
 #### the directory $(HOME)/Lekho1.0/ with something valuable #####
 
-OBJ_DIR = $(HOME)/Lekho/obj
-BIN_DIR = $(HOME)/Lekho/bin
+LEKHO_DIR = /home/kghose/C++/Lekho
+OBJ_DIR = $(LEKHO_DIR)/obj
+BIN_DIR = $(LEKHO_DIR)/bin
 
 ################# NO NEED TO CHANGE BEYOND THIS POINT #######################
 
@@ -217,7 +218,7 @@ $(OBJ_DIR)/SearchDictionary.o: Banan/SearchDictionary.cpp Banan/SearchDictionary
 $(OBJ_DIR)/BanglaLine.o: BanglaLine/BanglaLine.cpp BanglaLine/BanglaLine.h BanglaLetter/BanglaLetter.h include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLine.o BanglaLine/BanglaLine.cpp
 
-$(OBJ_DIR)/BanglaLetter.o: BanglaLetter/BanglaLetter.cpp 
+$(OBJ_DIR)/BanglaLetter.o: BanglaLetter/BanglaLetter.cpp BanglaLetter/BanglaLetter.h 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLetter.o BanglaLetter/BanglaLetter.cpp
 
 $(OBJ_DIR)/BanglaDocument.o: BanglaDocument/BanglaDocument.cpp BanglaDocument/BanglaDocument.h BanglaLine/BanglaLine.h

@@ -8,28 +8,28 @@
   <option key="background_color" value="#000000" />
   <option key="bangla_font" value="Adarshalipinormal" />
   <option key="bangla_font_size" value="18" />
-  <option key="english_font" value="Helvetica" />
-  <option key="english_font_size" value="13" />
+  <option key="english_font" value="Fixed [Misc]" />
+  <option key="english_font_size" value="18" />
   <option key="foreground_color" value="#55ffff" />
   <option key="lekhorc" value=".lekhorc" />
  </group>
  <group name="directories" >
   <option key="htmldir" value="/home/kghose/Lekho/v1.0/examples" />
-  <option key="latexdir" value="./" />
-  <option key="workingdir" value="examples" />
+  <option key="latexdir" value="/home/kghose/Lekho/tex" />
+  <option key="workingdir" value="/home/kghose/C++/Lekho/tex" />
  </group>
  <group name="startup" >
-  <option key="banan directory" value="Dict/" />
+  <option key="banan directory" value="/home/kghose/Dict/" />
   <option key="banjonborno" value="jukto.txt" />
-  <option key="height" value="579" />
-  <option key="initdir" value=".lekho/" />
+  <option key="height" value="532" />
+  <option key="initdir" value="/home/kghose/.lekho/" />
   <option key="karchinno" value="kar.txt" />
   <option key="latex" value="bangtex.txt" />
-  <option key="lekhorc" value=".lekhorc" />
+  <option key="lekhorc" value="/home/kghose/.lekhorc" />
   <option key="screenfont" value="adarshalipi.txt" />
   <option key="shoroborno" value="shor.txt" />
-  <option key="width" value="581" />
-  <option key="xpos" value="175" />
-  <option key="ypos" value="40" />
+  <option key="width" value="413" />
+  <option key="xpos" value="220" />
+  <option key="ypos" value="152" />
  </group>
 </preferences>

@@ -59,6 +59,9 @@ public:
 
 		//currently we are creating the soundex manually
 		QString soundexElement ;
+/*
+new rule to add - o and ya
+*/
 
 		ushort 	ra[] = {0x09b0, 0x09dc},
 			ja[] = {0x099c, 0x09af},
@@ -146,6 +149,8 @@ public:
 private:
 	bool	loadPage(QChar lett);			//load this page
 	bool	loadWords(QTextStream &);		//loads word from dictinary file
+
+void	findValidMutants_private(const QString &wd, QStringList &mutantList) ;
 
 /*
 	int	lookUpWord(QString wd, QStringList &completions, QStringList &corrections);
