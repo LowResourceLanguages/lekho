@@ -487,14 +487,46 @@ void BanglaTextEdit::replaceAll(const QStringList &w)
 void BanglaTextEdit::findWrongWord()
 {
 	QString wrongWord ;
-	findNextWrongWord( wrongWord ) ;
+	QStringList suggestions ;
+
+	findNextWrongWord( wrongWord , suggestions ) ;
 	emit foundWrongWord( wrongWord ) ;
+
+	//the mutant list, if you want it
+	if(suggestions.count() > 0)
+	{
+		//clumsy but necessary, pass the screen font version too so that we can see it
+		QStringList suggestionsScreenFont ;
+		for(int i = 0 ; i < (int)suggestions.count() ; i++)
+		{
+			QStringList segmentedText ;
+			segment(suggestions[i], segmentedText);
+
+			QString screenFontText ;
+
+			QStringList::ConstIterator i ;
+			for(i = segmentedText.begin() ; i != segmentedText.end() ; ++i)
+				screenFontText += lipi->unicode2screenFont((*i));
+
+			suggestionsScreenFont.append( screenFontText);
+		}
+
+		emit suggestionList( suggestions , suggestionsScreenFont);
+	}
+/*
+	//the mutant list.... just testing
+	for(int i = 0 ; i < (int)suggestions.count() ; i++)
+	{
+		insert(0,0, "\n");
+		insert(0,0, suggestions[i]);
+	}
+*/
 }
 
 //find , from current cursor pos, the next badly spelt word,
 //highlight it and return it.
 //NB: here wordFound means a badly spelt owrd has been found
-void BanglaTextEdit::findNextWrongWord(QString &wd)
+void BanglaTextEdit::findNextWrongWord(QString &wd, QStringList &suggestions)
 {
 	hasSelText = false ;
 	wordFound = true ;
@@ -503,10 +535,18 @@ void BanglaTextEdit::findNextWrongWord(QString &wd)
 	QPoint paracolStart = theCursor.paracol ;
 	QPoint selStart(-1,-1), selEnd(-1,-1) ;
 
+	QString dictMsg ;
 
 	theDoc.findNextWord(selStart, selEnd, wd, paracolStart);
 	while( banan->lookUpWord( wd ) )
 	{
+
+		if( banan->getMessage( dictMsg ) )
+			emit statusBarMessage( dictMsg );
+
+		if( banan->getError( dictMsg ) )
+			emit errorMessage( dictMsg ) ;
+
 		if ( selEnd.x() >= theDoc.lettersInLine( paracolStart.y() ) - 1 )//end of this line
 		{
 			paracolStart.setY( paracolStart.y() + 1 ) ;
@@ -541,7 +581,9 @@ void BanglaTextEdit::findNextWrongWord(QString &wd)
 		//another leetle hack -10
 		ensureVisible ( theCursor.xy.x() - 10 , theCursor.xy.y() + theDoc.getLineHeight(),
 				10, theDoc.getLineHeight()) ;
-		emit statusBarMessage( "Found wrong spelling" ) ;
+
+		//now find the valid mutants
+		banan->findValidMutants(wd, suggestions);
 
 		viewport()->update();
 	}

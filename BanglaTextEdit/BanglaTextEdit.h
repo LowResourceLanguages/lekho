@@ -129,6 +129,8 @@ public:
 
 	//set colors
 	void setColors(QColor fg, QColor bg);
+	QColor getForegroundColor() {return foreground ; }
+	QColor getBackgroundColor() {return background ; }
 
 	//initialise the parser
 	bool initialiseParser(Parser *p);
@@ -227,8 +229,8 @@ public:
 	//for future expansion, banan will carry all the optins (eg replace all, or what ever..)
 
 	//find , from current cursor pos, the next badly spelt word,
-	//highlight it and return it.
-	void findNextWrongWord(QString &wd);
+	//highlight it and return it. Also return any suggestions...
+	void findNextWrongWord(QString &wd, QStringList &sugg);
 
 
 public slots:
@@ -266,7 +268,10 @@ public slots:
 signals:
 
 	void statusBarMessage(const QString& );
+	void errorMessage(const QString& );
+
 	void foundWrongWord(const QString& );
+	void suggestionList(const QStringList &suggestions , const QStringList &suggestionsScreenFont);
 };
 
 #endif //BANGLATEXTEDIT_H

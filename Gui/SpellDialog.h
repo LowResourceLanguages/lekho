@@ -22,6 +22,8 @@
 #define SPELLDIALOG_H
 
 #include<qdialog.h>
+#include<qlistbox.h>
+
 //#include<BanglaTextEdit.h>
 #include<BanglaLineEdit.h>
 
@@ -30,15 +32,26 @@ class SpellDialog : public QDialog
 	Q_OBJECT
 
 	BanglaLineEdit *findedit, *replaceedit ;
+	QListBox 	*suggestionBox ;
+	QStringList 	*suggestionList ;
 
 public:
 	SpellDialog(BanglaTextEdit *, QString name=0, QWidget *parent=0) ;//, Parser *p=0, FontConverter *fc=0 );
+	~SpellDialog()
+	{
+		delete findedit;
+		delete replaceedit ;
+		delete suggestionBox ;
+		delete suggestionList ;
+	}
 
 private slots:
 	void findPressed();
 	void replacePressed();
 	void topPressed();
 	void wordFound(const QString &wd) ;
+	void setSuggestionList(const QStringList &suggestions , const QStringList &suggestionsScreenFont);
+	void suggestionSelected(int i);
 
 signals:
 	void findNext();

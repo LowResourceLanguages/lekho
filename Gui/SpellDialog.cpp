@@ -27,13 +27,22 @@ SpellDialog::SpellDialog(BanglaTextEdit *bte, QString name, QWidget *parent)// ,
 {
 	setCaption( name ) ;
 
-	setGeometry(parent->x()+ parent->width()-300, parent->y()+ parent->height()-100,300,100);
+	//setGeometry(parent->x()+ parent->width()-300, parent->y()+ parent->height()-100,300,100);
+	setGeometry(parent->x()+ parent->width()-300, parent->y()+ parent->height()-300,300,300);
 
 	findedit = new BanglaLineEdit(bte, name, this, 22);//this, name, p, fc);
 	findedit->setGeometry(105,3,190,30);
 
 	replaceedit = new BanglaLineEdit(bte, name, this, 22);//this, name, p, fc);
 	replaceedit->setGeometry(105,35,190,30);
+
+	suggestionBox = new QListBox(this, "suggestion box");
+	suggestionBox->setGeometry(105,67,190,230);
+	suggestionBox->setFont( bte->getBanglaFont() );
+	//suggestionBox->setForegroundColor( bte->getForegroundColor() );
+	//suggestionBox->setBackgroundColor( bte->getBackgroundColor() );
+
+	suggestionList = new QStringList() ;
 
 
 	QPushButton *skipbtn = new QPushButton("&Skip",this) ;
@@ -42,13 +51,14 @@ SpellDialog::SpellDialog(BanglaTextEdit *bte, QString name, QWidget *parent)// ,
 
 	skipbtn->setGeometry(5,3,90,30);
 	replacebtn->setGeometry(5,35,90,30);
-	topbtn->setGeometry(205,67,90,30);
+	topbtn->setGeometry(5,67,90,30);
 
 	connect( findedit, SIGNAL(returnPressed()), this, SLOT(findPressed()));
 	connect( skipbtn, SIGNAL(clicked()), this, SLOT(findPressed()));
 	connect( replaceedit, SIGNAL(returnPressed()), this, SLOT(replacePressed()));
 	connect( replacebtn, SIGNAL(clicked()), this, SLOT(replacePressed()));
 	connect( topbtn, SIGNAL(clicked()), this, SLOT(topPressed()));
+	connect( suggestionBox , SIGNAL(highlighted(int)), this, SLOT(suggestionSelected(int)) );
 
 	findedit->show();findedit->setFocus();
 	replaceedit->show();
@@ -63,6 +73,20 @@ void SpellDialog::wordFound(const QString &wd)
 {
 	findedit->setText( wd ) ;
 	replaceedit->setText( wd ) ;
+	suggestionBox->clear();
+}
+
+void SpellDialog::setSuggestionList(const QStringList &suggestions , const QStringList &suggestionsScreenFont)
+{
+	suggestionBox->insertStringList( suggestionsScreenFont );
+
+	delete suggestionList ;
+	suggestionList = new QStringList( suggestions ) ;
+}
+
+void SpellDialog::suggestionSelected(int i)
+{
+	replaceedit->setText( *(suggestionList->at(i)) ) ;
 }
 
 void SpellDialog::findPressed()

@@ -23,9 +23,12 @@ This class does all the dictionary fucntions.
 It's main function is to take ina word and return soem information about it that is
 stored in the dictionary
 */
+#include <iostream.h>
 
 #include <bangla.h>
 #include "SearchDictionary.h"
+
+
 
 bool	SearchDictionary::loadPage(QChar lett)
 {
@@ -33,6 +36,7 @@ bool	SearchDictionary::loadPage(QChar lett)
 	if( (index < 0) | (index > 127))
 	{
 		cout << "SearchDictionary::loadPage index is " << index << endl ;
+		dictionaryError("SearchDictionary::loadPage index is " + QString::number(index) +"\n");
 		return false ;
 	}
 
@@ -42,17 +46,20 @@ bool	SearchDictionary::loadPage(QChar lett)
 	QString filename = dictDir + "x" + QString::number(lett.unicode(),16) + ".dct" ;
 
 	cout << "Loading dictionary file " << filename << endl ;
+	dictionaryMessage("Loading dictionary file " + filename);
 
 	dictFile.setName(filename);
 	if ( !dictFile.open( IO_ReadOnly ) )
 	{
 		cout << "Couldn't open dictionary file " << filename << endl ;
+		dictionaryError("Couldn't open dictionary file " + filename + "\n");
 		return( false );
 	}
 
 	if (!loadWords( dictStream ) )
 	{
 		cout << endl << "Error while reading the dictionary file " << filename << endl;
+		dictionaryError("Error while reading the dictionary file " + filename + "\n");
 		return ( false );
 	}
 	else
@@ -95,12 +102,82 @@ bool	SearchDictionary::lookUpWord(const QString &wd) 	//basic search, will elabo
 	else
 		return true;
 }
-/*
-void	SearchDictionary::findValidMutants(QStringList &mutantList) 	//basic search, will elaborate later
+
+//mutate words and see if they are in dict
+void	SearchDictionary::findValidMutants(QString &wd, QStringList &mutantList)
 {
 
+	cout << "Generating mutants" << endl ;
+	dictionaryMessage("Generating mutants");
+
+	//take wd, go through all the letters and check which ones can have mutants
+	//build an array of int that long, to signal these mutation sites
+	//build an array of qstring with each qstring being the possible mutations at the respective site
+	uint mutaCount = 0 ;
+
+	uint *mutaSite = new uint [ wd.length() ];		//which letters (sites) are to be mutated
+	QString *alleleMatrix = new QString [ wd.length() ] ;	//what to mutate with
+
+	for(int i = 0 ; i < (int)wd.length() ; i++)
+	{
+		QStringList::ConstIterator j = soundex.begin() ;
+		for( ; j != soundex.end() ; j++)
+		{
+			int soundexPos = (*j).find( wd[i] ) ;
+			if(  soundexPos > -1)
+			{
+				mutaSite[ mutaCount ] = i ;
+				alleleMatrix[ mutaCount ] = (*j) ;
+				//alleleMatrix[ mutaCount ].remove( soundexPos, 1) ;
+				mutaCount++ ;
+				break;
+			}
+		}
+	}
+
+	QStringList allMutantList ;
+	mutaGen( wd, 0, mutaCount, mutaSite, alleleMatrix, allMutantList );
+
+	//now make sure they are valid
+	cout << "Validating mutants" << endl ;
+
+	QStringList::ConstIterator k = allMutantList.begin() ;
+	for( ; k != allMutantList.end() ; k++)
+	{
+		if( lookUpWord( *k) )
+		{
+			cout << "Adding a mutant..." << endl ;
+			mutantList.append( *k );
+		}
+	}
+
+	delete[] alleleMatrix ;
+	delete[] mutaSite ;
+
 }
-*/
+
+//private recursion function to generate the mutants
+void	SearchDictionary::mutaGen( QString &mutant, int mutaLevel, int mutaCount,
+			uint *mutaSite, QString *alleleMatrix, QStringList &mutantList)
+{
+	//find out if the caller of this function was operating on the last letter
+	//if it was add the current mutation to the testing list
+	if( mutaLevel == mutaCount )
+		mutantList.append(mutant);
+	else
+	{
+		//go through mutants at this position and propagate the mutation
+		for(int i= 0 ; i < (int)alleleMatrix[ mutaLevel ].length() ; i++)
+		{
+			mutant.replace( mutaSite[ mutaLevel ], 1, alleleMatrix[ mutaLevel ].mid(i,1) );
+			mutaGen( mutant, mutaLevel+1, mutaCount, mutaSite, alleleMatrix, mutantList);
+		}
+	}
+}
+
+
+
+
 /*
 //loads all the words from a dictionary file
 bool	SearchDictionary::loadWords(QTextStream &in)

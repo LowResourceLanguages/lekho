@@ -16,20 +16,20 @@
  <group name="directories" >
   <option key="htmldir" value="./" />
   <option key="latexdir" value="./" />
-  <option key="workingdir" value="/home/kghose/Lekho/v1.0/examples" />
+  <option key="workingdir" value="/home/kghose/Lekho/html" />
  </group>
  <group name="startup" >
   <option key="banan directory" value="Dict/" />
   <option key="banjonborno" value="jukto.txt" />
-  <option key="height" value="632" />
+  <option key="height" value="691" />
   <option key="initdir" value=".lekho/" />
   <option key="karchinno" value="kar.txt" />
   <option key="latex" value="bangtex.txt" />
   <option key="lekhorc" value=".lekhorc" />
   <option key="screenfont" value="adarshalipi.txt" />
   <option key="shoroborno" value="shor.txt" />
-  <option key="width" value="473" />
-  <option key="xpos" value="336" />
-  <option key="ypos" value="65" />
+  <option key="width" value="499" />
+  <option key="xpos" value="378" />
+  <option key="ypos" value="7" />
  </group>
 </preferences>

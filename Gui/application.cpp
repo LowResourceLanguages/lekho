@@ -284,6 +284,8 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     //in case BanglaTextEdit wants to talk to us, it can do so via this...
     connect(e, SIGNAL(statusBarMessage(const QString&)), this, SLOT(statusBarMessage(const QString&)));
+    //and this...
+    connect(e, SIGNAL(errorMessage(const QString&)), this, SLOT(errorMessage(const QString&)));
 
     statusBar()->message( "HINT : Press ESC to change language") ; //, 2000 );
 
@@ -807,6 +809,7 @@ void ApplicationWindow::spellCheck()
 	SpellDialog *fd = new SpellDialog(e, "Lekho : Spell Check", this);
 	connect(fd, SIGNAL(findNext()), e, SLOT(findWrongWord()) );
 	connect(e, SIGNAL( foundWrongWord(const QString& ) ), fd , SLOT( wordFound(const QString &) ) );
+	connect(e, SIGNAL( suggestionList(const QStringList & , const QStringList &) ), fd , SLOT( setSuggestionList(const QStringList &, const QStringList &) ) );
 	connect(fd, SIGNAL(replace(const QString &)), e, SLOT(replaceWrongWordWith(const QString &)) );
 	connect(fd, SIGNAL(top()), e, SLOT(top()) );
 }
@@ -970,4 +973,10 @@ void ApplicationWindow::aboutQt()
 void ApplicationWindow::statusBarMessage(const QString& msg)
 {
     statusBar()->message( msg );
+}
+
+void ApplicationWindow::errorMessage(const QString& msg)
+{
+	QMessageBox::information( this, "Lekho : Error", msg );
+
 }

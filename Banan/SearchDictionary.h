@@ -37,11 +37,15 @@ class SearchDictionary
 private:
 	QDict<char>	*wordList ;//( 40009, false) ;	//the basic dictionary, with a prime key
 	bool	loaded[128] ;			//flags telling us whats been loaded so far
+	QStringList soundex	;		//the soundex
 
 	//stuff to manage the dicitonary loading
 	QString		dictDir ;	//base dictionary directory
 	QFile dictFile ;
 	QTextStream dictStream ;
+
+	//messages
+	QString msg, err ;
 
 public:
 	SearchDictionary()
@@ -52,6 +56,43 @@ public:
 
 		dictStream.setDevice( &dictFile );
     		dictStream.setEncoding(QTextStream::UnicodeUTF8);
+
+		//currently we are creating the soundex manually
+		QString soundexElement ;
+
+		ushort 	ra[] = {0x09b0, 0x09dc},
+			ja[] = {0x099c, 0x09af},
+			ss[] = {0x09b7, 0x09b8, 0x09b6},
+			kkh[] = {0x0995, 0x0996},
+			ggh[] = {0x0997, 0x0998},
+			th[] = {0x09a4, 0x099f, 0x09a0},
+			ii[] = {0x09bf, 0x09c0},
+			uu[] = {0x09c1, 0x09c2} ;
+
+		soundexElement.setUnicodeCodes(ra,2);
+		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(ja,2);
+		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(ss, 3);
+		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(kkh,2);
+		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(ggh,2);
+		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(th,3);
+		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(ii,2);
+		soundex.append(soundexElement);
+
+		soundexElement.setUnicodeCodes(uu,2);
+		soundex.append(soundexElement);
+
 	}
 
 	~SearchDictionary()
@@ -59,9 +100,48 @@ public:
 		delete wordList ;
 	}
 
+	void	dictionaryMessage(const QString &ms)
+	{
+		msg = msg + ms ;
+	}
+
+	bool	getMessage(QString &ms)
+	{
+		if( !msg.isEmpty() )
+		{
+			ms = msg ;
+			msg = "";
+			return(true);
+		}
+		else
+			return(false);
+
+	}
+
+	void	dictionaryError(const QString &ms)
+	{
+		err = err + ms ;
+	}
+
+	bool	getError(QString &ms)
+	{
+		if( !err.isEmpty() )
+		{
+			ms = err ;
+			err = "";
+			return(true);
+		}
+		else
+			return(false);
+
+	}
+
 	void	setDictDir(QString dd) { dictDir = dd ;}
 	bool	lookUpWord(const QString &wd) ;		//basic search, will elaborate later
-
+	void	findValidMutants(QString &wd, QStringList &mutantList) ;
+	void	mutaGen( QString &mutant, int mutaLevel, int mutaCount,
+			uint *mutaSite, QString *alleleMatrix, QStringList &mutantList);
+ ;
 
 private:
 	bool	loadPage(QChar lett);			//load this page

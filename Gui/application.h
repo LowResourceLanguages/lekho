@@ -91,7 +91,7 @@ private slots:
 
 	void find();
 	void spellCheck();
-	
+
 	void setWordWrap(bool ww);
 	void setCursorBlink(bool cb);
 	void chooseEnglishFont();
@@ -109,6 +109,7 @@ private slots:
 
 public slots:
     void statusBarMessage(const QString&) ;
+    void errorMessage(const QString&) ;
 
 public:
     QPrinter *printer;
