@@ -1,0 +1,69 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+   <meta name="Author" content="Me">
+   <meta name="GENERATOR" content="Lekho">
+   <meta name="Keywords" content="">
+   <meta name="Classification" content="">
+   <title>
+   untitled
+   </title>
+</head>
+<body text="#FFFFFF" bgcolor="#000000" link="#FFFFCC" vlink="#D3D3D3" alink="#FF0000">
+English manual for লেখ<br>
+<br>
+0. Lekho is still in the beta phase, so please save your work often. Lekho hasn't crashed on me yet, but there's always a first time...<br>
+<br>
+1. You can type both Bangla and English using  Lekho. To toggle the language you type press the ESC key. When you type Bangla the cursor appears as a solid box, while when you type in English the cursor becomes hatched<br>
+<br>
+2. The romanisation rules are shown in parser.txt. This file shows you what to type on the English keyboard to get a particular Bangla letter.<br>
+<br>
+3. To get the bangla vowel modifier signs you need to type the consonant first then the vowel modifier&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	e.g.<br>
+<br>
+ka = ক + আ = কা <br>
+ki = ক + ই = কি<br>
+kI = ক + ঈ = কী<br>
+ku = ক + উ = কু<br>
+kU = ক + ঊ = কূ<br>
+kR = ক + ঋ = কৃ<br>
+<br>
+4. To get conjunct consonants type each consonant separated by the '/' key. Thus:<br>
+<br>
+Juk/tbr/N = যুক্তবর্ন<br>
+Ju = যু<br>
+k/t = ক + ত = ক্ত<br>
+r/N = র + ণ = র্ণ<br>
+<br>
+Other examples are<br>
+p/ra = প + র + আ = প্রা<br>
+<br>
+To get hoshonto type '/' followd by '\'. Thus<br>
+hak/\ka nuDel/\ = হাক্‌কা নুডেল্‌।<br>
+<br>
+5. "Word wrap" is the process whereby lines that are wider than the current window width are broken up (but not in the middle of a word) such that the line "wraps around" the window to the next screen line. If you don't want this, go to Options->word wrap and click on it. This is a toggle switch<br>
+<br>
+6. You can highlight sections of the text either by left clicking on the mouse and dragging it, or by holding down the shift key and pressing the cursor keys or the PgUp/PgDn keys. You can perform some operations on the selected text, and these are described next.<br>
+<br>
+7. If you right click the mouse you will get a list of editing options. The options can be broken down into two groups "copy" and "paste"<br>
+<br>
+Selecting a "copy" option copies any highlighted text into the clipboard. This text can be pasted into other applications.<br>
+<br>
+Similarly "paste" will paste in any text on the clipboard into the current document, starting at the current cursor position. If any text is highlighted, paste will erase that text first.<br>
+<br>
+8. The edit submenu has several sub-options, corresponding to different ways you can copy/paste the text. The options  are as follows:<br>
+a) utf-8 and  utf-16 (copy and paste)<br>
+These are basically two encoding methods for text information. For copying/cutting and pasting from one lekho window to another you can use either option (or just the CTRL+C, CTRL+X and CTRL+V keys) as long as you are consistent. i.e. if you copy/cut text as utf-8 you need to paste it as utf-8 too.<br>
+For linux users, KDE2 uses utf16 encoding, so to cut and paste between, say opera and Lekho, use utf16. <br>
+For windows users, Netscape 4.6 seems to use utf8. I don't know about other apps, but a quick test should be easy to do on your system.<br>
+<br>
+b) html character reference (copy only).<br>
+This allows you to copy the text in the format &#xxxx; where xxxx is a decimal code. Browsers can interpet this code to render the correct character, so you can paste this into a html document directly. This is useful when you have a html editor that doesn't allow unicode characters per se.<br>
+<br>
+c) romanised bangla (paste only)<br>
+This is kind of fun. If you copy a stretch of romanised bangla and paste this into Lekho as romanised you get an approximate bangla version of this. For example if you have the text "asha kori tumi bhalo aacho" pasting as romanised yeilds অশা কোরি তুমি ভালো আছো , not perfect, but passable.<br>
+<br>
+9. Exporting the text<br>
+You can export what you have typed into html or bangtex. When you export to html Lekho goes through the text and renders all the bangla parts in the current screen font. In addition Lekho adds some default headers html eg. <body> and <html>, some tags, and converts new lines to <br> symbols. So if you open up this file in a browser you can see it provided you have the Adarshalipi Fonts. help_lipi.hml is one such example.<br>
+Exporting to bangtex converts all the bangla letters into bangtex format. An example of such a source file is bangtex_example.tex. If you export this as bangtex into a file you can compile it with  latex (with the bangtex macro package installed).</body>
+</html>

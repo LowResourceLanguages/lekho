@@ -182,7 +182,7 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 
 	modified = false ;
 	hasSelText = false ;
-	
+
 	cursorBlinkOn() ;
 }
 
@@ -363,7 +363,7 @@ void BanglaTextEdit::splitLine(int para, int col)
 }
 
 //function::top
-//moves cursor to the top and crolls there
+//moves cursor to the top and scrolls there
 void BanglaTextEdit::top()
 {
 	cursorErase();
@@ -829,12 +829,16 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 		p->setPen(background);
 		p->setRasterOp(NotXorROP);
 
-		if(bangla->isBangla())
-			//p->drawRect(cursorRect);
-			p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
-		else
-			p->fillRect(cursorRect,QBrush(QBrush::Dense3Pattern));
-			//p->fillRect(cursorRect,QBrush(QBrush::HorPattern));
+		//p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
+		p->drawRect(cursorRect);
+
+//		if(bangla->isBangla())
+//			//p->drawRect(cursorRect);
+//			p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
+//		else
+//			p->fillRect(cursorRect,QBrush(QBrush::Dense3Pattern));
+//			//p->fillRect(cursorRect,QBrush(QBrush::HorPattern));
+
 		p->setRasterOp(CopyROP);
         }
 
@@ -1483,16 +1487,24 @@ void BanglaTextEdit::timerEvent(QTimerEvent *event)
 //function::calculateCursorRect
 QRect BanglaTextEdit::calculateCursorRect()
 {
+	int width = 0 ;
+	//make cursor a line if bangla
+	if(bangla->isBangla())
+		width = 1 ;
+	//make cursor block if english,
+	else
+		width = theDoc.getLineHeight()/2;
+
 	//kludge make cursor different if partialCodeInserted
 	if( partialCodeInserted )
 	{
 		theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
-		QRect crs(theCursor.xy.x(), theCursor.xy.y() , 1 , theDoc.getLineHeight());
+		QRect crs(theCursor.xy.x(), theCursor.xy.y() , width , theDoc.getLineHeight());
 		theDoc.moveCursor( Key_Left, theCursor.xy, theCursor.paracol);
 		return crs;
 	}
 	else
-		return QRect(theCursor.xy.x(), theCursor.xy.y() , 1 , theDoc.getLineHeight());
+		return QRect(theCursor.xy.x(), theCursor.xy.y() , width , theDoc.getLineHeight());
 }
 
 
