@@ -26,6 +26,7 @@
 
 #include <qscrollview.h>
 #include <qpopupmenu.h>
+#include <qprogressbar.h>
 #include <qapplication.h>
 #include <qclipboard.h>
 #include <qdragobject.h>
@@ -1369,7 +1370,7 @@ void BanglaTextEdit::clipBoardOp(int id)
 	paracolSelEnd += QPoint(1,0) ;	//undo the leetle hack
 }
 
-
+/*
 //print it !
 //this is basically a cut and paste of drawContents
 //1 = ok full page printed
@@ -1426,7 +1427,178 @@ bool BanglaTextEdit::print(QPainter *p, int page, bool &firstPrint, int pageWidt
 	}
 	return true ;
 }
+*/
 
+//printer helper functions
+//resizes the document and computes the position of the pagebreaks,
+//given the page dimensions
+void BanglaTextEdit::print_PageBreaks(int w, int h, QValueList<int> &breaks)
+{
+	//resize the document accordingly
+	oldWidth = 0 ;
+	theDoc.setScreenWidth( w );
+
+	//build a list of page breaks
+	breaks.clear();
+	breaks.append(0) ; 	//first line
+	int 	linesInAPage = (int)( (float)h/ (float)theDoc.getLineHeight() ),
+		currentLine = linesInAPage  ;
+
+	while( currentLine < theDoc.getTotalScreenLines() )
+	{
+		breaks.append( currentLine );
+		currentLine += linesInAPage ;
+
+	}
+	breaks.append( theDoc.getTotalScreenLines() );
+}
+
+//actually prints a given page
+bool BanglaTextEdit::print_Page(QPainter *p, int &startLine, int &endLine)
+{
+	int curry = 0 ;
+	BanglaLetterList theText;
+	if(!theDoc.copyScreenLine(startLine, theText))
+		return false;	//outta lines even before we start
+
+	int 	maxPaintWidth = theDoc.getScreenWidth() ,
+		lineHeight = theDoc.getLineHeight();
+
+	for(int i = startLine ; i < endLine ; i++)
+	{
+		theText.clear();
+		if(!theDoc.copyScreenLine(i, theText))
+			return false;
+//			break;	//outta lines
+
+		//erase original line (the bit on the printer)
+		p->eraseRect(0, curry, 0 + maxPaintWidth , lineHeight);
+
+		//paint newline
+		paintLine(p, 0, curry, lineHeight, theText);
+
+		curry += lineHeight ;
+	}
+
+	return true ;
+}
+
+//main print function
+bool BanglaTextEdit::print(QPrinter *printer)
+{
+#ifndef QT_NO_PRINTER
+
+	printer->setFullPage(true);
+
+	//from application.cpp's constructor we've set the default page to potrait
+	//and have some default margins etc.
+	//lets compute the page extents from that.
+	QPaintDeviceMetrics printerMetrics(printer);
+
+	int w_mm = printerMetrics.widthMM(), old_w_mm = w_mm ;
+	int h_mm = printerMetrics.heightMM(), old_h_mm = h_mm ;
+
+	int 	//w = (int)(((float)w_mm)*72.0/25.4),
+		//h = (int)(((float)h_mm)*72.0/25.4),
+		vertMar = (int)(10 * printerMetrics.logicalDpiY() / 25.4),
+		horizMar = (int)(10 * printerMetrics.logicalDpiX() / 25.4),
+		w = (int)(((float)w_mm) * printerMetrics.logicalDpiX()/25.4) - 2 * horizMar ,
+		h = (int)(((float)h_mm) * printerMetrics.logicalDpiY()/25.4) - 2 * vertMar;
+
+
+	//compute page breaks
+	QValueList<int> breaks ;
+	print_PageBreaks(w , h , breaks);
+	printer->setMinMax(1, breaks.count() -1);
+	printer->setFromTo(1, breaks.count() -1);
+
+    	if ( printer->setup( this ) )
+    	{
+
+
+		w_mm = printerMetrics.widthMM();
+		h_mm = printerMetrics.heightMM();
+
+		if( (old_w_mm != w_mm) || (old_h_mm != h_mm) )
+		{
+			vertMar = (int)(10 * printerMetrics.logicalDpiY() / 25.4) ;
+			horizMar = (int)(10 * printerMetrics.logicalDpiX() / 25.4) ;
+			w = (int)(((float)w_mm) * printerMetrics.logicalDpiX()/25.4) - 2 * horizMar ;
+			h = (int)(((float)h_mm) * printerMetrics.logicalDpiY()/25.4) - 2 * vertMar ;
+
+			print_PageBreaks(w , h , breaks);
+			printer->setMinMax(1, breaks.count() -1);
+			printer->setFromTo(1, breaks.count() -1);
+		}
+
+		emit statusBarMessage( "Printing..." );
+
+		//init printer
+		QPainter p;
+		if( !p.begin( printer ) )               // paint on printer
+	    		return false ;
+
+		p.setWindow(-horizMar, -vertMar, w + 2 * horizMar, h + 2 * vertMar);
+
+		int 	startPage = printer->fromPage() ,
+			endPage = printer->toPage() ;
+
+		if( startPage != 0) startPage-- ;
+		if( endPage == 0) endPage = breaks.count() - 2 ;
+		else
+			endPage-- ;
+
+		//how many pages to print
+		int pageCount = endPage - startPage + 1;
+
+
+		QProgressBar printBar(pageCount, this) ;
+		printBar.setProgress(0);
+		printBar.show();
+
+		int SIGN = +1 ;	//pages going up or down ?
+		if( printer->pageOrder() != QPrinter::FirstPageFirst )
+		{
+			SIGN = -1 ;
+
+			//flip the start and end
+			endPage += startPage ;
+			startPage = (endPage - startPage) ;
+			endPage -= startPage ;
+		}
+
+		for(int copy = 0 ; copy < printer->numCopies(); copy++)
+		{
+
+			int page = startPage ;
+			if(!print_Page(&p, breaks[page], breaks[page+1]))
+				return false;
+
+			emit statusBarMessage( "Printing page " + QString::number(page+1) + " of "
+				+ QString::number(pageCount) +
+				" copy " + QString::number(copy+1) + " of " + QString::number( printer->numCopies() )) ;
+			page += SIGN ;
+
+
+			for(int count = 1 ; count < pageCount ; count++)
+			{
+				printBar.setProgress(count);
+
+				printer->newPage();
+
+				if(!print_Page(&p, breaks[page], breaks[page+1]))
+					return false;
+				emit statusBarMessage( "Printing page " + QString::number(page+1) + " of "
+					+ QString::number(pageCount) +
+					" copy " + QString::number(copy+1) + " of " + QString::number( printer->numCopies() )) ;
+				page += SIGN ;
+			}
+		}
+	}
+
+	return true ;
+#endif
+}
 
 //cursor related stuff
 

@@ -90,14 +90,17 @@ public:
 	void setDocument(const BanglaDocument &bd);
 	void setDocument(const BanglaLetterList &bll);	//handles newlines
 	void clear();
-	
+
 	// some document parameters useful for displaying
 	void setLineHeight(int);
 	int getLineHeight();
 	int getLineWidth(int para, int line);
 	int getMaxLineWidth();
+	int getTotalDocumentLines() { return documentLine.count(); };
+	int getTotalScreenLines() { return screenMapLine.count(); };
 	void setLinesInPage(int);
 	void setScreenWidth(int);
+	int getScreenWidth() { return screenWidth; };
 
 	void changeFont(QFont &banglaFont, QFont &englishFont);
 

@@ -83,6 +83,8 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     : QMainWindow( 0, "Lekho", WDestructiveClose )
 {
     printer = new QPrinter;
+    printer->setOrientation( QPrinter::Portrait );
+
 
     fudgeHtmlOn = false ;
 
@@ -531,7 +533,19 @@ void ApplicationWindow::saveAs()
 {
     QString fn = QFileDialog::getSaveFileName( thePref.workingDir, QString::null,
 					       this );
-    if ( !fn.isEmpty() ) {
+    if ( !fn.isEmpty() )
+    {
+	QFile qf(fn);
+	if(qf.exists() )
+	{
+		if( QMessageBox::warning( this, "Lekho",
+                                 "File Exists, Overwrite?",
+                                 "No", "Yes", 0,
+                                 0, 0 ) == 0 )
+		{
+			return;
+		}
+	}
 	filename = fn;
 	save();
     } else {
@@ -548,7 +562,22 @@ void ApplicationWindow::saveAsHTML()
     {
     QString text = e->unicode();
     QFile f( fn );
-    if ( !f.open( IO_WriteOnly ) ) {
+    if(f.exists() )
+    {
+	if( QMessageBox::warning( this, "Lekho",
+                                 "File Exists, Overwrite?",
+                                 "No", "Yes", 0,
+                                 0, 0 ) == 0 )
+	{
+		return;
+	}
+    }
+
+    if ( !f.open( IO_WriteOnly ) )
+    {
+	QMessageBox::warning( this, "Lekho",
+                              QString("Could not write to %1").arg(fn) ) ;
+
 	statusBar()->message( QString("Could not write to %1").arg(fn),
 			      2000 );
 	return;
@@ -580,7 +609,24 @@ void ApplicationWindow::saveAsUTF16()
     {
     QString text = e->unicode();
     QFile f( fn );
-    if ( !f.open( IO_WriteOnly ) ) {
+
+    if(f.exists() )
+    {
+	if( QMessageBox::warning( this, "Lekho",
+                                 "File Exists, Overwrite?",
+                                 "No", "Yes", 0,
+                                 0, 0 ) == 0 )
+	{
+		return;
+	}
+    }
+
+
+    if ( !f.open( IO_WriteOnly ) )
+    {
+	QMessageBox::warning( this, "Lekho",
+                              QString("Could not write to %1").arg(fn) ) ;
+
 	statusBar()->message( QString("Could not write to %1").arg(fn),
 			      2000 );
 	return;
@@ -614,7 +660,11 @@ void ApplicationWindow::HTMLexport()
         fudgeHtml(text);	//if you have any headers beware....
 
     QFile f( htmlname );
-    if ( !f.open( IO_WriteOnly ) ) {
+    if ( !f.open( IO_WriteOnly ) )
+    {
+	QMessageBox::warning( this, "Lekho",
+                              QString("Could not write to %1").arg(htmlname) ) ;
+
 	statusBar()->message( QString("Could not export html to %1").arg(htmlname),
 			      2000 );
 	return;
@@ -707,6 +757,7 @@ void ApplicationWindow::LaTeXexportAs()
     }
 }
 
+/*
 void ApplicationWindow::print()
 {
 
@@ -781,7 +832,7 @@ void ApplicationWindow::print()
 			}
 		statusBar()->message( "Done printing..." );
 //		}
-/*
+
 		else
 		{
 			if(!e->print( &p , endPage - 1 , firstPrint, pageWidth, pageHeight,
@@ -798,11 +849,20 @@ void ApplicationWindow::print()
 					break ;
 			}
 
-		}*/
+		}
 	}
     }
 #endif
 }
+*/
+
+void ApplicationWindow::print()
+{
+#ifndef QT_NO_PRINTER
+	e->print(printer);
+#endif
+}
+
 
 void ApplicationWindow::find()
 {

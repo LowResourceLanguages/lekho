@@ -38,10 +38,12 @@
 #ifndef BANGLATEXTEDIT_H
 #define BANGLATEXTEDIT_H
 
-#include <qscrollview.h>
-#include <qpoint.h>
 #include <qcolor.h>
 #include <qpainter.h>
+#include <qpaintdevicemetrics.h>
+#include <qpoint.h>
+#include <qprinter.h>
+#include <qscrollview.h>
 
 #include <lekhostream.h>
 
@@ -127,7 +129,7 @@ public:
 	void setColors(QColor fg, QColor bg);
 
 	//initialise the parser
-	bool BanglaTextEdit::initialiseParser(Parser *p);
+	bool initialiseParser(Parser *p);
 	bool initialiseParser(QTextStream &kar, QTextStream &jukto, QTextStream &sjor);
 
 	//need to initialise the fontconverter
@@ -210,9 +212,11 @@ public:
 	void splitLine(int para, int col);
 
 	//print it !
-	bool print(QPainter *p, int page, bool &firstPrint, int pageWidth, int pageHeight,
-			int leftMargin, int rightMargin, int topMargin, int bottomMargin) ;
+	bool print(QPrinter *p ) ;
 
+	//private helper functions
+	void print_PageBreaks(int w, int h, QValueList<int> &breaks);
+	bool print_Page(QPainter *printer, int &startLine, int &endLine);
 
 public slots:
 
