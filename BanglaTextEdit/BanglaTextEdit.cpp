@@ -53,14 +53,24 @@ enum BanglaEditCode
 	PasteRomanised
 };
 
+/*
 //small utility function is this a bangla letter ?
 inline bool isBangla(const QChar &text)
 {
-	if((text.unicode() > 0x0980) & (text.unicode() < 0x09ff))
-		return true ;
-	else
-		return false ;
+	switch(text.unicode())
+	{
+		case 0x0964:	//dari
+		case 0x0965:	//double dari
+			return true ;
+			break;
+		default:
+			if( (text.unicode() > 0x0980) & (text.unicode() < 0x09ff) )
+				return true ;
+			break;
+	}
+	return false ;
 }
+*/
 
 //is it a tab ?
 inline bool isTab(const QChar &text)
@@ -222,8 +232,8 @@ int BanglaTextEdit::insert (int para, int col, const QString &text, bool indent 
 
     	setModified( true );
 	theDoc.insert(para, col, bll);
-	//viewport()->update();
-	update();
+	viewport()->update();
+
 	return (bll.count());
 }
 

@@ -19,6 +19,8 @@
 */
 #include "BanglaSegment.h"
 
+#include <bangla.h>
+
 //QValueList<QString> segment(const QString &a)
 void segment(const QString &a, QValueList<QString> &out)
 {
@@ -41,8 +43,9 @@ void segment(const QString &a, QValueList<QString> &out)
 	for(int i = 0 ; i < (int)a.length() ; i++)
 	{
 		//not bangla, not our problem
-		if(((a[i].unicode() < 0x0980) |
-			(a[i].unicode() > 0x09ff)) & (a[i].unicode() != 0x200c ))
+		//if(((a[i].unicode() < 0x0980) |
+		//	(a[i].unicode() > 0x09ff)) & (a[i].unicode() != 0x200c ) & (a[i].unicode() != 0x0964))
+		if(!isBangla(a[i]))
 		{
 			//flush any bangla there
 			if(!temp.isEmpty()) out.append(temp);

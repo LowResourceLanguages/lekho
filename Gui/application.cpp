@@ -136,7 +136,7 @@ ApplicationWindow::ApplicationWindow()
 
     file->insertSeparator();
 
-    id = file->insertItem( "Export &html", this, SLOT(HTMLexport()) );
+    id = file->insertItem( "Export &html", this, SLOT(HTMLexport()), CTRL+Key_H );
     //file->setWhatsThis( id, htmlExportText );
 
     id = file->insertItem( "Export html (choose name)...", this, SLOT(HTMLexportAs()) );
@@ -167,10 +167,8 @@ ApplicationWindow::ApplicationWindow()
 
     options->insertItem( "&Bangla font", this, SLOT(chooseBanglaFont()) );
     options->insertItem( "&English font", this, SLOT(chooseEnglishFont()) );
-    options->insertItem( "&foregorund color", this, SLOT(chooseForeground()) );
+    options->insertItem( "&foreground color", this, SLOT(chooseForeground()) );
     options->insertItem( "&background color", this, SLOT(chooseBackground()) );
-
-//    options->insertItem( "&WordWrap", this, SLOT(newDoc()), CTRL+Key_N );
 
 
     //help
@@ -204,7 +202,7 @@ ApplicationWindow::ApplicationWindow()
     //in case BanglaTextEdit wants to talk to us, it can do so via this...
     connect(e, SIGNAL(statusBarMessage(const QString&)), this, SLOT(statusBarMessage(const QString&)));
 
-    statusBar()->message( "Ready", 2000 );
+    statusBar()->message( "HINT : Press ESC to change language") ; //, 2000 );
 
     setGeometry(thePref.pos);
     //resize( 450, 600 );
@@ -221,32 +219,6 @@ ApplicationWindow::~ApplicationWindow()
 	delete printer;
 }
 
-/*
-void ApplicationWindow::contentsMousePressEvent ( QMouseEvent *mausevent )
-{
-	//now, if we press the right mouse button, we want to copy all the text... in soem format..into
-	//the clipboard
-	if(Qt::RightButton == mausevent->button())
-	{
-		QPoint copyMenuPos = mapToGlobal(mausevent->pos());
-		copyMenu->popup(copyMenuPos);
-		return;
-	}
-	else
-		e->contentsMousePressEvent(mausevent);
-}
-
-//clipboard stuff
-void ApplicationWindow::clipBoardOp(int id)
-{
-	//switch(id)
-	//{
-		cout << id << endl << flush ;
-
-	//}
-}
-*/
-
 void ApplicationWindow::printDebug()
 {
 	//Qcout << thePref << endl ;
@@ -257,28 +229,6 @@ void ApplicationWindow::printDebug()
 void ApplicationWindow::readPrefs()
 {
     	statusBar()->message( "Loading prefs" );
-
-	/*
-	//QDir d = QDir::home();
-	//QFile in(d.filePath(".lekhorc")) ;
-	QFile in(".lekhorc") ;
-	if ( !in.open(IO_ReadOnly) )
-	{
-		QMessageBox::information( this, "Lekho",
-                            "Couldn't load .lekhorc (initialisation file)\n"
-			    "Quitting");
-
-		Qcout << "Couldn't load .lekhorc (initialisation file)" << endl ;
-		in.close();
-		exit(0);
-	}
-
-	// .lekhorc file opened successfully
-	//read in the preferences
-        QTextStream lekhorc( &in );        // use a text stream
-	lekhorc >> thePref ;
-	in.close();
-	*/
 	thePref.load(".lekhorc");
 }
 
@@ -309,7 +259,7 @@ void ApplicationWindow::initialiseParser()
 void ApplicationWindow::initialiseScreenFontConverter()
 {
 	QFile fontFile(thePref.initDir + thePref.screenfontFileName) ;
-	Qcout << endl << thePref.initDir + thePref.screenfontFileName << endl ;
+
 	if(!fontFile.open(IO_ReadOnly)) {Qcerr << "screen font converter file problem" << endl ; exit(0);};
 	QTextStream 	fontF( &fontFile) ;
 
@@ -415,12 +365,9 @@ void ApplicationWindow::HTMLexport()
     }
 
     QTextStream t( &f );
-    //t.setEncoding(QTextStream::UnicodeUTF8);
 
     t << text;
     f.close();
-
-    //e->setModified( FALSE );
 
     setCaption( filename );
 

@@ -19,14 +19,31 @@
 */
 
 //bangla.h
-//some constants etc.
+//some constants and utility functionsetc.
 
 #ifndef BANGLA_H
 #define BANGLA_H
 
 #include<BanglaLetter.h>
-#include<qtextstream.h>
 
 const BanglaLetter BanglaCR("\n","\n",0);
+
+//small utility function is this a bangla letter ?
+inline bool isBangla(const QChar &text)
+{
+	switch(text.unicode())
+	{
+		case 0x0964:	//dari
+		case 0x0965:	//double dari
+		case 0x200c:	//zwnj
+			return true ;
+			break;
+		default:
+			if( (text.unicode() > 0x0980) & (text.unicode() < 0x09ff) )
+				return true ;
+			break;
+	}
+	return false ;
+}
 
 #endif
