@@ -20,6 +20,17 @@ QTextStream Qcin ( stdin,  IO_ReadOnly );
 QTextStream Qcerr( stderr, IO_WriteOnly );
 QTextStream debugStream ;				//dump all debug messages here
 
+void showLicense()
+{
+	Qcout	<< endl
+		<<	"-------------------------------------------------------------------------" << endl
+		<<	"| Lekho version .95, Copyright (C) 2002 Kaushik Ghose                   |" << endl
+    		<<	"| Lekho comes with ABSOLUTELY NO WARRANTY; for details see the GNU GPL  |" << endl
+    		<<	"| This is free software, and you are welcome to redistribute it         |" << endl
+    		<<	"| under certain conditions; for details see the GNU GPL.                |" << endl
+		<<	"-------------------------------------------------------------------------" << endl ;
+}
+
 int main( int argc, char ** argv )
 {
     QApplication a( argc, argv );
@@ -28,5 +39,6 @@ int main( int argc, char ** argv )
     mw->show();
     a.connect( &a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()) );
 
+    showLicense() ;
     return a.exec();
 }
