@@ -26,7 +26,7 @@
 
 #include<BanglaLetter.h>
 
-const BanglaLetter BanglaCR("\n","\n",0);
+const BanglaLetter BanglaCR("\n","",0);
 
 //small utility function is this a bangla letter ?
 inline bool isBangla(const QChar &text)

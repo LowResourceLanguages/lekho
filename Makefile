@@ -195,13 +195,13 @@ $(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
 $(OBJ_DIR)/FindDialog.o: Gui/FindDialog.cpp Gui/FindDialog.h 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/FindDialog.o Gui/FindDialog.cpp
 
-$(OBJ_DIR)/BanglaLine.o: BanglaLine/BanglaLine.cpp BanglaLine/BanglaLine.h
+$(OBJ_DIR)/BanglaLine.o: BanglaLine/BanglaLine.cpp BanglaLine/BanglaLine.h BanglaLetter/BanglaLetter.h include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLine.o BanglaLine/BanglaLine.cpp
 
 $(OBJ_DIR)/BanglaLetter.o: BanglaLetter/BanglaLetter.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLetter.o BanglaLetter/BanglaLetter.cpp
 
-$(OBJ_DIR)/BanglaDocument.o: BanglaDocument/BanglaDocument.cpp BanglaDocument/BanglaDocument.h
+$(OBJ_DIR)/BanglaDocument.o: BanglaDocument/BanglaDocument.cpp BanglaDocument/BanglaDocument.h BanglaLine/BanglaLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaDocument.o BanglaDocument/BanglaDocument.cpp
 
 $(OBJ_DIR)/BanglaTextEdit.o: BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h include/bangla.h

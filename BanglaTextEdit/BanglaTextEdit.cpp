@@ -694,10 +694,12 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 /*
  * "Dirty" drawContents because it dosen't care about the cx...
  */
-void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
+void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 {
-	//p->flush();
-	//p->end();
+
+	//protect our pixmap
+	if(cw == 0) return ;
+	if(ch == 0) return ;
 
 	int maxPaintWidth = viewport()->width();
 
@@ -720,9 +722,12 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 	//leettle hack here, + 20 for safety
 	resizeContents( theDoc.getMaxLineWidth() + 20, lineHeight * theDoc.totalScreenLines());
 
-	//QPixmap pm(theDoc.getMaxLineWidth() + 20, lineHeight * theDoc.totalScreenLines());
-	//QPainter *p = new QPainter ;
-	//p->begin(&pm, this );
+
+	//double buffering...
+	QPixmap pm(cw, ch) ;//;viewport()->height());
+	QPainter *p = new QPainter ;
+	p->begin(&pm);
+	p->translate(-cx, -cy);
 
 
 	p->setPen(foreground);
@@ -789,22 +794,17 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 		p->setPen(background);
 		p->setRasterOp(NotXorROP);
 
-		//p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
 		p->drawRect(cursorRect);
-
-//		if(bangla->isBangla())
-//			//p->drawRect(cursorRect);
-//			p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
-//		else
-//			p->fillRect(cursorRect,QBrush(QBrush::Dense3Pattern));
-//			//p->fillRect(cursorRect,QBrush(QBrush::HorPattern));
-
 		p->setRasterOp(CopyROP);
         }
 
-	//p->end();
-        //bitBlt(this, 0, 0, &pm);
-	//delete p ;
+
+	//transfer the drawing buffer onto the viewport...
+	p->end();
+        bitBlt(viewport(), cx - contentsX(), cy - contentsY() , &pm);
+	//cout << "cw = " << cw << " ch = " << ch << " cw x ch = " << cw * ch << endl ;
+	delete p ;
+
 }
 
 //draws one line of text in bangla and english
