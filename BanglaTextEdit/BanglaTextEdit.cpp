@@ -962,10 +962,10 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 	if(lockRedrawDuringPrinting)
 		return ;
 
-
-	//protect our pixmap
-	if(cw == 0) return ;
-	if(ch == 0) return ;
+	//protect our pixmap. Oddest of all, if you stretch/shrink the window quickly
+	//enough, you can make ch/cw go negative...
+	if(cw <= 0) return ;
+	if(ch <= 0) return ;
 
 	int maxPaintWidth = viewport()->width();
 
