@@ -68,7 +68,9 @@ class BanglaTextEdit : public QScrollView
 private:
 	LekhoCursor theCursor ;
 	QPoint paracolSelStart, paracolSelEnd ,	//the selection para/col
-		xySelStart , xySelEnd ;
+		xySelStart , xySelEnd ,
+		tempParacolSelStart , tempParacolSelEnd ;//needed to handle flipping of start and end posns...	
+
 	bool hasSelText ;
 
 	BanglaDocument theDoc ;
@@ -173,7 +175,7 @@ protected:
 
 public:
 	//insert text at paragraph and col indicated
-	int insert(int para, int col, const QString &text, bool indent = FALSE, bool checkNewLine = TRUE, bool removeSelected = TRUE );
+	int insert(int para, int col, const QString &text); //, bool indent = FALSE, bool checkNewLine = TRUE, bool removeSelected = TRUE );
 	void del(int para1, int col1, int para2, int col2 );
 	void splitLine(int para, int col);
 

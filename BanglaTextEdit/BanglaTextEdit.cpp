@@ -198,7 +198,8 @@ bool BanglaTextEdit::initialiseParser(QTextStream &kar, QTextStream &jukto, QTex
 //function::insert
 //the insert needs to be in unicode
 //return number of letters inserted...
-int BanglaTextEdit::insert (int para, int col, const QString &text, bool indent , bool checkNewLine , bool removeSelected)
+int BanglaTextEdit::insert (int para, int col, const QString &text)
+//, bool indent , bool checkNewLine , bool removeSelected)
 {
 	BanglaLetterList bll ;
 	//QValueList<QString> segmentedText = segment(text);
@@ -367,7 +368,7 @@ QString BanglaTextEdit::charRef(QPoint &start, QPoint &end)
 			theText);
 
 	QString charRef ;
-	for(int i = 0 ; i < theText.length() ; i++)
+	for(int i = 0 ; i < (int)theText.length() ; i++)
 	{
 		charRef += "&#" + QString::number(theText[i].unicode(),10) + ";";
 	}
@@ -818,6 +819,10 @@ void BanglaTextEdit::contentsMousePressEvent ( QMouseEvent *mausevent )
 
 	//set selection start (potentially the user may drag it...)
 	paracolSelStart = paracol ;
+	paracolSelEnd = paracol ;
+	tempParacolSelStart = paracol ;
+	tempParacolSelEnd = paracol ;
+
 
 	//show the para/col on the status bar
 	QString theMessage ;
@@ -866,7 +871,21 @@ void BanglaTextEdit::contentsMouseMoveEvent ( QMouseEvent *mausevent )
 	//theCursor.paracol = paracol ;
 	//cursorDraw();
 
-	paracolSelEnd = paracol ;
+
+	tempParacolSelEnd = paracol ;
+
+	QPoint sign = tempParacolSelEnd - tempParacolSelStart ;
+	if( (sign.y() < 0) || ( (sign.y() == 0) && (sign.x() < 0) ) )
+	{
+		paracolSelStart = tempParacolSelEnd ;
+		paracolSelEnd   = tempParacolSelStart ;
+	}
+	else
+	{
+		paracolSelStart = tempParacolSelStart ;
+		paracolSelEnd = tempParacolSelEnd ;
+	}
+
 
 	xySelStart = theDoc.paracol2xy(paracolSelStart);
 	xySelEnd = theDoc.paracol2xy(paracolSelEnd);
@@ -883,21 +902,36 @@ void BanglaTextEdit::contentsMouseReleaseEvent ( QMouseEvent *mausevent )
 	QPoint mauspos = mausevent->pos() ;//viewportToContents(mausevent->pos()) ;
 	QPoint paracol = theDoc.xy2paracol( mauspos );
 
+
+	tempParacolSelEnd = paracol ;
+
+	QPoint sign = tempParacolSelEnd - tempParacolSelStart ;
+	//if( (sign.x() < 0) || (sign.y() < 0) )
+	if( (sign.y() < 0) || ( (sign.y() == 0) && (sign.x() < 0) ) )
+	{
+		paracolSelStart = tempParacolSelEnd ;
+		paracolSelEnd   = tempParacolSelStart ;
+	}
+	else
+	{
+		paracolSelStart = tempParacolSelStart ;
+		paracolSelEnd = tempParacolSelEnd ;
+	}
+
 	//mouse just clicked in place....
-	if(paracol == paracolSelStart)
+	if(paracolSelEnd == paracolSelStart)
 	{
 		hasSelText = false;
 		return ;
 	}
 
-	//mose dragged to this spot
-
+	//mouse dragged to this spot
 	cursorErase();
 	theCursor.xy = mauspos ;
 	theCursor.paracol = paracol ;
 	cursorDraw();
 
-	paracolSelEnd = paracol ;
+	//paracolSelEnd = paracol ;
 
 
 	xySelStart = theDoc.paracol2xy(paracolSelStart);
