@@ -70,6 +70,9 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
 	QApplication::clipboard()->setSelectionMode(true);
 #endif
 
+	_wecreatedBangla = false ;
+	_wecreatedLipi = false ;
+
 	//otherwise the cursor won't appear...
 	theDoc.setLineHeight(QMAX( QFontMetrics(banglaFont).lineSpacing(),
 				   QFontMetrics(englishFont).lineSpacing() ));
@@ -112,6 +115,8 @@ BanglaTextEdit::~BanglaTextEdit()
     if (theCursor.cursorTimerId != 0)
         killTimer(theCursor.cursorTimerId);
 
+    if(_wecreatedBangla) delete bangla ;
+    if(_wecreatedLipi) delete lipi ;
 }
 
 //set the tab size and recompute all tabs.
@@ -168,9 +173,20 @@ void BanglaTextEdit::setColors(QColor fg, QColor bg)
 	viewport()->update();
 }
 
+//get passed an existing parser
+bool BanglaTextEdit::initialiseParser(Parser *p)
+{
+	bangla = p ;
+	return true ;
+}
+
+//load from file
 bool BanglaTextEdit::initialiseParser(QTextStream &kar, QTextStream &jukto, QTextStream &shor)
 {
-	if(!bangla.initialiseParser(kar, jukto, shor))
+	bangla = new Parser ;
+	_wecreatedBangla = true ;
+
+	if(!bangla->initialiseParser(kar, jukto, shor))
 	{
 		Qcerr << "Problem loading parser table : BanglaTextEdit " << endl ;
 		return false;
@@ -199,7 +215,7 @@ int BanglaTextEdit::insert (int para, int col, const QString &text)
 	{
 		if( isBangla( (*i).constref(0)) )
 		{
-			screenFontText = lipi.unicode2screenFont((*i));
+			screenFontText = lipi->unicode2screenFont((*i));
 			width = QFontMetrics(banglaFont).width(screenFontText);
 		}
 		else
@@ -249,7 +265,7 @@ void BanglaTextEdit::highlightWord(const QString &wd)
 	QPoint paracolStart = theCursor.paracol ,
 		paracolEnd(theDoc.lettersInLine(theDoc.totalLines()-1)-1,
 			theDoc.totalLines()-1) ;
-	QPoint selStart, selEnd ;
+	QPoint selStart(-1,-1), selEnd(-1,-1) ;
 	theDoc.findWord(selStart, selEnd, wd, paracolStart, paracolEnd);
 
 	if( (selStart.x() > -1) && (selEnd.x() > -1) )
@@ -272,9 +288,20 @@ void BanglaTextEdit::highlightWord(const QString &wd)
 
 }
 
+//get an existing one
+bool BanglaTextEdit::screenFontConverterInit(FontConverter *fc)
+{
+	lipi = fc;
+	return true ;
+}
+
+//init from file
 bool BanglaTextEdit::screenFontConverterInit(QTextStream &file)
 {
-	if(!lipi.initialiseConverter(file))
+	lipi = new FontConverter ;
+	_wecreatedLipi = true ;
+
+	if(!lipi->initialiseConverter(file))
 	{
 		//emit screenFontInitialiseProblem();
 		return false;
@@ -314,7 +341,7 @@ void BanglaTextEdit::setText(const QString &text)
 	{
 		if( isBangla((*i).constref(0)) )
 		{
-			screenFontText = lipi.unicode2screenFont((*i));
+			screenFontText = lipi->unicode2screenFont((*i));
 			width = QFontMetrics(banglaFont).width(screenFontText);
 		}
 		else
@@ -536,7 +563,7 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 		p->setPen(background);
 		p->setRasterOp(NotXorROP);
 
-		if(bangla.isBangla())
+		if(bangla->isBangla())
 			//p->drawRect(cursorRect);
 			p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
 		else
@@ -621,7 +648,7 @@ void BanglaTextEdit::delSelected()
 void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 {
 	QString theMessage ;
-	if(bangla.isBangla())
+	if(bangla->isBangla())
 		theMessage = "Bangla  | " ;
 	else
 		theMessage = "English | " ;
@@ -630,15 +657,15 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 
 	switch (event->key())
 	{
-		case	Key_F8:
+		case	Key_F3:
 			highlightWord("this");
 			break;
 
 		case 	Key_Escape:
 
 			keyPressEventFlushBangla();
-			bangla.toggleLanguage();
-			if(bangla.isBangla())
+			bangla->toggleLanguage();
+			if(bangla->isBangla())
 				theMessage = "Bangla  | " ;
 			else
 				theMessage = "English | " ;
@@ -711,7 +738,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			if(hasSelText)
 				delSelected();
 
-			if(!bangla.isBangla() && (event->text().length() > 0))
+			if(!bangla->isBangla() && (event->text().length() > 0))
 			{
 				cursorErase();
 				insert (theCursor.paracol.y(), theCursor.paracol.x(), event->text());
@@ -747,12 +774,12 @@ QString BanglaTextEdit::parseKeyHit(const QString &text)
 
 	for(int i = 0 ; i < (int)text.length() ; i++)
 	{
-		bool validc = bangla.parseThis(text[i]);
+		bool validc = bangla->parseThis(text[i]);
 
 		//a complete bangla letter is available
-		if(bangla.isCodeAvailable())
+		if(bangla->isCodeAvailable())
 		{
-			QString uc = bangla.getCode();
+			QString uc = bangla->getCode();
 			if(partialCodeInserted)
 			{
 				del(theCursor.paracol.y(), theCursor.paracol.x(),
@@ -765,9 +792,9 @@ QString BanglaTextEdit::parseKeyHit(const QString &text)
 		}
 
 		//a partial code is available...
-		if(bangla.isPartialCodeAvailable())
+		if(bangla->isPartialCodeAvailable())
 		{
-			QString uc = bangla.getPartialCode();
+			QString uc = bangla->getPartialCode();
 			if(partialCodeInserted)
 			{
 				del(theCursor.paracol.y(), theCursor.paracol.x(),
@@ -797,11 +824,11 @@ void BanglaTextEdit::keyPressEventFlushBangla()
 {
 	keysHit = "" ;
 
-	bangla.flushStack();
+	bangla->flushStack();
 
-	if(bangla.isCodeAvailable())
+	if(bangla->isCodeAvailable())
 	{
-		QString uc = bangla.getCode();
+		QString uc = bangla->getCode();
 		if(partialCodeInserted)
 		{
 			del(theCursor.paracol.y(), theCursor.paracol.x(),
@@ -1049,16 +1076,16 @@ void BanglaTextEdit::clipBoardOp(int id)
 			theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 		break;
 	case PasteRomanised:
-		if(bangla.isBangla())
+		if(bangla->isBangla())
 		{
 			keyPressEventFlushBangla();
 			parseKeyHit(cb->text());
 		}
 		else
 		{
-			bangla.toggleLanguage();
+			bangla->toggleLanguage();
 			parseKeyHit(cb->text());
-			bangla.toggleLanguage();
+			bangla->toggleLanguage();
 		}
 		keyPressEventFlushBangla();
 		break;

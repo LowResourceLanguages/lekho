@@ -291,6 +291,8 @@ void BanglaLine::changeFont(QFont &banglaFont, QFont &englishFont)
 	}
 }
 
+//function::findWord
+//very simple, fidns exact match.... case and all... will use for spellings...
 QPoint BanglaLine::findWord(const QString &wd, int startCol, int endCol)
 {
 	QString thisWord ;
@@ -333,7 +335,6 @@ QPoint BanglaLine::findWord(const QString &wd, int startCol, int endCol)
 			index++ ;
 		}
 	}
-
 
 	if(thisWord.length() == wd.length())//there's a chance of a match here
 	{

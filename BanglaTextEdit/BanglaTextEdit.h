@@ -1,5 +1,5 @@
 /*
-*  Lekho v1.0 will be a simple editor for bangla in unicode that will export
+*  Lekho v1.0 is a simple editor for bangla in unicode that exports
 *  to bangtex
 *  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
 *
@@ -75,8 +75,10 @@ private:
 	bool hasSelText ;
 
 	BanglaDocument theDoc ;
-	FontConverter lipi ;			//unicode->screen font
-	Parser bangla ;				//keystroke parser
+	FontConverter *lipi ;			//unicode->screen font
+	Parser *bangla ;			//keystroke parser
+	bool _wecreatedBangla, _wecreatedLipi ;
+
 	bool partialCodeInserted ;		//needed by parser, keeps track of if partial code has been inserted
 	QString keysHit ;			//fun display of romanised input
 	//LatexConverter bangtex ;
@@ -114,9 +116,11 @@ public:
 	void setColors(QColor fg, QColor bg);
 
 	//initialise the parser
+	bool BanglaTextEdit::initialiseParser(Parser *p);
 	bool initialiseParser(QTextStream &kar, QTextStream &jukto, QTextStream &sjor);
 
 	//need to initialise the fontconverter
+	bool screenFontConverterInit(FontConverter *fc);
 	bool screenFontConverterInit(QTextStream &sF);
 
 	//set this as the whole text of the document. Erase any previous stuff
