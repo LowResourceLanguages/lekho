@@ -1,0 +1,102 @@
+2002.09.03 Kaushik Ghose kghose@wam.umd.edu
+
+REQUIREMENTS
+
+In order for Lekho to run you need
+  The executable for your OS and processor
+  The bangla true type fonts AdarshaLipiXXX (Without these fonts, you can still type bangla, but you won't see it correctly on Lekho. It will save correctly.)
+  An initialisation file .lekhorc
+  Three files related to the transliteration rules, and one file related to the Adarshalipi font
+All these files (except the fonts)are bundled together into one package for the version you want to download. The fonts are available as part of the "required" package
+
+In addition, the following window specific requirements must be met:
+  Windows : the msvcrt.dll and the qt-mt230nc.dll must be on your system
+  Linux : QT version 2.3 or higher must be installed on your system
+All these (except for the Linux QT package) are available from the downloads page.
+QT for linux and windows is available from the trolltech website.
+
+WINDOWS
+
+Installing the executable:
+
+      Download the executable package for the version you are interested in e.g. lekho_win_v1.0_2002.09.02.zip
+      Download the fnts.zip file if you don't have the AdarshaLipi fonts
+      Download the dlls.zip file if you don't have the required dlls
+      Unzip the program package into a directory (if you keep the "use folder names" options on while extracting, if you are using winzip, the files
+      unzip into e.g. Lekho\v1.0\bin)
+      You should now have
+      lekho.exe
+      .lekhorc
+      .lekho (start up files folder containing kar.txt, jukto.txt, shor.txt and adarshalipi.txt)
+      examples ( a folder containing some example utf-8 bangla files) and
+      fnts.zip (the zipped Adarshalipi fonts)
+      Unzip the fnts.zip file and extract the three .ttf files you find into the folder where all the other files are (the exact location of the folder doesn't
+      matter).
+      Install these fonts by going to start->settings->control panel->fonts->file->install new font and then pointing the directory chooser that pops up
+      to the directory where you unzipped the fonts (the installer will inform you if you already have the fonts).
+      If you downloaded the dlls, unzip them into the same directory as the executable
+
+That's it ! By double clicking on lekho.exe you should be ready to go. Take a look at the help.txt file by opening it up in lekho. help.html will render correctly
+on ie6 if you have the usp10.dll (win98,2000,NT and XP) and James Kass' code2000 font.
+If all else fails take a look at help_lipi.html, which just needs the adarshalipi fonts to be installed.
+
+Compiling the executable:
+
+      Install the QT 2.3 free windows version on your computer
+      Download the source tarball for the required version. The source tarball is the same for linux and windows.
+      Unzip the tarball using winzip to a directory. It should default to Lekho\v1.0\
+      Generate a new QT project using the tmake utility and the Lekho.pro project file.
+      If you have problems play a bit with the include directories etc.
+
+LINUX
+
+Compiling and installing:
+
+      Ensure you have at least QT version 2.3 on your system. (QT is usually installed in /usr/lib/qtxx)
+      Download the source tarball for the required version.
+      Unzip and untar the package to a directory
+      Go into the Lekho/v1.0/ directory and open up Makefile in a text editor
+      Change the default installation and object directories on line 14 and 13 if you wish
+      Let us call the installation directory Lekho_v1.0
+      Type make
+      Lekho should compile with some warnings.(I'll remove the warning causing code soon)
+      Type make install (This copies some initialisation files to the install directory)
+      Install the ttf fonts found in fnts.zip if they arn't on your system (If you use a recent window manager like KDE2, the system->configuration
+      submenu should have tools do help you do this eg. kfontinst for KDE 2.
+      Goto the Lekho_v1.0/bin directory and type ./lekho and lekho should run
+      Open up the help.txt file found in the examples folder, or take a look at help.html in a unicode enabled browser. If your browser can't show
+      the page correctly, read help_lipi.html which should render correctly in you have the adarshalipi fonts installed.
+
+                                                    PERSONALISATION
+
+PERSONALISING THE LOOK
+
+The .lekhorc file contains information that Lekho uses when it starts up. Each parameter has a identifier label enclosed in square brackets [...]. The file
+structure is absolutely fixed, the labels are currently just there to aid humans. Things to change are
+[banglafont]
+AdarshaLipiExp 20<------ change this value to change the bangla font size
+[englishfont]
+arial 15<--------------- change this to change the english font size
+[foreground]
+0 0 0 <----------------- r g b values for the text (black)
+[background]
+255 255 255<------------ r g b values for the background (white)
+
+Bear with me, I'll add dialogs to configure all this from within lekho...
+
+PERSONALISING THE ROMANISATION RULES
+
+Take a look at the files in the .lekho/ directory. The files kar.txt, jukto.txt and shor.txt contain the romanisation rules. You need to keep a unicode chart for
+bangla open by you as you change the first column of each entry in each file to suit you preferences for the transliteration rules. For instance to get the
+"onnushor" symbol (рж) the default rule is you type "NNG"
+You probably don't like that. So you open up the file "jukto.txt" and look at the relevant line, which is
+NNG 1 0982
+which tells Lekho that hitting NNG should insert the single unicode character 0x0982. You would like to use the keystroke "~" to do the job. Just change
+the line to
+~ 1 0982
+
+CAUTION !!!!
+
+When you are changing the romanisation rules you need to ensure that the first letter of any romanisation sequence in one file eg. in jukto.txt is not the
+same as that in another file like shor.txt. If you violate this rule, then the results will be unexpected.
+
