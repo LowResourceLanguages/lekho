@@ -102,8 +102,9 @@ private slots:
     //void insertLatex(int id);
     //void insertHtml(int id);
 
-    void about();
-    void aboutQt();
+	void keyMapHelp();
+	void about();
+	void aboutQt();
 
 public slots:
     void statusBarMessage(const QString&) ;

@@ -236,7 +236,9 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     //help
     QPopupMenu * help = new QPopupMenu( this );
 
-    help->insertItem( "&About", this, SLOT(about()), Key_F1 );
+    help->insertItem( "Key&Map", this, SLOT(keyMapHelp()), Key_F1 );
+    help->insertSeparator();
+    help->insertItem( "&About", this, SLOT(about()) );
     help->insertItem( "About &Qt", this, SLOT(aboutQt()) );
     help->insertSeparator();
     help->insertItem( "What's &This", this, SLOT(whatsThis()), SHIFT+Key_F1 );
@@ -271,7 +273,14 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
 
     if(sl.count() > 0)
     {
-    	load(sl[0]);
+    	//hack to show keymap file
+	if(sl[0] == "-keymap")
+	{
+		e->setKeyMapAsText();
+		setCaption("Lekho help : keymap");
+	}
+	else
+    		load(sl[0]);
 	if(sl.count() > 1)
 	{
 		QStringList fileList ;
@@ -757,105 +766,6 @@ void ApplicationWindow::LaTeXexportAs()
     }
 }
 
-/*
-void ApplicationWindow::print()
-{
-
-#ifndef QT_NO_PRINTER
-
-    printer->setMinMax(1,6500);
-    if ( printer->setup( this ) )
-    {
-
-	printer->setFullPage(true);
-	QPaintDeviceMetrics printerMetrics(printer);
-
-	statusBar()->message( "Printing..." );
-
-	QPainter p;
-	if( !p.begin( printer ) )               // paint on printer
-	    return;
-
-	int 	pageWidth = printerMetrics.width() , pageHeight = printerMetrics.height(),
-		startPage = printer->fromPage() , endPage = printer->toPage(),
-		leftMargin = printer->margins().width(), rightMargin = printer->margins().width(),
-		topMargin = printer->margins().height() , bottomMargin = printer->margins().height() ;
-
-
-	//has the user set the pages
-	if(startPage == 0) startPage = 1 ;
-	if(endPage == 0) endPage = 6500 ;	//basically - all the pages
-
-	bool 	firstPrint = true ;	//don't want to wordWrap document every time we print a page...
-
-
-	for(int copy = 0 ; copy < printer->numCopies(); copy++)
-	{
-
-		if(printer->pageOrder() != QPrinter::FirstPageFirst)
-		{
-			switch( QMessageBox::information( this, "Lekho : Not Implemented",
-				"Printing in reverse order not implemented yet\n"
-				"Continue print in first-page-first order ?",
-				"Yes", "Cancel",
-				0, 1 ) )
-			{
-   				case 0:
-					break;
-				case 1:
-					return;
-				default:
-					return;
-			}
-		}
-
-//		{
-
-		QString theMessage = "Printing page " + QString::number(startPage) ;
-		statusBar()->message( theMessage );
-
-			if(!e->print( &p , startPage - 1 , firstPrint, pageWidth, pageHeight,
-				leftMargin, rightMargin,
-				topMargin, bottomMargin))
-				break ;
-
-			for(int i = startPage ; i < endPage ; i++)
-			{
-				theMessage = "Printing page " + QString::number(i+1) ;
-				statusBar()->message( theMessage );
-
-				printer->newPage();
-				if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
-					leftMargin, rightMargin,
-					topMargin, bottomMargin))
-					break ;
-			}
-		statusBar()->message( "Done printing..." );
-//		}
-
-		else
-		{
-			if(!e->print( &p , endPage - 1 , firstPrint, pageWidth, pageHeight,
-				leftMargin, rightMargin,
-				topMargin, bottomMargin))
-				break ;
-
-			for(int i = endPage - 2 ; i >= startPage - 1; i--)
-			{
-				printer->newPage();
-				if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
-					leftMargin, rightMargin,
-					topMargin, bottomMargin))
-					break ;
-			}
-
-		}
-	}
-    }
-#endif
-}
-*/
-
 void ApplicationWindow::print()
 {
 #ifndef QT_NO_PRINTER
@@ -986,11 +896,14 @@ void ApplicationWindow::closeEvent( QCloseEvent* ce )
     }
 }
 
-/*
-void ApplicationWindow::manual()
+
+void ApplicationWindow::keyMapHelp()
 {
+	QStringList st;
+	st.append("-keymap");
+	newDoc(st);
 }
-*/
+
 void ApplicationWindow::about()
 {
     QMessageBox::about( this, "Lekho : About",

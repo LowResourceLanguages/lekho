@@ -134,6 +134,10 @@ public:
 	void forceBangla();
 	void forceEnglish();
 
+	void keyMapUnModifiable(QStringList &key, QStringList &code);
+	void keyMapModifier(QStringList &key, QStringList &code);
+	void keyMapConjunct(QStringList &key, QStringList &code);
+
 public:
 	friend QTextStream& operator << (QTextStream &pipe , Parser& P);
 //	friend ostream& operator << (ostream &pipe , Parser& P);

@@ -142,8 +142,9 @@ public:
 	//set this as the whole text of the document. Erase any previous stuff
 	void setText(const QString &text);
 
-
-
+	//figure out the keymap and set this as the text (erasing previous stuff)
+	void setKeyMapAsText();
+	
 	// info functions ///////////////////////////////////////////////////////////
 
 	void setModified(bool mod);

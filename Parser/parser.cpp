@@ -449,6 +449,22 @@ void Parser::forceEnglish()
 	state = WAIT_INGREJI;
 }
 
+
+void Parser::keyMapUnModifiable(QStringList &key, QStringList &code)
+{
+	unmodifiable->theTree(key, code);
+}
+
+void Parser::keyMapModifier(QStringList &key, QStringList &code)
+{
+	modifier->theTree(key, code);
+}
+
+void Parser::keyMapConjunct(QStringList &key, QStringList &code)
+{
+	modifiable->theTree(key, code);
+}
+
 QTextStream& operator << (QTextStream& pipe , Parser& P)
 {
 	pipe	<< "Modifiers " << *(P.modifier) << endl

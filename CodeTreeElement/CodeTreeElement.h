@@ -32,6 +32,7 @@ date		:	2001.12.18	bug in addChild ?
 
 //#include <iostream.h>
 #include <qstring.h>
+#include <qstringlist.h>
 #include <qtextstream.h>
 //#include <unicodedefs.h>
 
@@ -84,6 +85,14 @@ public:
 	CodeTreeElement& getChild(int n);	//return refrence to child#
 	CodeTreeElement* getChildPointer(int n);	//return pointer to child#
 
+	//cool ! return a list of keys you have to enter to get the codes
+	void theTree(QStringList &key, QStringList &code) ;
+
+private:
+	//private - I call this recursively, neat huh ?
+	void theTree(CodeTreeElement *C, QString &root, QStringList &key, QStringList &code);
+
+public:
 	//debugging ?
 	friend QTextStream& operator<<(QTextStream& pipe , CodeTreeElement& C);
 //	friend ostream& operator<<(ostream& pipe , CodeTreeElement& C);

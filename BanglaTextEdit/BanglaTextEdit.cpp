@@ -533,6 +533,24 @@ void BanglaTextEdit::setText(const QString &text)
 
 }
 
+void BanglaTextEdit::setKeyMapAsText()
+{
+	QString keyMap("Keymap for Lekho\n\n");
+
+	QStringList key, code ;
+	bangla->keyMapUnModifiable(key, code) ;
+	bangla->keyMapModifier(key, code) ;
+	bangla->keyMapConjunct(key, code) ;
+
+	QStringList::ConstIterator 	keyiter = key.begin() ,
+					codeiter = code.begin() ;
+
+	for( ; keyiter != key.end() ; keyiter++, codeiter++)
+		keyMap += (*keyiter) + " -> " + (*codeiter) + "\n" ;
+
+	setText( keyMap );
+}
+
 void BanglaTextEdit::setModified(bool mod)
 {
 	modified = mod ;
@@ -687,6 +705,8 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 	return(latex);
 }
 
+
+/*
 	contents
 	|-----------------------|
 	|			|
@@ -709,11 +729,9 @@ QString BanglaTextEdit::getLatex(QPoint &start, QPoint &end)
 	     |  cx
 	     |
 	contentsX()
+*/
 
 //function::drawContents
-/*
- * "Dirty" drawContents because it dosen't care about the cx...
- */
 void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 {
 
@@ -744,7 +762,11 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 
 
 	//double buffering...
-	QPixmap pm(cw, ch) ;//;viewport()->height());
+	QPixmap::setDefaultOptimization( QPixmap::BestOptim );
+	QPixmap pm(cw, ch) ;
+	QPixmap::setDefaultOptimization( QPixmap::NormalOptim );
+	pm.fill(background);
+
 	QPainter *p = new QPainter ;
 	p->begin(&pm);
 	p->translate(-cx, -cy);
@@ -764,19 +786,13 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 
 	}
 
-	//if( firstLineToDraw > startLine)
-	//{
-	//	startLine = firstLineToDraw ;
-	//	curry = startLine*lineHeight ;
-	//}
-
 	for(int i = startLine ; i <= endLine ; i++)
 	{
 		BanglaLetterList theText;
 		theDoc.copyScreenLine(i, theText);
 
 		//erase original line (the bit on the screen)
-		p->eraseRect(cx, curry, cx + maxPaintWidth , lineHeight);
+	//	p->eraseRect(cx, curry, cx + maxPaintWidth , lineHeight);
 
 		//paint newline
 		paintLine(p, 0, curry, lineHeight, theText);
@@ -803,8 +819,6 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 		curry += lineHeight ;
 
 	}
-
-	//firstLineToDraw = 0 ;	//reset it. Only insert or delete should set it to anythng less...
 
 	//draw the cursor
         if (theCursor.cursorOn && viewport()->hasFocus())

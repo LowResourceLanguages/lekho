@@ -30,7 +30,7 @@ changelog
 
 CodeTreeElement::CodeTreeElement()	//when the man says do nuthin', do nothin'
 {
-	letter = '*';
+	letter = ' ';
 	code = "";
 	numChildren = 0;
 	depth = 0;
@@ -251,6 +251,36 @@ CodeTreeElement* CodeTreeElement::getChildPointer(int n)
 	else
 		return(&childElement[0]);	//just don't ty this..
 }
+
+
+//public - you call this
+//return a nice qstringlists presenting the keys and the respective codes...
+void CodeTreeElement::theTree(QStringList &key, QStringList &code)
+{
+	QString root("") ;
+	theTree(this , root, key, code) ;
+}
+
+//private - I call this recursively, neat huh ?
+void CodeTreeElement::theTree(CodeTreeElement *C, QString &root, QStringList &key, QStringList &code)
+{
+	if( !C->code.isEmpty())
+	{
+//		if(root.isEmpty())
+//			key.append( C->letter );
+//		else
+		key.append( root + C->letter );
+		code.append( C->code ) ;
+	}
+
+	QString thisRoot = root + C->letter ;
+
+	for(int i = 0 ; i < C->numChildren ; i++)
+	{
+		theTree( C->getChildPointer(i), thisRoot, key, code);
+	}
+}
+
 
 //try to print it nicely...
 QTextStream& operator<<(QTextStream& pipe , CodeTreeElement &C)
