@@ -37,11 +37,13 @@ public:
 private slots:
 	void findPressed();
 	void replacePressed();
+	void allPressed();
 	void topPressed();
 
 signals:
 	void find(const QString& );
 	void replace(const QStringList& );
+	void replaceAll(const QStringList& );
 	void top();
 };
 

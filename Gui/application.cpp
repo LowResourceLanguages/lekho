@@ -521,6 +521,7 @@ void ApplicationWindow::find()
 	FindDialog *fd = new FindDialog(e, "Find", this);
 	connect(fd, SIGNAL(find(const QString &)), e, SLOT(highlightWord(const QString &)) );
 	connect(fd, SIGNAL(replace(const QStringList &)), e, SLOT(replaceWord(const QStringList &)) );
+	connect(fd, SIGNAL(replaceAll(const QStringList &)), e, SLOT(replaceAll(const QStringList &)) );
 	connect(fd, SIGNAL(top()), e, SLOT(top()) );
 }
 

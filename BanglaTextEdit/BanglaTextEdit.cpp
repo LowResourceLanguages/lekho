@@ -432,6 +432,26 @@ void BanglaTextEdit::replaceWord(const QStringList &w)
 	viewport()->update();
 }
 
+//function::replaceAll
+void BanglaTextEdit::replaceAll(const QStringList &w)
+{
+	highlightWord(w[0]);
+	while(wordFound)
+	{
+		hasSelText = false ;
+		wordFound = false ;
+
+		cursorErase();
+		theCursor.paracol = paracolSelStart ;
+		del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1);
+		theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), w[1]) );
+		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+		cursorDraw();
+
+		highlightWord(w[0]);
+	}
+}
+
 //get an existing one
 bool BanglaTextEdit::screenFontConverterInit(FontConverter *fc)
 {

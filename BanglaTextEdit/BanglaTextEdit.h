@@ -207,6 +207,7 @@ public slots:
 	//find ops
 	void highlightWord(const QString &wd); //, bool onlySelected = false);
 	void replaceWord(const QStringList &w);
+	void replaceAll(const QStringList &w);
 
 	// clipboard ops ////////////////////////////////////////////////////////////
 private slots:

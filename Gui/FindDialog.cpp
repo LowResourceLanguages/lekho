@@ -51,7 +51,7 @@ FindDialog::FindDialog(BanglaTextEdit *bte, QString name, QWidget *parent)// ,  
 	connect( replaceedit, SIGNAL(returnPressed()), this, SLOT(replacePressed()));
 	connect( replacebtn, SIGNAL(clicked()), this, SLOT(replacePressed()));
 	connect( skipbtn, SIGNAL(clicked()), this, SLOT(findPressed()));	//eqiv to skipping
-
+	connect( allbtn, SIGNAL(clicked()), this, SLOT(allPressed()));
 	connect( topbtn, SIGNAL(clicked()), this, SLOT(topPressed()));
 
 	findedit->show();findedit->setFocus();
@@ -67,13 +67,18 @@ void FindDialog::findPressed()
 
 void FindDialog::replacePressed()
 {
-	if(!findedit->unicode().isEmpty())
-	{
-		QStringList l;
-		l += findedit->unicode() ;
-		l += replaceedit->unicode() ;
-		emit replace(l);
-	}
+	QStringList l;
+	l += findedit->unicode() ;
+	l += replaceedit->unicode() ;
+	emit replace(l);
+}
+
+void FindDialog::allPressed()
+{
+	QStringList l;
+	l += findedit->unicode() ;
+	l += replaceedit->unicode() ;
+	emit replaceAll(l);
 }
 
 void FindDialog::topPressed()
