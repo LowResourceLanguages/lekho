@@ -1,0 +1,5 @@
+This is a short paragraph.
+This paragraph should have a blank line below it.
+
+This is one medium sized paragraph, to show that we do word wrap properly. After the period at the end of this sentence I will begin a new paragraph by hitting one newline.
+This is the next paragraph, there should be no blank lines. I will now end this paragraph with no newline.
