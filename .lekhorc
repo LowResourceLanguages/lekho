@@ -16,7 +16,7 @@
  <group name="directories" >
   <option key="htmldir" value="/home/kghose/Lekho/v1.0/examples" />
   <option key="latexdir" value="/home/kghose/C++/Lekho/tex" />
-  <option key="workingdir" value="/home/kghose/C++/Lekho/v1.0/examples" />
+  <option key="workingdir" value="/home/kghose/C++/Lekho/tex" />
  </group>
  <group name="startup" >
   <option key="banan directory" value="/home/kghose/Dict/" />
@@ -28,8 +28,8 @@
   <option key="lekhorc" value="/home/kghose/.lekhorc" />
   <option key="screenfont" value="adarshalipi.txt" />
   <option key="shoroborno" value="shor.txt" />
-  <option key="width" value="592" />
-  <option key="xpos" value="329" />
-  <option key="ypos" value="75" />
+  <option key="width" value="600" />
+  <option key="xpos" value="257" />
+  <option key="ypos" value="81" />
  </group>
 </preferences>
