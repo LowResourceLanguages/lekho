@@ -54,14 +54,17 @@ bool LekhoPrefs::load(const QString &filename)
 	int fntSize = theFile->getNumber("bangla_font_size",15);
 	banglaFont.setFamily(fntName) ;
 	banglaFont.setPointSize(fntSize);
-
 	fntName = theFile->getString("english_font","Arial");
 	fntSize = theFile->getNumber("english_font_size",12);
 	englishFont.setFamily(fntName) ;
 	englishFont.setPointSize(fntSize);
-
 	foreground.setNamedColor(theFile->getString("foreground_color","#dedede"));
 	background.setNamedColor(theFile->getString("background_color","#000000")) ;
+
+	//advanced
+	theFile->setGroup("advanced");
+	cursorBlink = theFile->getBool("cursor_blinks",true);
+	wordWrap = theFile->getBool("word_wrap",true);
 
 	return true ; 	//do checks later
 }
@@ -95,9 +98,13 @@ bool LekhoPrefs::save(const QString &filename)
 	theFile->setNumber("bangla_font_size",banglaFont.pointSize());
 	theFile->setString("english_font", englishFont.family() );
 	theFile->setNumber("english_font_size",englishFont.pointSize());
-
 	theFile->setString("foreground_color",foreground.name());
 	theFile->setString("background_color",background.name());
+
+	//advanced
+	theFile->setGroup("advanced");
+	theFile->setBool("cursor_blinks",cursorBlink);
+	theFile->setBool("word_wrap",wordWrap);
 
 	theFile->flush();
 	//theFile->writeData();

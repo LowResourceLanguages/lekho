@@ -58,6 +58,19 @@
 #include "fileopen.xpm"
 #include "fileprint.xpm"
 
+//small util function
+QString stripFileName(const QString &fn)
+{
+	//char sep = QDir::separator ();	//just to be safe...
+
+	int i = fn.findRev("/",-1);
+
+	if(i > 0)
+		return(fn.left(i));
+	else
+		return("./");
+}
+
 /*
  * Just fill 'er up with all the buttons and things you want
  */
@@ -67,6 +80,12 @@ ApplicationWindow::ApplicationWindow()
     printer = new QPrinter;
 
     QPixmap openIcon, saveIcon, printIcon;
+
+    //read in prefs. some prefs affect how we set our defaults...
+    readPrefs();
+
+    //setting up the bangla editor, once again don't want defaulst overridden by BanglaTextEdit constructor
+    e = new BanglaTextEdit( this, "Lekho" );
 
     //set up the tool bar
     QToolBar * fileTools = new QToolBar( this, "file operations" );
@@ -164,6 +183,7 @@ ApplicationWindow::ApplicationWindow()
     action->setOn( true );
     connect( action, SIGNAL( toggled(bool) ), this , SLOT( setWordWrap(bool) ) );
     action->addTo( options );
+    action->setOn( thePref.wordWrap );
 
     options->insertSeparator();
 
@@ -177,13 +197,12 @@ ApplicationWindow::ApplicationWindow()
 
     //cursor blink
     QPopupMenu *advanced = new QPopupMenu( this );
-    delete action ;
     action = new QAction( tr("Cursor blink"), tr("C&ursor blink"), 0, this );
     action->setToggleAction(true);
     action->setOn( true );
     connect( action, SIGNAL( toggled(bool) ), this , SLOT( setCursorBlink(bool) ) );
     action->addTo( advanced );
-
+    action->setOn( thePref.cursorBlink );
 
     options->insertItem( "&Advanced...", advanced);
 
@@ -203,12 +222,12 @@ ApplicationWindow::ApplicationWindow()
 
 
     //setting up the bangla editor
-    e = new BanglaTextEdit( this, "Lekho" );
+//    e = new BanglaTextEdit( this, "Lekho" );
 
     e->setFocus();
     setCentralWidget( e );
 
-    readPrefs();
+//    readPrefs();
     initialiseParser();
     initialiseScreenFontConverter();
 
@@ -316,10 +335,7 @@ void ApplicationWindow::choose()
     QString fn = QFileDialog::getOpenFileName( thePref.workingDir, QString::null,
 					       this);
     if ( !fn.isEmpty() )
-    {
 	load( fn );
-	filename = fn ;
-    }
     else
 	statusBar()->message( "Loading aborted", 2000 );
 }
@@ -341,6 +357,9 @@ void ApplicationWindow::load( const QString &fileName )
 
     cout << "Done... " << endl << flush ;
     statusBar()->message( "Loaded document " + fileName, 2000 );
+
+    thePref.workingDir = stripFileName(fileName);	//not a robust function, gets rid of chars after last "/"
+    filename = fileName ;
 }
 
 
@@ -370,6 +389,8 @@ void ApplicationWindow::save()
     setCaption( filename );
 
     statusBar()->message( QString( "File %1 saved" ).arg( filename ), 2000 );
+
+    thePref.workingDir = stripFileName(filename);	//not a robust function, gets rid of chars after last "/"
 }
 
 
@@ -410,12 +431,14 @@ void ApplicationWindow::HTMLexport()
 
     statusBar()->message( QString( "File %1 exported" ).arg( htmlname ), 2000 );
 
+    thePref.htmlDir = stripFileName(htmlname);	//not a robust function, gets rid of chars after last "/"
+
 }
 
 
 void ApplicationWindow::HTMLexportAs()
 {
-    QString fn = QFileDialog::getSaveFileName( thePref.workingDir, QString::null,
+    QString fn = QFileDialog::getSaveFileName( thePref.htmlDir, QString::null,
 					       this );
     if ( !fn.isEmpty() ) {
 	htmlname = fn;
@@ -479,6 +502,8 @@ void ApplicationWindow::print()
 
 void ApplicationWindow::setWordWrap(bool ww)
 {
+	thePref.wordWrap = ww ;
+
 	if(ww)
 		e->wordWrapOn();
 	else
@@ -487,6 +512,8 @@ void ApplicationWindow::setWordWrap(bool ww)
 
 void ApplicationWindow::setCursorBlink(bool cb)
 {
+	thePref.cursorBlink = cb ;
+
 	if(cb)
 		e->cursorBlinkOn();
 	else

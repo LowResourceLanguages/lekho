@@ -109,7 +109,7 @@ private:
 
     QString filename, htmlname, latexname;
 
-    QDir working, latex, html ;
+    //QDir working, latex, html ;
 };
 
 

@@ -504,9 +504,10 @@ void BanglaTextEdit::drawContents(QPainter *p, int cx, int cy, int cw, int ch)
 		p->setRasterOp(NotXorROP);
 
 		if(bangla.isBangla())
-			p->drawRect(cursorRect);
-		else
+			//p->drawRect(cursorRect);
 			p->fillRect(cursorRect,QBrush(QBrush::SolidPattern));
+		else
+			p->fillRect(cursorRect,QBrush(QBrush::Dense5Pattern));
 		p->setRasterOp(CopyROP);
         }
 
@@ -604,6 +605,8 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 				theMessage = "Bangla  | " ;
 			else
 				theMessage = "English | " ;
+			cursorErase();
+			cursorDraw();
 			break;
 
 		case	Key_Left:
@@ -1007,7 +1010,17 @@ void BanglaTextEdit::clipBoardOp(int id)
 			theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
 		break;
 	case PasteRomanised:
-		parseKeyHit(cb->text());
+		if(bangla.isBangla())
+		{
+			keyPressEventFlushBangla();
+			parseKeyHit(cb->text());
+		}
+		else
+		{
+			bangla.toggleLanguage();
+			parseKeyHit(cb->text());
+			bangla.toggleLanguage();
+		}
 		keyPressEventFlushBangla();
 		break;
 	}
@@ -1023,12 +1036,11 @@ void BanglaTextEdit::timerEvent(QTimerEvent *event)
 //modified to only blink if told...
 
 	if(theCursor.blinkOn)
-	{
 		theCursor.cursorOn = !theCursor.cursorOn;
-		updateContents(calculateCursorRect());
-	}
 	else
 		theCursor.cursorOn = true ;
+
+	updateContents(calculateCursorRect());
 }
 
 

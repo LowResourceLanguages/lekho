@@ -78,6 +78,9 @@ struct LekhoPrefs
 	QColor	foreground,
 		background ;
 
+	bool	cursorBlink,
+		wordWrap  ;
+
 	bool	load(const QString& );
 	bool	save(const QString& );
 };
