@@ -1,34 +1,27 @@
-[initfile]
-.lekhorc
-[initdir]
-.lekho/
-[modifierfile]
-kar.txt
-[modifiablefile]
-jukto.txt
-[unmodifiablefile]
-shor.txt
-[screenfontfile]
-adarshalipi.txt
-[workingdir]
-../v1.0/examples/
-[htmldir]
-html
-[latexdir]
-latex
-[posx]
-10
-[posy]
-100
-[height]
-400
-[width]
-600
-[banglafont]
-AdarshaLipiExp 20 
-[englishfont]
-arial 15 
-[foreground]
-0 0 0
-[background]
-255 255 255 
+<!DOCTYPE preferences>
+<preferences application="lekho" version="0.0" >
+ <group name="appearance" >
+  <option key="background_color" value="#000000" />
+  <option key="bangla_font" value="AdarshalipiExp" />
+  <option key="bangla_font_size" value="15" />
+  <option key="english_font" value="Arial" />
+  <option key="english_font_size" value="12" />
+  <option key="foreground_color" value="#dedede" />
+  <option key="lekhorc" value=".lekhorc" />
+ </group>
+ <group name="directories" >
+  <option key="htmldir" value="./" />
+  <option key="latexdir" value="./" />
+  <option key="workingdir" value="examples/" />
+ </group>
+ <group name="startup" >
+  <option key="banjonborno" value="jukto.txt" />
+  <option key="initdir" value=".lekho/" />
+  <option key="karchinno" value="kar.txt" />
+  <option key="lekhorc" value=".lekhorc" />
+  <option key="screenfont" value="adarshalipi.txt" />
+  <option key="shoroborno" value="shor.txt" />
+  <option key="xpos" value="600" />
+  <option key="ypos" value="10" />
+ </group>
+</preferences>
