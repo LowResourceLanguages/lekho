@@ -24,7 +24,7 @@ a += " </group>\n";
 a += " <group name=\"startup\" >\n";
 a += "  <option key=\"banjonborno\" value=\"jukto.txt\" />\n";
 a += "  <option key=\"height\" value=\"632\" />\n";
-a += "  <option key=\"initdir\" value=\".lekho/\" />\n";
+a += "  <option key=\"initdir\" value=\"./\" />\n";
 a += "  <option key=\"karchinno\" value=\"kar.txt\" />\n";
 a += "  <option key=\"lekhorc\" value=\".lekhorc\" />\n";
 a += "  <option key=\"screenfont\" value=\"adarshalipi.txt\" />\n";
