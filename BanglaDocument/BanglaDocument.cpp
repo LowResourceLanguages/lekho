@@ -131,9 +131,11 @@ int BanglaDocument::getLineWidth(int para, int line)
 	if((*screenMapLineAt(line)).para  != para) //not good, you screwed up again, get out
 		return(0);
 
+	return( screenWidth );
+/*
 	return (*documentLineAt(para)).letterWidth((*screenMapLineAt(line)).startCol,
 						(*screenMapLineAt(line)).endCol);
-
+*/
 }
 
 int BanglaDocument::getMaxLineWidth()
@@ -210,6 +212,8 @@ void BanglaDocument::wrapWholeDocument()
 
 //return the last screenLine added
 //NOTE: you HAVE to get line_ and para correct, otherwise bang !
+//this gets called twice during typing - once during the deleteing of the partial code and the nex
+//durign the insertion of the next code
 int BanglaDocument::wrapParagraph(int para, int line_)
 {
 
@@ -764,6 +768,26 @@ void BanglaDocument::findWord(QPoint &start, QPoint &end, const QString &wd, con
 		end.setX(wdCol.y());
 	}
 
+}
+
+//find the start and stop of the next word from the given start position
+void BanglaDocument::findNextWord(QPoint &start, QPoint &end, QString &wd, const QPoint &paracolStart)
+{
+	int 	paraSt = paracolStart.y() ;
+
+	QPoint	wdCol(-1,-1) ;
+
+	//there has to be a word end and start, even if it spans the entire para
+	documentLineMemoryMoveTo(paraSt) ;
+	wdCol = (*documentLineAt(paraSt)).findNextWord(wd, paracolStart.x()) ;
+
+	start.setY(paraSt);
+	end.setY(paraSt);
+
+	start.setX(wdCol.x());
+	end.setX(wdCol.y());
+
+	return ;
 }
 
 //inserts a lot of letters in a given line. Looks out for and handles newlines

@@ -2,9 +2,9 @@ English manual for লেখ
 
 0. Lekho is still in the beta phase, so please save your work often. Lekho hasn't crashed on me yet, but there's always a first time...
 
-1. You can type both Bangla and English using  Lekho. To toggle the language you type press the ESC key. From version 1.1the cursor no longer changes appearance depending on the language, this was a little clumsy.
+1. You can type both Bangla and English using  Lekho. To toggle the language you type press the ESC key. From version 1.1 the cursor no longer changes appearance depending on the language, this was a little clumsy but the message bar at the bottom of the window displays the current language
 
-2. The romanisation rules are shown in parser.txt. This file shows you what to type on the English keyboard to get a particular Bangla letter.
+2. To know what to type on the English keyboard to get a particular Bangla letter hit "F1". This should pop up a new window showing the "keymap"
 
 3. To get the bangla vowel modifier signs you need to type the consonant first then the vowel modifier	e.g.
 

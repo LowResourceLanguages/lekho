@@ -1,13 +1,13 @@
 <!doctype html public "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-   <meta name="Author" content="Kaushik Ghose">
-   <meta name="GENERATOR" content="human">
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+   <meta name="Author" content="Me">
+   <meta name="GENERATOR" content="Lekho">
    <meta name="Keywords" content="">
    <meta name="Classification" content="">
    <title>
-   "লেখ" program ব্যভারের  সংক্ষিপ্ত নিয়মাবলী
+   untitled
    </title>
 </head>
 <body text="#FFFFFF" bgcolor="#000000" link="#FFFFCC" vlink="#D3D3D3" alink="#FF0000">
@@ -17,10 +17,10 @@
 আপনার যদি এই program শম্পর্কে কিছু বলার থাকে kghose@users.sourceforge.net-এ মেইল পাঠান<br>
 <br>
 ১। <br>
-লেখার ভাষা পরিবর্তনের  জন্য esc চাবি টিপতে হবে। বাংলা ভাষায় লেখার শময় cursor টি মটা রঙে আকা হবে, ইংরিজি লেখার শময় cursor টি একটু আবঝা দেখাবে। (নিজে একবার দুবার esc টিপে দেখে নিন)<br>
+লেখার ভাষা পরিবর্তনের  জন্য esc চাবি টিপতে হবে। নিচের "message bar"-এ লেখা থাকবে "bangla" বা "English"। (নিজে একবার দুবার esc টিপে দেখে নিন)<br>
 <br>
 ২।<br>
-কি চাবি টিপলে কি বাংলা বর্ণ ছাপা হবে লেখা আছে parser.txt ফাইলে। এই ফাইলটি দেখার জন্য file মেনু থেকে new টিপে নতুন  window খুলুন। তারপর  file->open থেকে parser.txt ফাইল খুলে পাশাপাশি দেখুন।<br>
+কি চাবি টিপলে কি বাংলা বর্ণ ছাপা হবে F1 চাবি টিপলে জেনতুন window খুলবে শেখানে দেখতে পারবেন (F1 চাবি টিপে দেখুন)<br>
 <br>
 ৩।<br>
 স্বরচিহ্ন ছাপতে গেলে ব্যঞ্জন বর্ণ প্রথমে লিখে তারপর স্বরচিহ্ন লিখুন, অর্থাত্‌:<br>
@@ -31,6 +31,12 @@ ku = ক + উ = কু<br>
 kU = ক + ঊ = কূ<br>
 kR = ক + ঋ = কৃ<br>
 <br>
+যদি কন কারনে স্বরচিহ্ন একলা ছাপতে দরকার হয় তা হলে প্রথমে '*' চিহ্ন টিপে তার পর স্বর চিহ্ন টিপবেন। অর্থাত:<br>
+*i = ি<br>
+*I = ী<br>
+*R = ৃ<br>
+ইত্যাদি<br>
+ <br>
 ৪।যুক্তবর্ণ লিখতে গেলে '/' চাবি ব্যবহার করতে হবে, যেমন: <br>
 Juk/tbr/N = যুক্তবর্ণ<br>
 Ju = যু<br>
@@ -40,10 +46,12 @@ r/N = র + ণ = র্ণ<br>
 অন্যান্য  উদাহরণ:<br>
 p/ra = প + র + আ = প্রা<br>
 <br>
+juktolist.txt ফাইলে বাংলার শব শাধারনত ব্যাভারিত যুক্তবর্ণর ফর্দা আছে।<br>
+<br>
 হসন্ত লিখতে গেলে '/'+'\' লিখতে হবে, যেমন:<br>
 hak/\ka nuDel/\ = হাক্‌কা নুডেল্‌।<br>
 <br>
-কিছু খেত্রে অপনি দুট বর্ণ লিখটে চান, কিনতু চাবি টেপলে একটা অন্য বর্ণ বেরয় - ধরুন লিখতে চান "বই", লেখলেন bi, পেলেন বি, কি মুশকিল। চিন্তা করার কিছুনেই, মাঝখানে "x" টিপে দেবেন, যেমন<br>
+কিছু খেত্রে অপনি দুট বর্ণ লিখতে চান, কিনতু চাবি টেপলে একটা অন্য বর্ণ বেরয় - ধরুন লিখতে চান "বই", লিখলেন bi, পেলেন বি, কি মুশকিল। চিন্তা করার কিছুনেই, মাঝখানে "x" টিপে দেবেন, যেমন<br>
 bxi = বই, বা <br>
 b/Jbxhar = ব্যবহার<br>
 <br>
@@ -72,24 +80,23 @@ utf-8, utf-16 হচ্ছে encoding-এর উপায়:<br>
 <br>
 আমি একটু গবেশনা করে বার কোরেছি কন কন program থেকে clipboard-এ কি format-এ copy হয়।<br>
 <br>
-Netscape 4.2 (linux ও windows)	utf-8<br>
-Internet Explorer 6	utf-8<br>
-opera 6	utf16<br>
+Netscape 4.2 (linux ও windows)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	utf-8<br>
+Inernet Explorer 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	utf-8<br>
+opera 6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	utf16<br>
 <br>
 খ)<br>
 copy as character reference:<br>
-এই উপায় বাংলা বা ইংরাজি বর্ণ গুল "&#xxxx" হিশাবে paste হয় xxxx হচ্ছে একতা decimal নম্বর। এই ওদভুত code গুলি যদি আপনি কোন html editor-এ paste করেন (e.g. netscape composer), তাহলে শেই webpage ঠিক browser (opera বা internet explorer 6) দিয়ে দেখলে বাংলা বর্ণগুল দেখতে পারবেন।<br>
+এই উপায় বাংলা বা ইংরাজি বর্ণ গুল "&#xxxx" হিশাবে paste হয়। xxxx হচ্ছে একতা decimal নম্বর। এই ওদভুত code গুলি যদি আপনি কোন html editor-এ paste করেন (e.g. netscape composer), তাহলে শেই webpage ঠিক browser (opera বা internet explorer 6) দিয়ে দেখলে বাংলা বর্ণগুল দেখতে পারবেন।<br>
 <br>
 গ)<br>
 paste as romanised:<br>
-এই উপায় ব্য়বহার করবেন জখন আপনার কিছু বাংলা কথা ইংরেজিতে phonetically লেখা আছে, ধরুন আপনার বন্ধু আপনাকে ইমাইল পাঠিয়েছে "tui kemon aachish ?" লিখে। আপনি এই লেখাটি নির্দিশ্ত করে copy করে লেকর windowতে মাউস এনে টিপলেন "paste from romanised", screen-এ ফুটে উঠল "তুই কেমোন আচিশ ?"। উপায় টা নির্ভুলত নয়ই, কিন্তু মটা মটি কাজ করে।  <br>
+এই উপায় ব্যাবহার করবেন জখন আপনার কিছু বাংলা কথা ইংরেজিতে phonetically লেখা আছে, ধরুন আপনার বন্ধু আপনাকে ইমাইল পাঠিয়েছে "tui kemon aachish ?" লিখে। আপনি এই লেখাটি নির্দিশ্ত করে copy করে লেখর windowতে মাউস এনে টিপলেন "paste from romanised", screen-এ ফুটে উঠল "তুই কেমোন আচিশ ?"। উপায় টা নির্ভুলত নয়ই, কিন্তু মটা মটি কাজ করে।  <br>
 <br>
 ঘ)<br>
 export html <br>
-এই উপায় দেয়ে আপনি লেখাটা webpage হিশাবে save কোরতে পারেন। export হয় adarshalipi font-এ। এই webpage, জে কোন browser-এ দেখা যায়, adarshalipi font থাকলেই হোল। যেমন, help_lipi.html এই ফাইল (help.txt) থেকে বানান হয়ছে export html ব্যভার করে।<br>
+এই উপায় দিয়ে আপনি লেখাটা webpage হিশাবে save কোরতে পারেন। export হয় adarshalipi font-এ। এই webpage, জে কোন browser-এ দেখা যায়, adarshalipi font থাকলেই হোল। যেমন, help_lipi.html এই ফাইল (help.txt) থেকে বানান হয়ছে export html ব্যভার করে।<br>
 <br>
 ঙ)<br>
 export latex<br>
-আপনার যদি bangtex এবং latex computer-এ থাকে, তাহলে আপনি bangtex macro হিশাবে ফাইল export কর্তেপারেন। bangtex_example.tex ফাইল একবার দেখুন।
-</body>
+আপনার যদি bangtex এবং latex computer-এ থাকে, তাহলে আপনি bangtex macro হিশাবে ফাইল export কর্তেপারেন। bangtex_example.tex ফাইল একবার দেখুন।</body>
 </html>

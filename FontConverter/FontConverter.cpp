@@ -168,7 +168,6 @@ QString FontConverter::unicode2screenFont(QString uc)
 		uc = uc.left(uc.length()-1);
 	}
 
-
 	//take out jawfola
 	if(uc.right(2).find(jawphola) > -1)
 	{
@@ -223,7 +222,7 @@ QString FontConverter::unicode2screenFont(QString uc)
 	if(temp.isEmpty())
 	{
 		if(out.isEmpty())
-			out += QChar(0x5e);
+			out += " ";//a blank looks prettier //QChar(0x5e);
 	}
 	else
 	{

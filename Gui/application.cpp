@@ -62,6 +62,7 @@
 #include "fileprint.xpm"
 
 #include<FindDialog.h>
+#include<SpellDialog.h>
 
 //small util function
 QString stripFileName(const QString &fn)
@@ -197,6 +198,10 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     //Edit
     QPopupMenu *edit = new QPopupMenu( this );
     edit->insertItem( "&Find", this, SLOT(find()), Key_F3 );
+    edit->insertItem( "&Spell", this, SLOT(spellCheck()), Key_F2 );
+
+    edit->insertSeparator();
+
     edit->insertItem( "Copy", this, SLOT(copy()), CTRL+Key_C);		//utf-16 ops
     edit->insertItem( "Paste", this, SLOT(paste()), CTRL+Key_V );	//utf-16 ops
     edit->insertItem( "Cut", this, SLOT(cut()), CTRL+Key_X );	//utf-16 ops
@@ -260,6 +265,8 @@ ApplicationWindow::ApplicationWindow(QStringList &sl)
     initialiseParser();
     initialiseScreenFontConverter();
     initialiseLatexConverter();
+
+    banan->setDictDir( thePref.dictDir );
 
     e->setFonts(thePref.banglaFont, thePref.englishFont);
     e->setColors(thePref.foreground, thePref.background);
@@ -481,6 +488,7 @@ void ApplicationWindow::choose()
 	load( fn );
     else
 	statusBar()->message( "Loading aborted", 2000 );
+
 }
 
 
@@ -782,6 +790,16 @@ void ApplicationWindow::find()
 	connect(fd, SIGNAL(replaceAll(const QStringList &)), e, SLOT(replaceAll(const QStringList &)) );
 	connect(fd, SIGNAL(top()), e, SLOT(top()) );
 }
+
+void ApplicationWindow::spellCheck()
+{
+	SpellDialog *fd = new SpellDialog(e, "Spell", this);
+	connect(fd, SIGNAL(findNext()), e, SLOT(findWrongWord()) );
+	connect(e, SIGNAL( foundWrongWord(const QString& ) ), fd , SLOT( wordFound(const QString &) ) );
+	connect(fd, SIGNAL(replace(const QString &)), e, SLOT(replaceWrongWordWith(const QString &)) );
+	connect(fd, SIGNAL(top()), e, SLOT(top()) );
+}
+
 
 void ApplicationWindow::copy()
 {

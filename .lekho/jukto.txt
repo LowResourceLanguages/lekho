@@ -19,7 +19,7 @@ D	1	09a1
 Dh	1	09a2
 N	1	09a3
 t	1	09a4
-tt	3	09a4 	09cd 	200d
+tt      3       09a4    09cd    200d
 th	1	09a5
 d	1	09a6
 dh	1	09a7
@@ -39,5 +39,4 @@ h	1	09b9
 rh	1	09dc
 rhh	1	09dd
 y	1	09df
-\	1	200c
-
+\       1       200c

@@ -90,7 +90,8 @@ private slots:
 	void print();
 
 	void find();
-
+	void spellCheck();
+	
 	void setWordWrap(bool ww);
 	void setCursorBlink(bool cb);
 	void chooseEnglishFont();

@@ -27,13 +27,17 @@
 ** program may be used, distributed and modified without limitation.
 **
 *****************************************************************************/
-#define	LEKHO_VERSION "1.0"
+#define	LEKHO_VERSION "1.1"
 
 #include <qtextstream.h>
 #include <qapplication.h>
 
 #include <lekhostream.h>
+#include <SearchDictionary.h>
 #include "application.h"
+
+
+SearchDictionary	*banan;			//spelling dict
 
 QTextStream Qcout( stdout, IO_WriteOnly );	//same as cout etc...
 QTextStream Qcin ( stdin,  IO_ReadOnly );
@@ -56,6 +60,8 @@ int main( int argc, char ** argv )
 {
     QApplication a( argc, argv );
 
+    banan = new SearchDictionary ;
+
     QStringList fileList ;
     for(int i = 1 ; i < a.argc() ; i++)
     	fileList.append( a.argv()[i] );
@@ -65,5 +71,10 @@ int main( int argc, char ** argv )
     a.connect( &a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()) );
 
     showLicense() ;
-    return a.exec();
+    int returnVal = a.exec();
+
+    //clean up the mess you left when you went away
+    delete banan ;
+
+    return returnVal ;
 }

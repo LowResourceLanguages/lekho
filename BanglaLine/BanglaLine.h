@@ -90,6 +90,8 @@ public:
 	//return -1 if not found
 	QPoint findWord(const QString &w, int startCol=0, int endCol=-1);
 
+	//find the start and end columns of the next word
+	QPoint findNextWord(QString &wd, int startCol);
 
 public:
 	friend QTextStream& operator << (QTextStream& pipe , BanglaLine& b);

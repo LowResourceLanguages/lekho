@@ -20,6 +20,7 @@
 
 /* this file will get bigger and bigger as the interface gets more complicated, but
    BanglaTextEdit and BanglaDocument etc. shouldn't be affected....
+   This file is badly named. It should be named LekhoGlobal...
 */
 
 #ifndef LEKHOSTREAM_H
@@ -27,9 +28,12 @@
 
 #include <qtextstream.h>
 
+#include <SearchDictionary.h>
+
 extern QTextStream Qcout ;	//same as cout etc...
 extern QTextStream Qcin  ;
 extern QTextStream Qcerr ;
 extern QTextStream debugStream ;				//dump all debug messages here
 
+extern SearchDictionary *banan ;	//the spelling dict
 #endif

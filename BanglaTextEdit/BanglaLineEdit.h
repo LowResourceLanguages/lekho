@@ -35,6 +35,9 @@ public:
 	//so we trap it
 	void keyPressEvent(QKeyEvent *event);
 
+	//flush the parser...
+	void flush();
+
 signals:
 	void returnPressed();
 

@@ -37,6 +37,9 @@ bool LekhoPrefs::load(const QString &filename)
 	unmodifiableFileName = theFile->getString("shoroborno","shor.txt");	//shoroborno
 	screenfontFileName = theFile->getString("screenfont","adarshalipi.txt");	//unicode->screenfont rules file
 	latexFileName = theFile->getString("latex","bangtex.txt");	//unicode->screenfont rules file
+
+	dictDir = theFile->getString("banan directory","Dict/");	//spellings
+
 	pos.setX(theFile->getNumber("xpos",10));
 	pos.setY(theFile->getNumber("ypos",10));
 	pos.setWidth(theFile->getNumber("width",600));
@@ -82,6 +85,9 @@ bool LekhoPrefs::save(const QString &filename)
 	theFile->setString("shoroborno",unmodifiableFileName);	//shoroborno
 	theFile->setString("screenfont",screenfontFileName);	//unicode->screenfont rules file
 	theFile->setString("latex",latexFileName);		//unicode->bangtex
+
+	theFile->setString("banan directory", dictDir);		//unicode->bangtex
+
 	theFile->setNumber("xpos",pos.x());
 	theFile->setNumber("ypos",pos.y());
 	theFile->setNumber("width",pos.width());

@@ -62,6 +62,8 @@ protected:
 	QValueList<ScreenLine> screenMapLine ;
 	bool wordWrap ;
 
+	//QValueList<uint>	screenLineLengths ;
+
 	int 	lineHeight,
 		linesInPage ,
 		screenWidth,
@@ -142,6 +144,9 @@ public:
 	//set portion of the document.
 	//return -1 in column if not found
 	void findWord(QPoint &start, QPoint &end, const QString &wd, const QPoint &paracolStart, const QPoint &paracolEnd);
+
+	//find the start and stop of the next word from the given start position
+	void findNextWord(QPoint &start, QPoint &end, QString &wd, const QPoint &paracolStart);
 
 	//inserts letters starting at a given line. If the line is 1+ the last line
 	//a new line is added

@@ -47,6 +47,15 @@ inline bool isBangla(const QChar &text)
 	return false ;
 }
 
+//small utility function is this a bangla number ?
+inline bool isBanglaNumber(const QChar &text)
+{
+	if( (text.unicode() >= 0x09e6) & (text.unicode() <= 0x09ef) )
+		return true ;
+	else
+		return false ;
+}
+
 
 
 

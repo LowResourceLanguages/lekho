@@ -141,7 +141,7 @@ BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *paren
 	setFonts(bf , ef );
 	setTabWidth(bte->tabWidth);
 
-	bangla = new Parser(bte->bangla) ;	//need to copy the parser over, sicne it has a state
+	bangla = new Parser(bte->bangla) ;	//need to copy the parser over, since it has a state
 	//bangla = bte->bangla ;
 	lipi = bte->lipi ;			//lipi has no state, can share it
 
@@ -419,6 +419,7 @@ void BanglaTextEdit::highlightWord(const QString &wd)
 	{
 		wordFound = false ;
 		top();
+		emit statusBarMessage( "Finished search wrapping to top" ) ;
 	}
 
 }
@@ -475,6 +476,98 @@ void BanglaTextEdit::replaceAll(const QStringList &w)
 
 		highlightWord(w[0]);
 	}
+}
+
+
+//spell checker...
+//not very well written and pretty inflexible
+//uses the global dictionary banan
+//for future expansion, banan will carry all the optins (eg replace all, or what ever..)
+
+void BanglaTextEdit::findWrongWord()
+{
+	QString wrongWord ;
+	findNextWrongWord( wrongWord ) ;
+	emit foundWrongWord( wrongWord ) ;
+}
+
+//find , from current cursor pos, the next badly spelt word,
+//highlight it and return it.
+//NB: here wordFound means a badly spelt owrd has been found
+void BanglaTextEdit::findNextWrongWord(QString &wd)
+{
+	hasSelText = false ;
+	wordFound = true ;
+
+	int lastLine = theDoc.totalLines();
+	QPoint paracolStart = theCursor.paracol ;
+	QPoint selStart(-1,-1), selEnd(-1,-1) ;
+
+
+	theDoc.findNextWord(selStart, selEnd, wd, paracolStart);
+	while( banan->lookUpWord( wd ) )
+	{
+		if ( selEnd.x() >= theDoc.lettersInLine( paracolStart.y() ) - 1 )//end of this line
+		{
+			paracolStart.setY( paracolStart.y() + 1 ) ;
+			if ( paracolStart.y() >= lastLine )
+			{
+				wordFound = false ;
+				break ;
+			}
+			paracolStart.setX( 0 ) ;
+		}
+		else
+			paracolStart.setX( selEnd.x() + 1 ) ;
+
+		theDoc.findNextWord(selStart, selEnd, wd, paracolStart);
+	}
+
+	if( wordFound )
+	{
+		paracolSelStart = selStart ;
+		paracolSelEnd = selEnd;
+		paracolSelEnd.setX(paracolSelEnd.x())  ;
+		hasSelText = true ;
+		xySelStart = theDoc.paracol2xy(paracolSelStart);
+		xySelEnd = theDoc.paracol2xy(paracolSelEnd);
+
+		cursorErase();
+		theCursor.xy = xySelStart ;
+		theCursor.paracol = paracolSelEnd ;
+		theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+		cursorDraw();
+
+		//another leetle hack -10
+		ensureVisible ( theCursor.xy.x() - 10 , theCursor.xy.y() + theDoc.getLineHeight(),
+				10, theDoc.getLineHeight()) ;
+		emit statusBarMessage( "Found wrong spelling" ) ;
+
+		viewport()->update();
+	}
+	else	//go to top
+	{
+		top();
+		emit statusBarMessage( "Finished spell check wrapping to top" ) ;
+	}
+
+}
+
+//it only checks if a wrong word has been flagged (i.e. selected)
+//and replaces it with this one
+void BanglaTextEdit::replaceWrongWordWith(const QString &wd)
+{
+	hasSelText = false ;
+	wordFound = false ;
+
+	cursorErase();
+	theCursor.paracol = paracolSelStart ;
+	del(paracolSelStart.y(), paracolSelStart.x(), paracolSelEnd.y(), paracolSelEnd.x()-1);
+	theCursor.paracol.setX( theCursor.paracol.x() + insert(paracolSelStart.y(), paracolSelStart.x(), wd) );
+	theDoc.moveCursor( Key_unknown, theCursor.xy, theCursor.paracol);
+	cursorDraw();
+
+	viewport()->update();
 }
 
 //get an existing one
@@ -758,7 +851,7 @@ void BanglaTextEdit::drawContents(QPainter *ptr, int cx, int cy, int cw, int ch)
 		curry = startLine*lineHeight ;
 
 	//leettle hack here, + 20 for safety
-	resizeContents( theDoc.getMaxLineWidth() + 20, lineHeight * theDoc.totalScreenLines());
+	resizeContents( theDoc.getMaxLineWidth() , lineHeight * theDoc.totalScreenLines());
 
 
 	//double buffering...
@@ -929,7 +1022,7 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 	if(event->state() == ShiftButton)
 		shiftPress = true ;
 
-		
+
 	switch (event->key())
 	{
 		case 	Key_Escape:
@@ -1210,15 +1303,16 @@ void BanglaTextEdit::contentsMousePressEvent ( QMouseEvent *mausevent )
 	if(revealUnicode)
 	{
 		theMessage += " Unicode : " ;
-		QString theChar ;
+		QString theChar, screenFont ;
 		theDoc.unicode(paracol.y(),paracol.x(),paracol.y(),paracol.x(),theChar);
+		theDoc.screenFont(paracol.y(),paracol.x(),paracol.y(),paracol.x(), screenFont);
 
 		int i ;
 		for(i = 0 ; i < (int)theChar.length() ; i++)
 			theMessage += "0x" + QString::number(theChar.ref(i).unicode(),16) + " " ;
 
-		for(i = 0 ; i < (int)theChar.length() ; i++)
-			theMessage += "(" + QString::number(theChar.ref(i).unicode(),10) + ")";
+		for(i = 0 ; i < (int)screenFont.length() ; i++)
+			theMessage += "(" + QString::number(screenFont.ref(i).unicode(),16) + ")";
 		//Qcout << theMessage << endl << flush ;
 	}
 
@@ -1463,12 +1557,23 @@ bool BanglaTextEdit::print_Page(QPainter *p, int &startLine, int &endLine)
 	return true ;
 }
 
+//oooh, the windows printer is soooo hacked....
 //main print function
 bool BanglaTextEdit::print(QPrinter *printer)
 {
 #ifndef QT_NO_PRINTER
 
 	printer->setFullPage(true);
+
+#ifdef _WS_WIN_
+	//hack for windows printing
+	QFont 	printingBanglaFont = banglaFont,
+		printingEnglishFont = englishFont ;
+
+	printingBanglaFont.setPointSize(QFontInfo(banglaFont).pointSize() * 4) ;
+	printingEnglishFont.setPointSize(QFontInfo(englishFont).pointSize() * 4) ;
+	setFonts(printingBanglaFont, printingEnglishFont);
+#endif
 
 	//from application.cpp's constructor we've set the default page to potrait
 	//and have some default margins etc.
@@ -1516,7 +1621,13 @@ bool BanglaTextEdit::print(QPrinter *printer)
 		//init printer
 		QPainter p;
 		if( !p.begin( printer ) )               // paint on printer
-	    		return false ;
+		{
+#ifdef _WS_WIN_
+			//hack for windows printing
+			setFonts(banglaFont, englishFont);
+#endif
+			return false ;
+		}
 
 		p.setWindow(-horizMar, -vertMar, w + 2 * horizMar, h + 2 * vertMar);
 
@@ -1555,7 +1666,13 @@ bool BanglaTextEdit::print(QPrinter *printer)
 
 			int page = startPage ;
 			if(!print_Page(&p, breaks[page], breaks[page+1]))
+			{
+#ifdef _WS_WIN_
+				//hack for windows printing
+				setFonts(banglaFont, englishFont);
+#endif
 				return false;
+			}
 
 			emit statusBarMessage( "Printing page " + QString::number(page+1) + " of "
 				+ QString::number(pageCount) +
@@ -1570,7 +1687,14 @@ bool BanglaTextEdit::print(QPrinter *printer)
 				printer->newPage();
 
 				if(!print_Page(&p, breaks[page], breaks[page+1]))
+				{
+#ifdef _WS_WIN_
+					//hack for windows printing
+					setFonts(banglaFont, englishFont);
+#endif
 					return false;
+				}
+
 				emit statusBarMessage( "Printing page " + QString::number(page+1) + " of "
 					+ QString::number(pageCount) +
 					" copy " + QString::number(copy+1) + " of " + QString::number( printer->numCopies() )) ;
@@ -1579,8 +1703,13 @@ bool BanglaTextEdit::print(QPrinter *printer)
 		}
 	}
 
-	return true ;
+#ifdef _WS_WIN_
+	//hack for windows printing
+	setFonts(banglaFont, englishFont);
 #endif
+
+	return true ;
+#endif	//QT_NO_PRINTER
 }
 
 //cursor related stuff
@@ -1642,14 +1771,14 @@ void BanglaTextEdit::cursorDraw()
 void BanglaTextEdit::wordWrapOn()
 {
 	theDoc.wordWrapOn();
-	theDoc.moveCursor(Qt::Key_unknown, theCursor.xy, theCursor.paracol);
+	theDoc.moveCursor(Qt::Key_unknown, theCursor.xy, theCursor.paracol);//ensures cursor draw at proper locn
 	viewport()->update();
 }
 
 void BanglaTextEdit::wordWrapOff()
 {
 	theDoc.wordWrapOff();
-	theDoc.moveCursor(Qt::Key_unknown, theCursor.xy, theCursor.paracol);
+	theDoc.moveCursor(Qt::Key_unknown, theCursor.xy, theCursor.paracol);//ensures cursor draw at proper locn
 	viewport()->update();
 }
 

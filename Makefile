@@ -27,7 +27,7 @@ CXXFLAGS = -pipe -Wall -W -g -O4
 #CXXFLAGS = -pipe -Wall -W -O3
 LEXFLAGS = 
 YACCFLAGS= -d
-INCPATH  = -IGui -IBanglaLetter -IBanglaLine -IBanglaDocument -IBanglaTextEdit -IBanglaSegment -IFontConverter -ICodeTreeElement -IParser -Iinclude -I$(QTDIR)/include -I$(QTDIR)/mkspecs/default
+INCPATH  = -IGui -IBanglaLetter -IBanglaLine -IBanglaDocument -IBanglaTextEdit -IBanglaSegment -IFontConverter -ICodeTreeElement -IBanan -IParser -Iinclude -I$(QTDIR)/include -I$(QTDIR)/mkspecs/default
 LINK     = g++
 LFLAGS   = 
 LIBS     = $(SUBLIBS) -Wl,-rpath,$(QTDIR)/lib -L$(QTDIR)/lib -L/usr/X11R6/lib -lqt -lXext -lX11 -lm
@@ -53,6 +53,7 @@ OBJECTS_DIR = $(OBJ_DIR)/
 
 HEADERS = Gui/application.h \
 	  	Gui/FindDialog.h \
+	  	Gui/SpellDialog.h \
 		BanglaLine/BanglaLine.h \
 		BanglaLetter/BanglaLetter.h \
 		BanglaDocument/BanglaDocument.h \
@@ -62,14 +63,17 @@ HEADERS = Gui/application.h \
 		FontConverter/FontConverter.h \
 		FontConverter/LatexConverter.h \
 		CodeTreeElement/CodeTreeElement.h \
+	  	Banan/SearchDictionary.h \
 		include/preferences.h \
 		include/lekhoprefs.h \
 		include/bangla.h \
 		include/startup.h \
 		Parser/parser.h
+
 SOURCES = Gui/main.cpp \
 		Gui/application.cpp \
 	  	Gui/FindDialog.cpp \
+	  	Gui/SpellDialog.cpp \
 		BanglaLine/BanglaLine.cpp \
 		BanglaLetter/BanglaLetter.cpp \
 		BanglaDocument/BanglaDocument.cpp \
@@ -79,14 +83,17 @@ SOURCES = Gui/main.cpp \
 		FontConverter/FontConverter.cpp \
 		FontConverter/LatexConverter.cpp \
 		CodeTreeElement/CodeTreeElement.cpp \
+	  	Banan/SearchDictionary.cpp \
 		include/preferences.cpp \
 		include/lekhoprefs.cpp \
 		include/bangla.cpp \
 		include/startup.cpp \
 		Parser/parser.cpp
+
 OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/application.o \
 		$(OBJ_DIR)/FindDialog.o \
+		$(OBJ_DIR)/SpellDialog.o \
 		$(OBJ_DIR)/BanglaLine.o \
 		$(OBJ_DIR)/BanglaLetter.o \
 		$(OBJ_DIR)/BanglaDocument.o \
@@ -96,6 +103,7 @@ OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/FontConverter.o \
 		$(OBJ_DIR)/LatexConverter.o \
 		$(OBJ_DIR)/CodeTreeElement.o \
+		$(OBJ_DIR)/SearchDictionary.o \
 		$(OBJ_DIR)/preferences.o \
 		$(OBJ_DIR)/lekhoprefs.o \
 		$(OBJ_DIR)/bangla.o \
@@ -106,10 +114,12 @@ UICDECLS =
 UICIMPLS = 
 SRCMOC   = Gui/moc_application.cpp \
 		Gui/moc_FindDialog.cpp \
+		Gui/moc_SpellDialog.cpp \
 		BanglaTextEdit/moc_BanglaTextEdit.cpp \
 		BanglaTextEdit/moc_BanglaLineEdit.cpp
 OBJMOC = $(OBJ_DIR)/moc_application.o \
 		$(OBJ_DIR)/moc_FindDialog.o \
+		$(OBJ_DIR)/moc_SpellDialog.o \
 		$(OBJ_DIR)/moc_BanglaTextEdit.o \
 		$(OBJ_DIR)/moc_BanglaLineEdit.o
 DIST	   = 
@@ -179,7 +189,8 @@ FORCE:
 
 ####### Compile
 
-$(OBJ_DIR)/main.o: Gui/main.cpp Gui/application.h
+$(OBJ_DIR)/main.o: Gui/main.cpp Gui/application.h \
+		Banan/SearchDictionary.h	
 	test -d $(OBJ_DIR)/ || mkdir -p $(OBJ_DIR)/
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/main.o Gui/main.cpp
 
@@ -194,6 +205,12 @@ $(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
 
 $(OBJ_DIR)/FindDialog.o: Gui/FindDialog.cpp Gui/FindDialog.h 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/FindDialog.o Gui/FindDialog.cpp
+
+$(OBJ_DIR)/SpellDialog.o: Gui/SpellDialog.cpp Gui/SpellDialog.h BanglaTextEdit/BanglaLineEdit.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/SpellDialog.o Gui/SpellDialog.cpp
+
+$(OBJ_DIR)/SearchDictionary.o: Banan/SearchDictionary.cpp Banan/SearchDictionary.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/SearchDictionary.o Banan/SearchDictionary.cpp
 
 $(OBJ_DIR)/BanglaLine.o: BanglaLine/BanglaLine.cpp BanglaLine/BanglaLine.h BanglaLetter/BanglaLetter.h include/bangla.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLine.o BanglaLine/BanglaLine.cpp
@@ -243,6 +260,9 @@ $(OBJ_DIR)/moc_application.o: Gui/moc_application.cpp
 $(OBJ_DIR)/moc_FindDialog.o: Gui/moc_FindDialog.cpp  
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/moc_FindDialog.o Gui/moc_FindDialog.cpp
 
+$(OBJ_DIR)/moc_SpellDialog.o: Gui/moc_SpellDialog.cpp  
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/moc_SpellDialog.o Gui/moc_SpellDialog.cpp
+
 $(OBJ_DIR)/moc_BanglaTextEdit.o: BanglaTextEdit/moc_BanglaTextEdit.cpp  
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/moc_BanglaTextEdit.o BanglaTextEdit/moc_BanglaTextEdit.cpp
 
@@ -258,6 +278,9 @@ Gui/moc_application.cpp: $(MOC) Gui/application.h
 
 Gui/moc_FindDialog.cpp: $(MOC) Gui/FindDialog.h
 	$(MOC) Gui/FindDialog.h -o Gui/moc_FindDialog.cpp
+
+Gui/moc_SpellDialog.cpp: $(MOC) Gui/SpellDialog.h
+	$(MOC) Gui/SpellDialog.h -o Gui/moc_SpellDialog.cpp
 
 BanglaTextEdit/moc_BanglaTextEdit.cpp: $(MOC) BanglaTextEdit/BanglaTextEdit.h
 	$(MOC) BanglaTextEdit/BanglaTextEdit.h -o BanglaTextEdit/moc_BanglaTextEdit.cpp

@@ -48,4 +48,7 @@ void BanglaLineEdit::keyPressEvent(QKeyEvent *event)
 	}
 }
 
-
+void BanglaLineEdit::flush()
+{
+	keyPressEventFlushBangla();
+}

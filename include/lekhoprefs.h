@@ -31,27 +31,6 @@
 #include<qrect.h>
 #include<qtextstream.h>
 
-/*
-const char
-		INITFILE[]	= "[initfile]" ,
-		INITDIR[]	= "[initdir]" ,
-		KARNAME[]	= "[modifierfile]" ,
-		JUKTONAME[]	= "[modifiablefile]" ,
-		SHORNAME[]	= "[unmodifiablefile]" ,
-		SCREENFONTFILE[]= "[screenfontfile]" ,
-		WORKINGDIR[]	= "[workingdir]",
-		HTMLDIR[]	= "[htmldir]" ,
-		LATEXDIR[]	= "[latexdir]" ,
-		X[]		= "[posx]" ,
-		Y[]		= "[posy]" ,
-		HEIGHT[]	= "[height]" ,
-		WIDTH[]		= "[width]" ,
-		BANGLAFONT[]	= "[banglafont]" ,
-		ENGLISHFONT[]	= "[englishfont]" ,
-		FOREGROUND[]	= "[foreground]" ,
-		BACKGROUND[]	= "[background]" ;
-*/
-
 //just a structure to encapsulate lekho directories, start up files etc. etc.
 struct LekhoPrefs
 {
@@ -69,7 +48,9 @@ struct LekhoPrefs
 
 		workingDir,	//where we look for our text files
 		htmlDir,	//remember where we stored out html export
-		latexDir;	//remember where we stored our latex exports
+		latexDir,	//remember where we stored our latex exports
+
+		dictDir ;	//spellings directory
 
 	//int	x,y, width, height ;
 	QRect	pos ;
@@ -83,7 +64,7 @@ struct LekhoPrefs
 		wordWrap  ;
 
 	LekhoPrefs() { theFile = NULL ; }
-	
+
 	bool	load(const QString& );
 	bool	save(const QString& );
 };

@@ -295,7 +295,7 @@ void BanglaLine::changeFont(QFont &banglaFont, QFont &englishFont)
 }
 
 //function::findWord
-//very simple, fidns exact match.... case and all... will use for spellings...
+//very simple, finds exact match.... case and all...
 QPoint BanglaLine::findWord(const QString &wd, int startCol, int endCol)
 {
 	QString thisWord ;
@@ -351,6 +351,77 @@ QPoint BanglaLine::findWord(const QString &wd, int startCol, int endCol)
 
 	return(wordLoc);	//no luck
 }
+
+
+//finds next word from this column
+//if you start it in the middle of a word, it scans for a white space (== start of the word)
+//if it finds no white space scanning forward, it flags the end of the word as the para end
+//and then scans backwards for word start
+//returns the start and stop.
+QPoint BanglaLine::findNextWord(QString &wd, int startCol)
+{
+	QPoint wordLoc(-1,-1);
+
+	BanglaLetterList::Iterator i ;
+
+	int 	wordStart = startCol,
+		wordEnd = startCol ,
+		index = startCol  ;
+
+	//look for the start
+	for(i = letter.at(startCol) ; i != letter.end() ; ++i)
+	{
+		index++;
+		if( (*i).unicode == " " )//a space ! the word must start here
+			break ;
+	}
+
+	wordStart = index ;
+
+	//looked through whole line found no word
+	if( i == letter.end() )
+	{
+		wordEnd = index ;
+		//now look backwards
+		//look for the start
+		index = startCol;
+		for(i = letter.at(startCol) ; i != letter.begin() ; --i)
+		{
+			if( (*i).unicode == " " )//a space ! the word must start here
+				break ;
+			index--;
+		}
+		wordStart = index ;
+	}
+	else
+	{
+		//found word start, now need to find word end
+		//look for the start
+		for(i = letter.at(wordStart) ; i != letter.end() ; ++i)
+		{
+			if( (*i).unicode == " " )//a space ! the word must end here
+				break ;
+			index++;
+		}
+
+		wordEnd = index ;
+		if(wordEnd >= letter.count() )
+			wordEnd = letter.count() -1;
+	}
+
+	wordLoc.setX(wordStart);
+	wordLoc.setY(wordEnd);
+
+	wd = "";
+	index = wordStart ;
+	for(i = letter.at(wordStart) ; index <= wordEnd ; ++i, ++index)
+	{
+		wd += (*i).unicode ;
+	}
+
+	return(wordLoc);
+}
+
 
 QTextStream& operator << (QTextStream& pipe , BanglaLine& bl)
 {

@@ -214,4 +214,14 @@ This file tests consonant conjunct displays
 হ + ঋ = হৃ
 হ + উ = হু
 
+অ্যান্ডি অয়াইটের ওনুযাই (Andy White's proposals):
+khandatha = ত্‌
+ta-y-hasonto = ত্‍
+two tricky ones 
+	khanda-ta, ta-y-hoshoi = ত্‌তি
+	ta-y-hasonto, ta-y-hoshoi = ত্‍তি
+Ta-y-hasonto = ট্‌
+ontestojaw-y-reph = র্য
 
+এখন কার উনিকোড্‌ (Current unicode):
+ra-y-jawphola-akar = র্যা 

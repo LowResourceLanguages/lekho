@@ -45,11 +45,12 @@
 #include <qprinter.h>
 #include <qscrollview.h>
 
-#include <lekhostream.h>
+#include <lekhostream.h>	//actually, globals including dictionary...
 
 #include <BanglaDocument.h>
 #include <FontConverter.h>
 #include <LatexConverter.h>
+#include <SearchDictionary.h>
 
 #include <parser.h>
 
@@ -82,11 +83,12 @@ protected:
 	bool wordFound ;	//has the word been found ? used for replace
 
 	BanglaDocument theDoc ;
-	FontConverter	*lipi ;			//unicode->screen font
-	LatexConverter	*bangtex ;		//unicode->bangtex
+	FontConverter		*lipi ;			//unicode->screen font
+	LatexConverter		*bangtex ;		//unicode->bangtex
 
 	Parser *bangla ;			//keystroke parser
 	bool _wecreatedBangla, _wecreatedLipi, _wecreatedBangtex ;
+
 
 	bool partialCodeInserted ;		//needed by parser, keeps track of if partial code has been inserted
 	QString keysHit ;			//fun display of romanised input
@@ -144,7 +146,7 @@ public:
 
 	//figure out the keymap and set this as the text (erasing previous stuff)
 	void setKeyMapAsText();
-	
+
 	// info functions ///////////////////////////////////////////////////////////
 
 	void setModified(bool mod);
@@ -219,6 +221,16 @@ public:
 	void print_PageBreaks(int w, int h, QValueList<int> &breaks);
 	bool print_Page(QPainter *printer, int &startLine, int &endLine);
 
+	//spell checker...
+	//not very well written and pretty inflexible
+	//uses the global dictionary banan
+	//for future expansion, banan will carry all the optins (eg replace all, or what ever..)
+
+	//find , from current cursor pos, the next badly spelt word,
+	//highlight it and return it.
+	void findNextWrongWord(QString &wd);
+
+
 public slots:
 
 	void wordWrapOn();
@@ -230,9 +242,19 @@ public slots:
 
 	//experimental stage...
 	//find ops
-	void highlightWord(const QString &wd); //, bool onlySelected = false);
+	//looks for this word from the current cursor posititon
+	//and selects it
+	void highlightWord(const QString &wd);
+
+	//send the source word and the word to replace with
 	void replaceWord(const QStringList &w);
+	//same as above but iterative over whole document
 	void replaceAll(const QStringList &w);
+
+	void findWrongWord();
+	//it only checks if a wrong word has been flagged (i.e. selected)
+	//and replaces it with this one
+	void replaceWrongWordWith(const QString &wd);
 
 	// clipboard ops ////////////////////////////////////////////////////////////
 	void clipBoardOp(int id);
@@ -244,6 +266,7 @@ public slots:
 signals:
 
 	void statusBarMessage(const QString& );
+	void foundWrongWord(const QString& );
 };
 
 #endif //BANGLATEXTEDIT_H
