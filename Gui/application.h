@@ -82,6 +82,8 @@ private slots:
 
     void print();
 
+    void find();
+    
     void setWordWrap(bool ww);
     void setCursorBlink(bool cb);
     void chooseEnglishFont();

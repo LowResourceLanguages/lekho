@@ -18,33 +18,28 @@
 *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
 */
 
+#ifndef FINDDIALOG_H
+#define FINDDIALOG_H
+
+#include<qdialog.h>
+#include<BanglaTextEdit.h>
 #include<BanglaLineEdit.h>
 
-//BanglaLineEdit::BanglaLineEdit( QWidget *parent, QString name, Parser *p, FontConverter *fc)
-BanglaLineEdit::BanglaLineEdit(BanglaTextEdit *bte, QString name, QWidget *parent )
-: BanglaTextEdit(bte, name, parent) // parent, name)
+class FindDialog : public QDialog
 {
+	Q_OBJECT
 
-	//fun diagnostic stuff..
-	//revealUnicode = false ;		//if this is set true, the status bar shows you the unicode value of
-}
+	BanglaLineEdit *findedit, *replaceedit ;
 
+public:
+	FindDialog(BanglaTextEdit *, QString name=0, QWidget *parent=0) ;//, Parser *p=0, FontConverter *fc=0 );
 
-//the only change we need is to ensure that return gets evaluated differently
-//so we trap it
-void BanglaLineEdit::keyPressEvent(QKeyEvent *event)
-{
+private slots:
+	void findPressed();
 
-	switch (event->key())
-	{
-		case	Key_Enter:
-		case	Key_Return:
-			emit returnPressed();
-			break;
+signals:
+	void find(const QString& );
 
-		default:
-			BanglaTextEdit::keyPressEvent( event ) ;
-	}
-}
+};
 
-
+#endif

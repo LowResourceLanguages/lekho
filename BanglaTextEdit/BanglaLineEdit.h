@@ -27,8 +27,9 @@ class BanglaLineEdit : public BanglaTextEdit
 	Q_OBJECT
 
 public:
-	BanglaLineEdit( QWidget *parent=0, QString name=0, Parser *p, FontConverter *fc);
-	virtual ~BanglaTextEdit();
+	//BanglaLineEdit( QWidget *parent=0, QString name=0, Parser *p=0, FontConverter *fc=0);
+	BanglaLineEdit(BanglaTextEdit *bte, QString name=0, QWidget *parent=0);
+	//virtual ~BanglaTextEdit();
 
 	//the only change we need is to ensure that return gets evaluated differently
 	//so we trap it
@@ -37,6 +38,6 @@ public:
 signals:
 	void returnPressed();
 
-}
+};
 
 #endif //BANGLALINEEDIT_H

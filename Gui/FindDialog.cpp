@@ -18,33 +18,31 @@
 *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
 */
 
-#include<BanglaLineEdit.h>
+#include<qpushbutton.h>
 
-//BanglaLineEdit::BanglaLineEdit( QWidget *parent, QString name, Parser *p, FontConverter *fc)
-BanglaLineEdit::BanglaLineEdit(BanglaTextEdit *bte, QString name, QWidget *parent )
-: BanglaTextEdit(bte, name, parent) // parent, name)
+#include<FindDialog.h>
+
+FindDialog::FindDialog(BanglaTextEdit *bte, QString name, QWidget *parent)// ,  Parser *p, FontConverter *fc )
+ : QDialog(parent, name)
 {
+	setGeometry(20,20,300,100);
+	findedit = new BanglaLineEdit(bte, name, this);//this, name, p, fc);
+	findedit->setGeometry(100,10,200,30);
 
-	//fun diagnostic stuff..
-	//revealUnicode = false ;		//if this is set true, the status bar shows you the unicode value of
+	replaceedit = new BanglaLineEdit(bte, name, this);//this, name, p, fc);
+	replaceedit->setGeometry(100,45,200,30);
+
+	QPushButton *findbtn = new QPushButton("&Find",this) ;
+	QPushButton *replacebtn = new QPushButton("&Replace",this) ;
+	QPushButton *okbtn = new QPushButton("&Close",this) ;
+
+	connect( findedit, SIGNAL(returnPressed()), this, SLOT(findPressed()));
+	findedit->show();
+	replaceedit->show();
+	this->show();
 }
 
-
-//the only change we need is to ensure that return gets evaluated differently
-//so we trap it
-void BanglaLineEdit::keyPressEvent(QKeyEvent *event)
+void FindDialog::findPressed()
 {
-
-	switch (event->key())
-	{
-		case	Key_Enter:
-		case	Key_Return:
-			emit returnPressed();
-			break;
-
-		default:
-			BanglaTextEdit::keyPressEvent( event ) ;
-	}
+	emit	find(findedit->unicode()) ;
 }
-
-

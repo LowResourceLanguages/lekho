@@ -63,7 +63,8 @@ void segment(const QString &a, QValueList<QString> &out)
 				temp = "";
 			}
 			else
-				//a vowel always stands alone
+				//a vowel always stands alone, unless there's a chondrobindu
+				//basically an exception for aa^
 				if(vowel.find(a[i]) > -1)
 				{
 					if(!temp.isEmpty())
@@ -71,7 +72,10 @@ void segment(const QString &a, QValueList<QString> &out)
 						out.append(temp);
 						temp ="";
 					}
-					out.append(QString(a[i]));
+					if(a[i+1] == candrabindu)	//chondrobindo after
+						out.append(QString(a[i++])+candrabindu);
+					else
+						out.append(QString(a[i]));
 				}
 				else
 					//this must be a consonant,ligature or zwnj

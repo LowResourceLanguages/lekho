@@ -110,6 +110,61 @@ BanglaTextEdit::BanglaTextEdit( QWidget *parent, QString name)
 	cursorBlinkOn() ;
 }
 
+BanglaTextEdit::BanglaTextEdit(BanglaTextEdit *bte, QString name, QWidget *parent )
+	: QScrollView(parent, name, WRepaintNoErase|WResizeNoErase )
+{
+#ifdef Q_WS_X11
+	//otherwise on X11 systems Lekho can't paste to other apps
+	QApplication::clipboard()->setSelectionMode(true);
+#endif
+
+	setFonts(bte->banglaFont , bte->englishFont );
+	setTabWidth(bte->tabWidth);
+
+	//bangla = new Parser(bte->bangla) ;	//need to copy the parser over, sicne it has a state
+	bangla = bte->bangla ;
+	lipi = bte->lipi ;			//lipi has no state, can share it
+
+	_wecreatedBangla = false ;
+	_wecreatedLipi = false ;
+
+	foreground = bte->foreground;
+	background = bte->background;
+
+	//otherwise the cursor won't appear...
+	theDoc.setLineHeight(QMAX( QFontMetrics(banglaFont).lineSpacing(),
+				   QFontMetrics(englishFont).lineSpacing() ));
+	theDoc.setLinesInPage((int)((float)visibleHeight()/(float)theDoc.getLineHeight()));
+
+	//set the cursor at the start and init it...
+	//theDoc.moveCursor(Key_unknown, theCursor.xy, theCursor.paracol);//dummy, to get cursor pos refreshed
+
+	oldWidth = 0 ;
+
+	partialCodeInserted = false ;
+
+	//set up cursor
+	theCursor.cursorTimerId = startTimer(800);
+	if (theCursor.cursorTimerId == 0)
+	{
+		theCursor.cursorOn = TRUE;
+	}
+
+	// Setup the viewport widget
+	viewport()->setBackgroundMode(NoBackground); // NoBackground because drawContents paints every pixel
+	viewport()->setFocusPolicy(WheelFocus);
+	viewport()->setCursor(ibeamCursor);
+
+	viewport()->setFocus();
+	viewport()->update();
+
+	revealUnicode = bte->revealUnicode ;
+
+	modified = false ;
+
+	cursorBlinkOn() ;
+}
+
 BanglaTextEdit::~BanglaTextEdit()
 {
     if (theCursor.cursorTimerId != 0)
@@ -685,7 +740,10 @@ void BanglaTextEdit::keyPressEvent(QKeyEvent *event)
 			keyPressEventFlushBangla();
 			//if we press a key, we should get rid of the select
 			if(hasSelText)
+			{
 				hasSelText = false ;
+				viewport()->update();
+			}
 
 			cursorErase();
 			theDoc.moveCursor(event->key(), theCursor.xy, theCursor.paracol);

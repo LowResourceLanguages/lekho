@@ -66,7 +66,7 @@ class BanglaTextEdit : public QScrollView
 {
 	Q_OBJECT
 
-private:
+protected:
 	LekhoCursor theCursor ;
 	QPoint paracolSelStart, paracolSelEnd ,	//the selection para/col
 		xySelStart , xySelEnd ,
@@ -104,6 +104,7 @@ private:
 public:
 	//BanglaTextEdit ( const QString &text, const QString &context = QString::null, QWidget *parent = 0, const char *name = 0 );
 	BanglaTextEdit( QWidget *parent=0, QString name=0);
+	BanglaTextEdit( BanglaTextEdit *bte, QString name=0, QWidget *parent=0 );
 	virtual ~BanglaTextEdit();
 
 	//set tab width
@@ -132,6 +133,10 @@ public:
 
 	void setModified(bool mod);
 	bool isModified();
+
+	//give us acess to the parser and font converter... carefull
+	inline Parser *getParser() { return(bangla); }
+	inline FontConverter *getFontConverter() { return(lipi); }
 
 	// document ops //////////////////////////////////////////////////////////////
 	//return in unicode
@@ -183,9 +188,6 @@ public:
 	void del(int para1, int col1, int para2, int col2 );
 	void splitLine(int para, int col);
 
-	//experimental stage...
-	//find ops
-	void highlightWord(const QString &wd); //, bool onlySelected = false);
 
 
 public slots:
@@ -194,6 +196,10 @@ public slots:
 	void wordWrapOff();
 	void cursorBlinkOn();
 	void cursorBlinkOff();
+
+	//experimental stage...
+	//find ops
+	void highlightWord(const QString &wd); //, bool onlySelected = false);
 
 	// clipboard ops ////////////////////////////////////////////////////////////
 private slots:

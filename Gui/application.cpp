@@ -58,6 +58,8 @@
 #include "fileopen.xpm"
 #include "fileprint.xpm"
 
+#include<FindDialog.h>
+
 //small util function
 QString stripFileName(const QString &fn)
 {
@@ -177,6 +179,10 @@ ApplicationWindow::ApplicationWindow()
     menuBar()->insertSeparator();
 
     //Options
+    QPopupMenu *edit = new QPopupMenu( this );
+    edit->insertItem( "Find", this, SLOT(find()), CTRL+Key_F3 );
+
+    //Options
     QPopupMenu * options = new QPopupMenu( this );
 
     QAction * action = new QAction( tr("WordWrap"), tr("&WordWrap"), 0, this );
@@ -218,6 +224,7 @@ ApplicationWindow::ApplicationWindow()
 
     //insert the menus onto the menu bar in the order we want
     menuBar()->insertItem( "&File", file );
+    menuBar()->insertItem( "&Edit", edit );
     menuBar()->insertItem( "&Options", options);
     menuBar()->insertItem( "&Help", help );
 
@@ -508,6 +515,12 @@ void ApplicationWindow::print()
     */
 }
 
+void ApplicationWindow::find()
+{
+	//FindDialog *fd = new FindDialog(this,"Find", e->getParser(), e->getFontConverter());
+	FindDialog *fd = new FindDialog(e, "Find", this);
+	connect(fd, SIGNAL(find(const QString &)), e, SLOT(highlightWord(const QString &)) );
+}
 
 void ApplicationWindow::setWordWrap(bool ww)
 {

@@ -50,10 +50,12 @@ OBJECTS_DIR = $(OBJ_DIR)/
 ####### Files
 
 HEADERS = Gui/application.h \
+	  	Gui/FindDialog.h \
 		BanglaLine/BanglaLine.h \
 		BanglaLetter/BanglaLetter.h \
 		BanglaDocument/BanglaDocument.h \
 		BanglaTextEdit/BanglaTextEdit.h \
+		BanglaTextEdit/BanglaLineEdit.h \
 		BanglaSegment/BanglaSegment.h \
 		FontConverter/FontConverter.h \
 		CodeTreeElement/CodeTreeElement.h \
@@ -62,10 +64,12 @@ HEADERS = Gui/application.h \
 		Parser/parser.h
 SOURCES = Gui/main.cpp \
 		Gui/application.cpp \
+	  	Gui/FindDialog.cpp \
 		BanglaLine/BanglaLine.cpp \
 		BanglaLetter/BanglaLetter.cpp \
 		BanglaDocument/BanglaDocument.cpp \
 		BanglaTextEdit/BanglaTextEdit.cpp \
+		BanglaTextEdit/BanglaLineEdit.cpp \
 		BanglaSegment/BanglaSegment.cpp \
 		FontConverter/FontConverter.cpp \
 		CodeTreeElement/CodeTreeElement.cpp \
@@ -74,10 +78,12 @@ SOURCES = Gui/main.cpp \
 		Parser/parser.cpp
 OBJECTS = $(OBJ_DIR)/main.o \
 		$(OBJ_DIR)/application.o \
+		$(OBJ_DIR)/FindDialog.o \
 		$(OBJ_DIR)/BanglaLine.o \
 		$(OBJ_DIR)/BanglaLetter.o \
 		$(OBJ_DIR)/BanglaDocument.o \
 		$(OBJ_DIR)/BanglaTextEdit.o \
+		$(OBJ_DIR)/BanglaLineEdit.o \
 		$(OBJ_DIR)/BanglaSegment.o \
 		$(OBJ_DIR)/FontConverter.o \
 		$(OBJ_DIR)/CodeTreeElement.o \
@@ -88,9 +94,13 @@ FORMS =
 UICDECLS = 
 UICIMPLS = 
 SRCMOC   = Gui/moc_application.cpp \
-		BanglaTextEdit/moc_BanglaTextEdit.cpp
+		Gui/moc_FindDialog.cpp \
+		BanglaTextEdit/moc_BanglaTextEdit.cpp \
+		BanglaTextEdit/moc_BanglaLineEdit.cpp
 OBJMOC = $(OBJ_DIR)/moc_application.o \
-		$(OBJ_DIR)/moc_BanglaTextEdit.o
+		$(OBJ_DIR)/moc_FindDialog.o \
+		$(OBJ_DIR)/moc_BanglaTextEdit.o \
+		$(OBJ_DIR)/moc_BanglaLineEdit.o
 DIST	   = 
 QMAKE_TARGET = lekho
 DESTDIR  = $(BIN_DIR)/
@@ -168,6 +178,9 @@ $(OBJ_DIR)/application.o: Gui/application.cpp Gui/application.h \
 		Gui/fileprint.xpm
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/application.o Gui/application.cpp
 
+$(OBJ_DIR)/FindDialog.o: Gui/FindDialog.cpp Gui/FindDialog.h 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/FindDialog.o Gui/FindDialog.cpp
+
 $(OBJ_DIR)/BanglaLine.o: BanglaLine/BanglaLine.cpp BanglaLine/BanglaLine.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLine.o BanglaLine/BanglaLine.cpp
 
@@ -180,6 +193,9 @@ $(OBJ_DIR)/BanglaDocument.o: BanglaDocument/BanglaDocument.cpp BanglaDocument/Ba
 $(OBJ_DIR)/BanglaTextEdit.o: BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaTextEdit.o BanglaTextEdit/BanglaTextEdit.cpp
 
+$(OBJ_DIR)/BanglaLineEdit.o: BanglaTextEdit/BanglaLineEdit.cpp BanglaTextEdit/BanglaLineEdit.h BanglaTextEdit/BanglaTextEdit.cpp BanglaTextEdit/BanglaTextEdit.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaLineEdit.o BanglaTextEdit/BanglaLineEdit.cpp
+
 $(OBJ_DIR)/BanglaSegment.o: BanglaSegment/BanglaSegment.cpp BanglaSegment/BanglaSegment.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/BanglaSegment.o BanglaSegment/BanglaSegment.cpp
 
@@ -189,10 +205,10 @@ $(OBJ_DIR)/FontConverter.o: FontConverter/FontConverter.cpp FontConverter/FontCo
 $(OBJ_DIR)/CodeTreeElement.o: CodeTreeElement/CodeTreeElement.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/CodeTreeElement.o CodeTreeElement/CodeTreeElement.cpp
 
-$(OBJ_DIR)/lekhoprefs.o: include/lekhoprefs.cpp 
+$(OBJ_DIR)/lekhoprefs.o: include/lekhoprefs.cpp include/lekhoprefs.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/lekhoprefs.o include/lekhoprefs.cpp
 
-$(OBJ_DIR)/preferences.o: include/preferences.cpp 
+$(OBJ_DIR)/preferences.o: include/preferences.cpp  include/preferences.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/preferences.o include/preferences.cpp
 
 $(OBJ_DIR)/parser.o: Parser/parser.cpp Parser/parser.h
@@ -201,14 +217,26 @@ $(OBJ_DIR)/parser.o: Parser/parser.cpp Parser/parser.h
 $(OBJ_DIR)/moc_application.o: Gui/moc_application.cpp  
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/moc_application.o Gui/moc_application.cpp
 
+$(OBJ_DIR)/moc_FindDialog.o: Gui/moc_FindDialog.cpp  
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/moc_FindDialog.o Gui/moc_FindDialog.cpp
+
 $(OBJ_DIR)/moc_BanglaTextEdit.o: BanglaTextEdit/moc_BanglaTextEdit.cpp  
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/moc_BanglaTextEdit.o BanglaTextEdit/moc_BanglaTextEdit.cpp
+
+$(OBJ_DIR)/moc_BanglaLineEdit.o: BanglaTextEdit/moc_BanglaLineEdit.cpp  
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o $(OBJ_DIR)/moc_BanglaLineEdit.o BanglaTextEdit/moc_BanglaLineEdit.cpp
 
 Gui/moc_application.cpp: $(MOC) Gui/application.h
 	$(MOC) Gui/application.h -o Gui/moc_application.cpp
 
+Gui/moc_FindDialog.cpp: $(MOC) Gui/FindDialog.h
+	$(MOC) Gui/FindDialog.h -o Gui/moc_FindDialog.cpp
+
 BanglaTextEdit/moc_BanglaTextEdit.cpp: $(MOC) BanglaTextEdit/BanglaTextEdit.h
 	$(MOC) BanglaTextEdit/BanglaTextEdit.h -o BanglaTextEdit/moc_BanglaTextEdit.cpp
+
+BanglaTextEdit/moc_BanglaLineEdit.cpp: $(MOC) BanglaTextEdit/BanglaLineEdit.h
+	$(MOC) BanglaTextEdit/BanglaLineEdit.h -o BanglaTextEdit/moc_BanglaLineEdit.cpp
 
 ####### Install
 
