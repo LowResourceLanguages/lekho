@@ -11,7 +11,7 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>560</width>
+            <width>556</width>
             <height>510</height>
         </rect>
     </property>
@@ -232,9 +232,10 @@
         <slot>jumpToPara_slot(int)</slot>
     </connection>
     <slot access="public">mouse_pos_slot(int,int)</slot>
-    <slot access="public">unicode_under_cursor_slot(const QString&amp;)</slot>
+    <slot access="public">diagnostic_slot()</slot>
     <slot access="public">setCurrentParagraph_slot(int)</slot>
     <slot access="public">setJumpParagraph_slot()</slot>
     <slot access="public">setParagraphCount_slot(int)</slot>
+    <slot access="public">unicode_under_cursor_slot(const QString&amp;)</slot>
 </connections>
 </UI>

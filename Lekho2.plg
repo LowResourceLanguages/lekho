@@ -6,13 +6,13 @@
 --------------------Configuration: Lekho2 - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSP10E.tmp" with contents
+Creating temporary file "C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSPA57.tmp" with contents
 [
 /nologo /MD /W3 /Gm /GX /ZI /Od /I "C:\qt\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "QT_DLL" /D "QT_THREAD_SUPPORT" /FR"c:\src\bin\debug/" /Fp"c:\src\bin\debug/Lekho2.pch" /YX /Fo"c:\src\bin\debug/" /Fd"c:\src\bin\debug/" /FD /GZ /c 
-"C:\src\Lekho2\banglamultilineedit.cpp"
+"C:\src\Lekho2\lekho2.cpp"
 ]
-Creating command line "cl.exe @C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSP10E.tmp" 
-Creating temporary file "C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSP10F.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSPA57.tmp" 
+Creating temporary file "C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSPA58.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib imm32.lib wsock32.lib C:\qt\lib\qt-mt230nc.lib C:\qt\lib\qtmain.lib /nologo /subsystem:windows /incremental:yes /pdb:"c:\src\bin\debug/Lekho2.pdb" /debug /machine:I386 /out:"c:\src\bin\debug/Lekho2.exe" /pdbtype:sept 
 \src\bin\debug\banglamultilineedit.obj
@@ -30,12 +30,12 @@ kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.li
 \src\bin\debug\segmenter.obj
 \src\bin\debug\structures.obj
 ]
-Creating command line "link.exe @C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSP10F.tmp"
+Creating command line "link.exe @C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSPA58.tmp"
 <h3>Output Window</h3>
 Compiling...
-banglamultilineedit.cpp
+lekho2.cpp
 Linking...
-Creating temporary file "C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSP110.tmp" with contents
+Creating temporary file "C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSPA5A.tmp" with contents
 [
 /nologo /o"c:\src\bin\debug/Lekho2.bsc" 
 \src\bin\debug\banglamultilineedit.sbr
@@ -52,7 +52,7 @@ Creating temporary file "C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSP110.tmp" with con
 \src\bin\debug\parser.sbr
 \src\bin\debug\segmenter.sbr
 \src\bin\debug\structures.sbr]
-Creating command line "bscmake.exe @C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSP110.tmp"
+Creating command line "bscmake.exe @C:\DOCUME~1\KAUSHI~1\LOCALS~1\Temp\RSPA5A.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 

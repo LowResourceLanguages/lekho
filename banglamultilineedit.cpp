@@ -221,11 +221,15 @@ int ScreenMatrix::static_wordWrap(Segmenter &seg, FontConverter &conv, int scree
 	ScreenLine thisLine ;
 
 	LetterList_iterator lit = sp.ll.begin(),//(*sit).start_letter,
-						candidate_break_letter = NULL ;
-	
+						candidate_break_letter = NULL ;	
+
+	int total_width = 0,
+		width_till_candidate_break = 0;//fixes a subtle bug !
+
 	while( lit != sp.ll.end())
 	{
-		int total_width = 0;
+		total_width -= width_till_candidate_break ;//heh heh
+
 		candidate_break_letter = NULL;
 
 		//iterate through the letter list till we are done
@@ -234,8 +238,11 @@ int ScreenMatrix::static_wordWrap(Segmenter &seg, FontConverter &conv, int scree
 		{
 			total_width += (*lit).screen_font_width ;
 			if( (*lit).unicode == " " )//white space check....
+			{
+				width_till_candidate_break = total_width ;
 				candidate_break_letter = lit ;
-			
+			}
+
 			if(total_width > screen_width)
 			{
 				//at this point we have exceeded the width of the line
@@ -354,6 +361,7 @@ void ScreenMatrix::getScreenText(ScreenImage &img)
 //returns the x,y of the cursor position sent in returns false if outta range
 //this assumes that para is relative to first para within the visible part of the screen
 //returns character and letter_len that are vital to cursor_position in the editor
+//x and y are relative to the top left part of the character
 bool ScreenMatrix::cursorXY(int para, int letter, 
 							int &character,//we point to before letter blah, in  characters how much is this
 							int &letter_len,//how many charcters is the next letter (i.e. the letter the cursor sits before
@@ -600,7 +608,7 @@ BanglaMultilineEdit::BanglaMultilineEdit( QWidget *parent, QString name)
 	//font initialisation
 	QFont bangla_f ;
 	bangla_f.setFamily("ekushey");
-	bangla_f.setPointSize(16);
+	bangla_f.setPointSize(12);
 
 //	setFonts(font(), font());/////////////////////////////////////////DEEEEEEEEEEEEEEEEEEEEBUUUUUUUUUUUUUUUUUUUUUUUUUGGGGGGGGGGGGGGGGGGGGGGGGG
 
@@ -680,6 +688,8 @@ void BanglaMultilineEdit::recomputeScreenMatrix(int screen_width, int screen_hei
 //only used for single line or page jumps
 //screen_width refers to the actual text are available, so before we call it we should
 //remove margins etc.
+//last_top_y,x are set in draw contents and ensures we don't do this computation more
+//often than we need....
 void BanglaMultilineEdit::scrollEvent(int top_y, int bottom_y, int screen_width)
 {
 	if( ( expanded_chunk_top_y == last_top_y ) &
@@ -988,6 +998,20 @@ void BanglaMultilineEdit::drawCursor(QPainter*p)
 	}
 }
 
+//called by inserttext and loadFile, to init some vars that are VERY important
+void BanglaMultilineEdit::resetCursor()
+{
+		expanded_chunk_top_para_iter = paragraph.begin();
+		expanded_chunk_top_y = 0;
+		cursor_position.para_iter = paragraph.begin();
+		cursor_position.letter = 0 ;
+		paragraphs_above = 0;
+		paragraphs_below = paragraph.count();
+
+		emit paragraphCount_signal((int)paragraph.count());
+		emit currentParagraph_signal(0);
+}
+
 //wipe everything and load a new file in.
 //we pass the filename directly for efficiencey
 bool BanglaMultilineEdit::loadFile(QString &fname)
@@ -1008,16 +1032,8 @@ bool BanglaMultilineEdit::loadFile(QString &fname)
 			file_line = ts.readLine();
 		}
 	    f.close();	
-
-		expanded_chunk_top_para_iter = paragraph.begin();
-		expanded_chunk_top_y = 0;
-		cursor_position.para_iter = paragraph.begin();
-		cursor_position.letter = 0 ;
-		paragraphs_above = 0;
-		paragraphs_below = paragraph.count();
-
-		emit paragraphCount_signal((int)paragraph.count());
-		emit currentParagraph_signal(0);
+		
+		resetCursor();
 
 		return true ;
 	}
@@ -1037,7 +1053,7 @@ bool BanglaMultilineEdit::saveFile(QString &fname)
 		ParagraphList_iterator para_iter = paragraph.begin() ;
 		while(para_iter != paragraph.end())
 		{
-			ts << (*para_iter).text + "\n" ;
+			ts << (*para_iter).text << endl ; 
 			para_iter++;
 		}
 	    f.close();	
@@ -1047,20 +1063,24 @@ bool BanglaMultilineEdit::saveFile(QString &fname)
 		return false ;
 }
 
-//call this everytime you mess with the text
-
+//call this everytime you mess with the text. p_iter tells it the first para that has been
+//messed with, paras tells it how many paras have been messed with
+//
 void BanglaMultilineEdit::paraChanged(ParagraphList_iterator p_iter, int paras)
 {
-	//bit of a hack, not too ugly. we need some inits, that only recomputescrenmatrix
+	//temporary solution, very compute intensive...
+	recomputeScreenMatrix(visible_text_width, visible_text_height);
+/*
+	//bit of a hack, not too ugly. we need some inits, that only recomputescreenmatrix
 	//does, when we start a new docu...
-//	if(paragraph.count() < 2)
-//	{
-//		if(paragraph[0].text.length() > 1)
-//		{
-//			recomputeScreenMatrix(visible_text_width, visible_text_height);
-//			return ;
-//		}
-//	}
+	if(paragraph.count() < 2)
+	{
+		if(paragraph[0].text.length() < 2)
+		{
+			recomputeScreenMatrix(visible_text_width, visible_text_height);
+			return ;
+		}
+	}
 
 	//p_iter is bound to be lower that expanded_chunk_top_para_iter
 	int screen_para = 0 ;
@@ -1077,7 +1097,7 @@ void BanglaMultilineEdit::paraChanged(ParagraphList_iterator p_iter, int paras)
 		para_list.append(*(p_iter++));
 
 	screen_matrix.insertInMiddle(segmenter, converter , visible_text_width, para_list, screen_para);
-
+*/
 }
 
 //insert this into current cursor position
@@ -1086,6 +1106,13 @@ void BanglaMultilineEdit::paraChanged(ParagraphList_iterator p_iter, int paras)
 void BanglaMultilineEdit::insertText(const QString &string_)
 {
 	QString string = string_;
+
+	//heh heh, trap to see if we are inserting into a new docu...
+	if(cursor_position.para_iter == paragraph.end())
+	{
+		paragraph.append(Paragraph());
+		resetCursor();
+	}
 
 	//we asume that the cursor position is correct, and we should insert from there
 	//first break up the text into string segments that end with a new line. The last
@@ -1113,6 +1140,8 @@ void BanglaMultilineEdit::insertText(const QString &string_)
 	QStringList::Iterator qsl_iter = parasToInsert.begin();
 	//the orginal para gets its left_fracture and anything added to it
 	left_fracture += (*qsl_iter);
+
+
 	(*para_iter).text = left_fracture ;
 	paragraphs_modified_by_this_op++;
 
@@ -1152,7 +1181,6 @@ void BanglaMultilineEdit::screenLineUp()
 	expanded_chunk_top_y += screen_matrix.getLineHeight();
 	expanded_chunk_bottom_y = expanded_chunk_top_y + screen_matrix.getChunkHeight();
 	scrollEvent(0, visible_text_height , visible_text_width);
-//	viewport()->update();
 }
 
 void BanglaMultilineEdit::screenLineDown()
@@ -1160,7 +1188,6 @@ void BanglaMultilineEdit::screenLineDown()
 	expanded_chunk_top_y -= screen_matrix.getLineHeight();
 	expanded_chunk_bottom_y = expanded_chunk_top_y + screen_matrix.getChunkHeight();
 	scrollEvent(0, visible_text_height, visible_text_width);
-	//viewport()->update();
 }
 
 
@@ -1211,7 +1238,12 @@ void BanglaMultilineEdit::getUnicode(QString &unicode)
 
 void BanglaMultilineEdit::keyPressEvent(QKeyEvent *event)
 {
-	
+	bool shift_press = false ;
+	if(event->state() == ShiftButton)
+		shift_press = true ;
+
+	QString text_to_insert ;
+
 	switch (event->key())
 	{
 		case	Key_PageUp:
@@ -1261,12 +1293,19 @@ void BanglaMultilineEdit::keyPressEvent(QKeyEvent *event)
 			break;
 
 		default:
+
 			//parser.keystrokeToUnicode(key_seq, letter);
-			insertText(event->text());
-			cursorLetterRight(1);
-			viewport()->update();
+			text_to_insert = event->text();
+			if(text_to_insert.length() > 0)
+			{
+				insertText(text_to_insert);
+				cursorLetterRight(1);
+				viewport()->update();
+			}
 			break;
 	}
+
+	makeCursorVisible();
 }
 
 
@@ -1286,6 +1325,7 @@ void BanglaMultilineEdit::makeCursorVisible()
 	//basically go through the screen_line list, tick off the screen lines and make sure
 	//its on screen
 	int x, y ;
+	//remember x and y returned are relative to the top left part of the character
 	screen_matrix.cursorXY( cursor_position.para - paragraphs_above, 
 							cursor_position.letter, 
 							cursor_position.character,
@@ -1293,7 +1333,8 @@ void BanglaMultilineEdit::makeCursorVisible()
 							cursor_position.letter_iter,
 							x, y);
 
-	while( y + expanded_chunk_top_y - top_text_margin > visible_text_height)
+	int old_y = y ;
+	while( y - top_text_margin + expanded_chunk_top_y + screen_matrix.getLineHeight() > visible_text_height)
 	{
 		screenLineDown();
 		screen_matrix.cursorXY(cursor_position.para - paragraphs_above, 
@@ -1302,9 +1343,13 @@ void BanglaMultilineEdit::makeCursorVisible()
 			cursor_position.letter_len,
 			cursor_position.letter_iter,
 			x, y);
+		if(old_y == y)
+			break;
+		else
+			old_y = y ;
 	}
 
-	while( y + expanded_chunk_top_y  < 0)
+	while( y - top_text_margin + expanded_chunk_top_y < 0)
 	{
 		screenLineUp();
 		screen_matrix.cursorXY(cursor_position.para - paragraphs_above, 
@@ -1313,6 +1358,10 @@ void BanglaMultilineEdit::makeCursorVisible()
 			cursor_position.letter_len,
 			cursor_position.letter_iter,
 			x, y);
+		if(old_y == y)
+			break;
+		else
+			old_y = y ;
 	}
 
 //	emit unicode_under_cursor_signal((*cursor_position.para_iter).text.mid(cursor_position.character-1,cursor_position.letter_len));
@@ -1366,11 +1415,12 @@ void BanglaMultilineEdit::cursorLineDown(int n_lines)
 {
 	makeCursorVisible() ;
 	int x, y;
+	//getcursorxy returns screen ready coordinates...
 	getCursorXY(x,y);
 	
 	int old_y = y ;
 
-	if((y - expanded_chunk_top_y - top_text_margin + screen_matrix.getLineHeight()) >= visible_text_height)
+	if((y - expanded_chunk_top_y + top_text_margin + screen_matrix.getLineHeight()) >= visible_text_height)
 	{
 		screenLineDown();
 		getCursorXY(x,y);
@@ -1388,7 +1438,7 @@ void BanglaMultilineEdit::cursorLineUp(int n_lines)
 	getCursorXY(x,y) ;
 
 	int old_y = y ;
-	if((y - expanded_chunk_top_y - top_text_margin - screen_matrix.getLineHeight()) < 0)
+	if((y - expanded_chunk_top_y + top_text_margin - screen_matrix.getLineHeight()) < 0)
 	{
 		screenLineUp();
 		getCursorXY(x,y);
@@ -1543,229 +1593,11 @@ void BanglaMultilineEdit::setCursorXY(int x, int y)		//sets cursor to this posit
 //	return return_value ;
 }
 
-/*
-	//just don't ask, just don't ask...
-	if(lockRedrawDuringPrinting)
-		return ;
 
-	//protect our pixmap. Oddest of all, if you stretch/shrink the window quickly
-	//enough, you can make ch/cw go negative...
-	if(cw <= 0) return ;
-	if(ch <= 0) return ;
-
-	int maxPaintWidth = viewport()->width();
-
-	if (oldWidth != maxPaintWidth)
-	{
-		oldWidth = maxPaintWidth ;
-		cursorErase() ;
-		theDoc.setScreenWidth(maxPaintWidth);
-		theDoc.moveCursor(Key_unknown, theCursor.xy, theCursor.paracol);//dummy, to get cursor pos refreshed
-		theDoc.setLinesInPage((int)((float)visibleHeight()/(float)theDoc.getLineHeight()));
-		cursorDraw();
-	}
-
-
-	int	lineHeight = theDoc.getLineHeight(),
-		startLine = (int)(float(cy)/(float)lineHeight),
-		endLine = (int)((float)(cy + ch)/(float)lineHeight +.5 ),
-		curry = startLine*lineHeight ;
-
-	//leettle hack here, + 20 for safety
-	resizeContents( theDoc.getMaxLineWidth() , lineHeight * theDoc.totalScreenLines());
-
-
-	//double buffering...
-	QPixmap::setDefaultOptimization( QPixmap::BestOptim );
-	//QPixmap pm(cw, ch) ;
-	QPixmap pm(maxPaintWidth, ch) ; //modified for current line highlight
-	QPixmap::setDefaultOptimization( QPixmap::NormalOptim );
-	pm.fill(background);
-
-	QPainter *p = new QPainter ;
-	p->begin(&pm);
-	p->translate(-cx, -cy);
-
-
-	p->setPen(foreground);
-	p->setBackgroundColor(background);
-
-
-	bool selectionInView = false ;
-	if(hasSelText)
-	{
-		//the sel start has to before the last screen line
-		//and the sel end has to be after the first screen line
-		if((cy <= xySelEnd.y()) && ((cy + ch) >=  xySelStart.y()) )
-			selectionInView = true ;
-
-	}
-
-	//stuff for syntax highlighting
-	BanglaLetterList theTextForHighlight ;
-	for(int ij = startLine ; ij <= endLine ; ij++)
-	{
-		BanglaLetterList theText;
-		theDoc.copyScreenLine(ij, theTextForHighlight);
-	}
-	char *hiliteStr = new char[ theTextForHighlight.count() ] ;
-
-	//parse for highlighting
-	doljatra.highlight( theTextForHighlight, hiliteStr );
-	int currentLetter = 0 ;
-
-	for(int i = startLine ; i <= endLine ; i++)
-	{
-		BanglaLetterList theText;
-		theDoc.copyScreenLine(i, theText);
-
-		//paint newline
-		paintLine(p, 0, curry, lineHeight, theText, &currentLetter, hiliteStr);
-		p->setPen( foreground ) ;//this bastard was causing printing in paintLine, but removing it
-					 //caused problems with highlighting...
-
-		//hack, if text is selected then highlight it...
-		if(selectionInView)
-		{
-			p->setPen(foreground);
-			p->setRasterOp(NotXorROP);
-			if((curry == xySelStart.y()) && ( curry == xySelEnd.y()))
-				p->fillRect(xySelStart.x(), curry, xySelEnd.x() - xySelStart.x(), lineHeight, QBrush(QBrush::SolidPattern));
-			else
-			if(curry == xySelStart.y())
-				p->fillRect(xySelStart.x(), curry, cx + maxPaintWidth , lineHeight, QBrush(QBrush::SolidPattern));
-			else
-			if((curry > xySelStart.y()) && (curry < xySelEnd.y()))
-				p->fillRect(cx, curry, cx + maxPaintWidth , lineHeight, QBrush(QBrush::SolidPattern));
-			else
-			if(curry == xySelEnd.y())
-				p->fillRect(cx, curry, xySelEnd.x() - cx , lineHeight, QBrush(QBrush::SolidPattern));
-			p->setRasterOp(CopyROP);
-		}
-
-		curry += lineHeight ;
-
-	}
-
-
-
-	//if( hiliteStr != NULL )
-		delete[] hiliteStr ;
-
-	//draw the cursor
-        if (theCursor.cursorOn && viewport()->hasFocus())
-        {
-		QRect cursorRect = calculateCursorRect();
-
-		//p->setPen(background);
-		p->setPen(foreground);
-		//p->setRasterOp(XorROP);
-
-		p->drawRect(cursorRect);
-		p->setRasterOp(CopyROP);
-        }
-
-	/* requires several additions, will do later...
-	//lightly shade the current screen line
-	int highlightCurrentLine = 1 ;
-	if (highlightCurrentLine)
-	{
-		QRect currentLineRect(0, theCursor.xy.y(), maxPaintWidth, lineHeight) ;
-		p->setPen(foreground);
-		p->setRasterOp(XorROP);
-		p->drawRect(currentLineRect);
-		p->setRasterOp(CopyROP);
-
-	}
-	*/
-/*
-	//transfer the drawing buffer onto the viewport...
-	p->end();
-        bitBlt(viewport(), cx - contentsX(), cy - contentsY() , &pm);
-	//cout << "cw = " << cw << " ch = " << ch << " cw x ch = " << cw * ch << endl ;
-	delete p ;
-
+//for diagnostics
+QString BanglaMultilineEdit::getDiagnosticInfo()
+{
+	QString diag ;
+	diag += "Paragraphs : " + QString::number(paragraph.count());
+	return diag ;
 }
-*/
-
-
-
-
-/*
-
-
-
-QString BanglaMultilineEdit::textLine ( int line ) ;
-int BanglaMultilineEdit::numLines () ;
-virtual QSize BanglaMultilineEdit::minimumSizeHint () const
-virtual void BanglaMultilineEdit::insertLine ( const QString & s, int line = -1 ) 
-virtual void BanglaMultilineEdit::insertAt ( const QString & s, int line, int col, bool mark = FALSE ) 
-virtual void BanglaMultilineEdit::removeLine ( int line ) 
-void BanglaMultilineEdit::cursorPosition ( int * line, int * col ) const (obsolete)
-virtual void BanglaMultilineEdit::setCursorPosition ( int line, int col, bool mark = FALSE ) 
-void BanglaMultilineEdit::getCursorPosition ( int * line, int * col ) const
-bool BanglaMultilineEdit::atBeginning () const
-bool BanglaMultilineEdit::atEnd () const
-virtual void BanglaMultilineEdit::setFixedVisibleLines ( int lines ) 
-int BanglaMultilineEdit::maxLineWidth () const
-void BanglaMultilineEdit::setAlignment ( int flags ) 
-int BanglaMultilineEdit::alignment () const
-virtual void BanglaMultilineEdit::setValidator ( const QValidator * ) 
-const BanglaMultilineEdit::QValidator* validator () const
-void BanglaMultilineEdit::setEdited ( bool ) 
-bool BanglaMultilineEdit::edited () const
-void BanglaMultilineEdit::cursorWordForward ( bool mark ) 
-void BanglaMultilineEdit::cursorWordBackward ( bool mark ) 
-enum EchoMode { Normal, NoEcho, Password }
-virtual void BanglaMultilineEdit::setEchoMode ( EchoMode ) 
-EchoMode BanglaMultilineEdit::echoMode () const
-void BanglaMultilineEdit::setMaxLength ( int ) 
-int BanglaMultilineEdit::maxLength () const
-virtual void BanglaMultilineEdit::setMaxLineLength ( int ) 
-int BanglaMultilineEdit::maxLineLength () const
-virtual void BanglaMultilineEdit::setMaxLines ( int ) 
-int BanglaMultilineEdit::maxLines () const
-virtual void setHMargin ( int ) 
-int hMargin () const
-virtual void setSelection ( int row_from, int col_from, int row_to, int col_t ) 
-enum WordWrap { NoWrap, WidgetWidth, FixedPixelWidth, FixedColumnWidth }
-void setWordWrap ( WordWrap mode ) 
-WordWrap wordWrap () const
-void setWrapColumnOrWidth ( int ) 
-int wrapColumnOrWidth () const
-enum WrapPolicy { AtWhiteSpace, Anywhere }
-void setWrapPolicy ( WrapPolicy policy ) 
-WrapPolicy wrapPolicy () const
-bool autoUpdate () const
-virtual void setAutoUpdate ( bool ) 
-void setUndoEnabled ( bool ) 
-bool isUndoEnabled () const
-void setUndoDepth ( int ) 
-int undoDepth () const
-bool isReadOnly () const
-bool isOverwriteMode () const
-QString text () const
-int length () const
-Public Slots
-virtual void setText ( const QString & ) 
-virtual void setReadOnly ( bool ) 
-virtual void setOverwriteMode ( bool ) 
-void clear () 
-void append ( const QString & ) 
-void deselect () 
-void selectAll () 
-void paste () 
-void pasteSubType ( const QCString & subtype ) 
-void copyText () const (obsolete)
-void copy () const
-void cut () 
-void insert ( const QString & ) 
-void undo () 
-void redo () 
-Signals
-void textChanged () 
-void returnPressed () 
-void undoAvailable ( bool ) 
-void redoAvailable ( bool ) 
-void copyAvailable ( bool )
-*/

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form interface generated from reading ui file '.\lekho2_base.ui'
 **
-** Created: Tue Apr 13 09:50:46 2004
+** Created: Fri Apr 16 06:43:52 2004
 **      by:  The User Interface Compiler (uic)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -36,10 +36,11 @@ public:
 
 public slots:
     virtual void mouse_pos_slot(int,int);
-    virtual void unicode_under_cursor_slot(const QString&);
+    virtual void diagnostic_slot();
     virtual void setCurrentParagraph_slot(int);
     virtual void setJumpParagraph_slot();
     virtual void setParagraphCount_slot(int);
+    virtual void unicode_under_cursor_slot(const QString&);
 
 protected:
     QGridLayout* Lekho2_baseLayout;

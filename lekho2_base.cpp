@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Form implementation generated from reading ui file '.\lekho2_base.ui'
 **
-** Created: Tue Apr 13 09:50:46 2004
+** Created: Fri Apr 16 06:43:52 2004
 **      by:  The User Interface Compiler (uic)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -28,7 +28,7 @@ Lekho2_base::Lekho2_base( QWidget* parent,  const char* name, WFlags fl )
 {
     if ( !name )
 	setName( "Lekho2_base" );
-    resize( 560, 510 ); 
+    resize( 556, 510 ); 
     setSizePolicy( QSizePolicy( (QSizePolicy::SizeType)7, (QSizePolicy::SizeType)7, sizePolicy().hasHeightForWidth() ) );
     setCaption( tr( "Form1" ) );
     setFocusPolicy( QWidget::ClickFocus );
@@ -95,9 +95,9 @@ void Lekho2_base::mouse_pos_slot(int,int)
     qWarning( "Lekho2_base::mouse_pos_slot(int,int): Not implemented yet!" );
 }
 
-void Lekho2_base::unicode_under_cursor_slot(const QString&)
+void Lekho2_base::diagnostic_slot()
 {
-    qWarning( "Lekho2_base::unicode_under_cursor_slot(const QString&): Not implemented yet!" );
+    qWarning( "Lekho2_base::diagnostic_slot(): Not implemented yet!" );
 }
 
 void Lekho2_base::setCurrentParagraph_slot(int)
@@ -113,5 +113,10 @@ void Lekho2_base::setJumpParagraph_slot()
 void Lekho2_base::setParagraphCount_slot(int)
 {
     qWarning( "Lekho2_base::setParagraphCount_slot(int): Not implemented yet!" );
+}
+
+void Lekho2_base::unicode_under_cursor_slot(const QString&)
+{
+    qWarning( "Lekho2_base::unicode_under_cursor_slot(const QString&): Not implemented yet!" );
 }
 

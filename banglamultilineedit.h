@@ -256,6 +256,9 @@ private:
 	//for diagnostics
 	ofstream err_out ;
 
+	//a leetle fun to do resets when we load a new docu, or start a new one
+	void resetCursor();
+
 	//called by scrollEvent as the case demands
 	void longScroll(int top_y, int bottom_y, int screen_width, int paraNum);//basically a scroll to an arbitrary paragraph, which is paraNum, 
 	void expandTop(int top_y, int bottom_y, int screen_width);//add paras to the top, until we reach the top viewport
@@ -330,6 +333,9 @@ public:
 	void pageUp();
 	void pageDown();	
 
+	//for diagnostics
+	QString getDiagnosticInfo();
+
 
 signals:
 	void currentParagraph_signal(int);
@@ -343,87 +349,5 @@ public slots:
 	void jumpToPara_slot(int);//numbering starts at 0
 
 };
-
-  
-
-/*
-	//public funtions, exactly matching QMultilineEdit, some may be unimplemented  
-	QString textLine ( int line ) ;
-	int numLines () ;
-	virtual QSize minimumSizeHint () const
-	virtual void insertLine ( const QString & s, int line = -1 ) 
-	virtual void insertAt ( const QString & s, int line, int col, bool mark = FALSE ) 
-	virtual void removeLine ( int line ) 
-	void cursorPosition ( int * line, int * col ) const (obsolete)
-	virtual void setCursorPosition ( int line, int col, bool mark = FALSE ) 
-	void getCursorPosition ( int * line, int * col ) const
-	bool atBeginning () const
-	bool atEnd () const
-	virtual void setFixedVisibleLines ( int lines ) 
-	int maxLineWidth () const
-	void setAlignment ( int flags ) 
-	int alignment () const
-	virtual void setValidator ( const QValidator * ) 
-	const QValidator* validator () const
-	void setEdited ( bool ) 
-	bool edited () const
-	void cursorWordForward ( bool mark ) 
-	void cursorWordBackward ( bool mark ) 
-	enum EchoMode { Normal, NoEcho, Password }
-	virtual void setEchoMode ( EchoMode ) 
-	EchoMode echoMode () const
-	void setMaxLength ( int ) 
-	int maxLength () const
-	virtual void setMaxLineLength ( int ) 
-	int maxLineLength () const
-	virtual void setMaxLines ( int ) 
-	int maxLines () const
-	virtual void setHMargin ( int ) 
-	int hMargin () const
-	virtual void setSelection ( int row_from, int col_from, int row_to, int col_t ) 
-	enum WordWrap { NoWrap, WidgetWidth, FixedPixelWidth, FixedColumnWidth }
-	void setWordWrap ( WordWrap mode ) 
-	WordWrap wordWrap () const
-	void setWrapColumnOrWidth ( int ) 
-	int wrapColumnOrWidth () const
-	enum WrapPolicy { AtWhiteSpace, Anywhere }
-	void setWrapPolicy ( WrapPolicy policy ) 
-	WrapPolicy wrapPolicy () const
-	bool autoUpdate () con
-	virtual void setAutoUpdate ( bool ) 
-	void setUndoEnabled ( bool ) 
-	bool isUndoEnabled () const
-	void setUndoDepth ( int ) 
-	int undoDepth () const
-	bool isReadOnly () const
-	bool isOverwriteMode () const
-	QString text () const
-	int length () const
-	Public Slots
-	virtual void setText ( const QString & ) 
-	virtual void setReadOnly ( bool ) 
-	virtual void setOverwriteMode ( bool ) 
-	void clear () 
-	void append ( const QString & ) 
-	void deselect () 
-	void selectAll () 
-	void paste () 
-	void pasteSubType ( const QCString & subtype ) 
-	void copyText () const (obsolete)
-	void copy () const
-	void cut () 
-	void insert ( const QString & ) 
-	void undo () 
-	void redo () 
-
-signals:
-	void textChanged () 
-	void returnPressed () 
-	void undoAvailable ( bool ) 
-	void redoAvailable ( bool ) 
-	void copyAvailable ( bool )
-  
-};
-*/
 
 #endif

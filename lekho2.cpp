@@ -1,5 +1,7 @@
 #include <qcombobox.h>
+#include <qmultilineedit.h>
 #include <qslider.h>
+#include <qtimer.h>
 
 #include "lekho2.h"
 
@@ -16,10 +18,23 @@ Lekho2::Lekho2( QWidget* parent,  const char* name, WFlags fl )
 
 	//for testing
 	//mainEdit->loadFile( QString("test2.txt") );
-	mainEdit->loadFile( QString("one_line.txt") );
-	//mainEdit->loadFile( QString("../idle_thoughts.txt") );
+	//mainEdit->loadFile( QString("one_line.txt") );
+	mainEdit->loadFile( QString("../idle_thoughts.txt") );
+	//mainEdit->loadFile( QString("../eraseme.txt") );
 	//mainEdit->loadFile( QString("juktolist.txt") );
 	//mainEdit->loadFile( QString("baanshi.bn.htm") );
+
+/*
+	//diagnostic info...
+	//create and display the query display window
+	diagnosticWindow = new InfoWindow_base(0) ;
+	diagnosticWindow->setCaption("GPL");
+	diagnosticWindow->show() ;		
+
+	QTimer *t = new QTimer( this );
+    connect( t, SIGNAL(timeout()), this, SLOT(diagnostic_slot()) );
+    t->start( 0, FALSE );
+*/
 }
 
 
@@ -70,4 +85,9 @@ void Lekho2::unicode_under_cursor_slot(const QString &uc)
 		out += "0x0" + QString::number(uc[i].unicode(),16) + ", ";
 
 	infoEdit->setText(out);
+}
+
+void Lekho2::diagnostic_slot()
+{
+	diagnosticWindow->infoLineEdit->setText(mainEdit->getDiagnosticInfo());
 }

@@ -8,6 +8,7 @@ go for the linked list (QValueList) of letters
 
 #include <qlineedit.h>
 
+#include "infowindow_base.h"
 #include "lekho2_base.h"
 #include "banglamultilineedit.h"
 
@@ -17,6 +18,8 @@ class Lekho2 : public Lekho2_base
 {
 	QString text,			//the entire document
 			screen_text ;	//the screen rendering of the document
+
+	InfoWindow_base *diagnosticWindow;
 
 public:
 	Lekho2( QWidget* parent = 0, const char* name = 0, WFlags fl = 0 );
@@ -35,4 +38,8 @@ public slots:
 	//file ops
 	void openFile(QString &fname);
 	void saveFile(QString &fname);
+
+	//for diagnostics
+	void diagnostic_slot();
+
 };
