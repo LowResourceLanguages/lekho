@@ -39,12 +39,9 @@ class BanglaLine
 {
 
 
-private:
+protected:
 	BanglaLetterList	letter ;
 	int			lineWidth ;
-//	bool			newLine ;
-
-private:
 
 public:
 	BanglaLine();
@@ -72,6 +69,8 @@ public:
 	bool hasCR();
 
 	int letterCount();	//how many letters in this line ?
+//	int lineWidth();
+	int letterWidth(int l);
 
 public:
 	friend ostream& operator << (ostream& pipe , BanglaLine& b);

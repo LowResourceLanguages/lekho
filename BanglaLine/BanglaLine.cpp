@@ -196,6 +196,18 @@ int BanglaLine::letterCount()
 	return letter.count();
 }
 
+/*
+int BanglaLine::lineWidth()
+{
+	return lineWidth;
+}
+*/
+
+int BanglaLine::letterWidth(int l)
+{
+	return letter[l].width ;
+}
+
 ostream& operator << (ostream& pipe , BanglaLine& bl)
 {
 	int p_end = (int)bl.letter.count();

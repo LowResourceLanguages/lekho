@@ -30,7 +30,7 @@ int main()
 {
 	BanglaDocument theDoc ;
 
-	int lineNo , col , n, line1, line2, col1, col2;
+	int lineNo , col , line1, line2, col1, col2;
 	QString str ;
 	char in[80], opt ;
 	BanglaLetter bl ;

@@ -38,14 +38,27 @@ class ScreenManager
 {
 private:
 	int	wrapWidth,
-		line1, line2, col1, col2;
-		//the lines/cols that have been changed
+		lineHeight,
+		line1, line2 ;
+		//the lines that have been changed
 
 	QFont	banglaFont, englishFont ;
-	QValueList<ScreenImage> wholeImage ;
 
 private:
-	bool	findSpace(int col, int dir, BanglaLine &bl);
+	//utility to find first white space either left(-1) or right(+1) of col
+	//returns the col of the white space, -1 if not found
+	int	findSpace(int col, int dir, BanglaLine &bl);
+
+	//chop off at most "width" from the front of the line respecting word boundaries
+	bool	chopFront(BanglaDocument &bd, int line, int width, BanglaLetterList &bll);
+
+	//chop off from the end of the line, respecting word boundaries, such that
+	//the line is now at most
+	bool	chopEnd(BanglaDocument &bd, int line, int width, BanglaLetterList &bll);
+
+	//returns true if we did have to wordwrap at line l
+	bool	wrapThisLine(BanglaDocument &bd, int l);
+	bool	recompute(BanglaDocument &bd, QFont bangla, QFont english);
 
 public:
 	ScreenManager();
@@ -53,10 +66,20 @@ public:
 
 	void	setWrapWidth(BanglaDocument &bd, int width);
 	void	setFonts(BanglaDocument &bd, QFont bangla, QFont english);
-	void	wordWrap(BanglaDocument &bd, int line,
-			 int &line1, int &col1, int &line2, int &col2);
+
+	//returns true if word wrapping was needed
+	//returns the extent of the changes (so that we can update on screen)
+	//if a new line had to be added any where l2 becoems last document line
+	bool	wordWrap(BanglaDocument &bd, int line, int &l1, int &l2);
+
+	//a mouse click needs to be transformed to document coordinates
+	//x and y need to be first transformed to coordinates on the document
 	void	screen2doc(BanglaDocument &bd, int x, int y, int &line, int &col);
+
+	//inversion of screen2doc
 	void	doc2screen(BanglaDocument &bd, int line, int col, int &x, int &y);
-}
+
+	//enquiries
+};
 
 #endif
