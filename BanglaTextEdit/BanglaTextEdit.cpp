@@ -1370,65 +1370,6 @@ void BanglaTextEdit::clipBoardOp(int id)
 	paracolSelEnd += QPoint(1,0) ;	//undo the leetle hack
 }
 
-/*
-//print it !
-//this is basically a cut and paste of drawContents
-//1 = ok full page printed
-//0 = no page empty
-//-1 == we finished half way thru
-bool BanglaTextEdit::print(QPainter *p, int page, bool &firstPrint, int pageWidth, int pageHeight,
-		int leftMargin, int rightMargin, int topMargin, int bottomMargin)
-{
-
-
-	int 	maxPaintWidth = pageWidth - leftMargin - rightMargin,
-		maxPaintHeight = pageHeight - topMargin - bottomMargin  ;
-	int	lineHeight = theDoc.getLineHeight() ;
-	//snapfit the page height...
-	maxPaintHeight = (int)( (float)maxPaintHeight/(float)lineHeight ) * lineHeight ;
-
-
-
-	if (firstPrint)
-	{
-		oldWidth = 0 ;
-		theDoc.setScreenWidth(maxPaintWidth);
-//		theDoc.setLinesInPage((int)((float)visibleHeight()/(float)theDoc.getLineHeight()));
-	}
-
-	p->setPen(QColor(0,0,0));
-	p->setBackgroundColor(QColor(255,255,255));
-
-
-
-	int	startLine = (int)((float)(page  * maxPaintHeight)/(float)lineHeight),
-		endLine = (int)( (float) ((page +1) * maxPaintHeight) /(float)lineHeight ) ,
-		curry = topMargin ; //+ startLine*lineHeight ;
-
-
-	BanglaLetterList theText;
-	if(!theDoc.copyScreenLine(startLine, theText))
-		return 0;	//outta lines even before we start
-
-	for(int i = startLine ; i < endLine ; i++)
-	{
-		theText.clear();
-		if(!theDoc.copyScreenLine(i, theText))
-			return false;
-//			break;	//outta lines
-
-		//erase original line (the bit on the printer)
-		p->eraseRect(0, curry, 0 + maxPaintWidth , lineHeight);
-
-		//paint newline
-		paintLine(p, leftMargin, curry, lineHeight, theText);
-
-		curry += lineHeight ;
-	}
-	return true ;
-}
-*/
-
 //printer helper functions
 //resizes the document and computes the position of the pagebreaks,
 //given the page dimensions
@@ -1454,6 +1395,7 @@ void BanglaTextEdit::print_PageBreaks(int w, int h, QValueList<int> &breaks)
 }
 
 //actually prints a given page
+//this is basically a cut and paste of drawContents
 bool BanglaTextEdit::print_Page(QPainter *p, int &startLine, int &endLine)
 {
 	int curry = 0 ;
@@ -1569,6 +1511,9 @@ bool BanglaTextEdit::print(QPrinter *printer)
 
 		for(int copy = 0 ; copy < printer->numCopies(); copy++)
 		{
+			//next copy, fresh page...
+			if(copy > 0)
+				printer->newPage();
 
 			int page = startPage ;
 			if(!print_Page(&p, breaks[page], breaks[page+1]))

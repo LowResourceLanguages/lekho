@@ -8,7 +8,7 @@ THANKS
 NOTE** 
 1. A detailed user manual in bangla is available in examples\help.txt 
 A user manual in english can be found in examples\help_en.txt. My bangla is rusty and help_en.txt may be more "pretty" as far as language goes. Thanks to Progga for going over the help.txt file and suggesting corrections.
-2. A changelog is available in CHANGES
+2. A changelog is available in CHANGES, and this includes the set of bugfixes. Current known bugs are in BUGS, but this is largely empty when you get it - if I find out about a bug I try to fix it before the next release.
 
 INSTALLATION
 
@@ -16,38 +16,12 @@ WINDOWS
 
 Installing the executable:
 
-1. Ensure you have the following two .dll files where your system can see them eg. in c:\windows\system\ or in the directory where you put the lekho executable lekho.exe
-	a)	msvcrt.dll and 
-	b)	qt-mt230nc.dll
+1. Goto the sourceforge site http://www.sf.net/projects/lekho 
+and grab the latest installation executable. Do read the winreadme.txt file. 
+The important thing to note is that the large file (~1.8 MB) has EVERYTHING you need to run Lekho, juts add windows. If you are downloading লেখ (Lekho) for the first time use this.
+The smaller file has no .dll files and no source code, this makes it considerably smaller (~.200 kB)
 
-These two can be obtained from the sourceforge site at 
-
-http://prdownloads.sourceforge.net/lekho/win_dlls.zip?download
-
-2. Ensure you have the AdarshalipiExp,Con and Normal fonts installed. 
-Goto start->settings->control panel and click on "fonts" and see if the fonts are listed. If they are not do the following. Goto
-
-http://prdownloads.sourceforge.net/lekho/adarshalipifonts.zip?download
-
-and download the fonts package. Unzip them to any directory you wish. Then goto start->settings->control panel the fonts and click install. 
-
-3. Download the executable package for the version you are interested in. The files are available at
-
-http://sourceforge.net/project/showfiles.php?group_id=40137 
-
- 
-4. Unzip the program package into a directory (if you keep the "use folder names" options on while extracting, if you are using winzip, the files unzip into 
-
-Lekho\
-
-You should now have
-
-      lekho.exe
-      .lekhorc
-      .lekho\ (a start up files folder containing kar.txt, jukto.txt, shor.txt and adarshalipi.txt)
-      examples\ ( a folder containing some example utf-8 bangla files)
-
-5. That's it ! By double clicking on lekho.exe you should be ready to go. Take a look at the help.txt in examples\ by opening it up in lekho. help.html will render correctly
+2. That's it ! By going to start->programs->Lekho and clicking on the lekho icon you should be ready to go. Take a look at the help.txt in examples\ by opening it up in lekho. help.html will render correctly
 on ie6 if you have the usp10.dll (win98,2000,NT and XP) and James Kass' code2000 font.
 If all else fails take a look at help_lipi.html, which just needs the adarshalipi fonts to be installed.
 
@@ -62,7 +36,7 @@ http://www.trolltech.com
 
 4. Unzip the tarball using winzip to a directory. It should default to Lekho\v1.0\
 
-5. Double click on lekho.dsp, this should generate a workspace with lekho as one of the projects
+5. Double click on lekho.dsw, this should openup a workspace with lekho as the project.
 
 6. Compile and enjoy.
 
@@ -84,7 +58,6 @@ Compiling and installing:
 5. Type make
       Lekho should compile with some warnings.(I'll remove the warning causing code soon)
       Type make install (This copies some initialisation files to the install directory)
-
 
 6. Install the ttf fonts found in fnts.zip if they arn't on your system (If you use a recent window manager like KDE2, the system->configuration
       submenu should have tools do help you do this eg. kfontinst for KDE 2.
