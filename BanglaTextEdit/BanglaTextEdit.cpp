@@ -1487,24 +1487,25 @@ void BanglaTextEdit::timerEvent(QTimerEvent *event)
 //function::calculateCursorRect
 QRect BanglaTextEdit::calculateCursorRect()
 {
+/*
 	int width = 0 ;
 	//make cursor a line if bangla
 	if(bangla->isBangla())
 		width = 1 ;
 	//make cursor block if english,
 	else
-		width = theDoc.getLineHeight()/2;
-
+		width = theDoc.getLineHeight()/3;
+*/
 	//kludge make cursor different if partialCodeInserted
 	if( partialCodeInserted )
 	{
 		theDoc.moveCursor( Key_Right, theCursor.xy, theCursor.paracol);
-		QRect crs(theCursor.xy.x(), theCursor.xy.y() , width , theDoc.getLineHeight());
+		QRect crs(theCursor.xy.x(), theCursor.xy.y() , 1 , theDoc.getLineHeight());
 		theDoc.moveCursor( Key_Left, theCursor.xy, theCursor.paracol);
 		return crs;
 	}
 	else
-		return QRect(theCursor.xy.x(), theCursor.xy.y() , width , theDoc.getLineHeight());
+		return QRect(theCursor.xy.x(), theCursor.xy.y() , 1 , theDoc.getLineHeight());
 }
 
 
