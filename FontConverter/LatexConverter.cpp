@@ -25,6 +25,7 @@ LatexConverter::LatexConverter()
 	ushort _mophola[] = {0x09cd, 0x09ae};
 	ushort _jawphola[] = {0x09cd, 0x09df};
 	ushort _lophola[] = {0x09cd, 0x09b2};
+	ushort _bophola[] = {0x09cd, 0x09ac};
 	ushort _rawphola[] = {0x09cd, 0x09b0};
 	ushort _kar[] = {0x09be,0x09bf,0x09c0,0x09c1,0x09c2,0x09c3,0x09c7,
 		0x09c8,0x09cb,0x09cc};
@@ -32,6 +33,7 @@ LatexConverter::LatexConverter()
 	mophola.setUnicodeCodes(_mophola,2);
 	jawphola.setUnicodeCodes(_jawphola,2);
 	lophola.setUnicodeCodes(_lophola,2);
+	bophola.setUnicodeCodes(_bophola,2);
 	rawphola.setUnicodeCodes(_rawphola,2);
 	kar.setUnicodeCodes(_kar, 10);
 
@@ -63,6 +65,8 @@ bool LatexConverter::initialiseConverter(QTextStream& file)
 	file >> latexRawphola ;
 
 	file >> latexLophola ;
+
+	file >> latexBophola ;
 
 	for(int i = 0 ; i < 9 ; i++)
 	{
@@ -148,6 +152,7 @@ QString LatexConverter::unicode2latex(QString uc)
 		hashontoPresent = false ,
 		mopholaPresent = false,
 		lopholaPresent = false,
+		bopholaPresent = false,
 		jawpholaPresent = false,
 		rawpholaPresent = false,
 		karPresent = false;
@@ -205,6 +210,12 @@ QString LatexConverter::unicode2latex(QString uc)
 		uc = uc.left(uc.length()-2);
 	}
 
+	//take out bophola
+	if(uc.right(2).find(bophola) > -1)
+	{
+		bopholaPresent = true ;
+		uc = uc.left(uc.length()-2);
+	}
 
 	//if there is a zwnj at the end, take it out and add a hashanta at the end
 	//unless it has a special form eg. khondottha
@@ -255,6 +266,12 @@ QString LatexConverter::unicode2latex(QString uc)
 	if(lopholaPresent)
 	{
 		out.append(latexLophola);
+	}
+
+	//put in lophola
+	if(bopholaPresent)
+	{
+		out.append(latexBophola);
 	}
 
 	//put in the rawphola

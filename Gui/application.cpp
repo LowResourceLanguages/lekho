@@ -525,44 +525,53 @@ void ApplicationWindow::LaTeXexportAs()
 
 void ApplicationWindow::print()
 {
-//will handle later
-/*
-    // ###### Rewrite to use QSimpleRichText to print here as well
-    const int Margin = 10;
-    int pageNo = 1;
 
-    if ( printer->setup(this) ) {		// printer dialog
+/*
+    QMessageBox::information( this, "Lekho : Not implemented",
+				    "The print feature is currently not available");
+	return;
+*/
+#ifndef QT_NO_PRINTER
+    if ( printer->setup( this ) )
+    {
+
+	printer->setFullPage(true);
+	QPaintDeviceMetrics printerMetrics(printer);
+
+    	//QRect printerPos ;
+
 	statusBar()->message( "Printing..." );
+
 	QPainter p;
 	if( !p.begin( printer ) )               // paint on printer
 	    return;
 
-	p.setFont( e->font() );
-	int yPos	= 0;			// y-position for each line
-	QFontMetrics fm = p.fontMetrics();
-	QPaintDeviceMetrics metrics( printer ); // need width/height
-						// of printer surface
-	for( int i = 0 ; i < e->lines() ; i++ ) {
-	    if ( Margin + yPos > metrics.height() - Margin ) {
-		QString msg( "Printing (page " );
-		msg += QString::number( ++pageNo );
-		msg += ")...";
-		statusBar()->message( msg );
-		printer->newPage();		// no more room on this page
-		yPos = 0;			// back to top of page
-	    }
-	    p.drawText( Margin, Margin + yPos,
-			metrics.width(), fm.lineSpacing(),
-			ExpandTabs | DontClip,
-			e->text( i ) );
-	    yPos = yPos + fm.lineSpacing();
+	int 	pageWidth = printerMetrics.width() , pageHeight = printerMetrics.height(),
+		startPage = printer->fromPage() , endPage = printer->toPage(),
+		leftMargin = printer->margins().width(), rightMargin = printer->margins().width(),
+		topMargin = printer->margins().height() , bottomMargin = printer->margins().height() ;
+
+	printer->setMinMax(1,6500);
+
+	//has ther use set the pages
+	if(startPage == 0) startPage = 1 ;
+	if(endPage == 0) endPage = 6500 ;	//basically - all the pages
+
+	bool 	firstPrint = true ;	//don't want to wordWrap document every time we print a page...
+
+	for(int copy = 0 ; copy < printer->numCopies(); copy++)
+	for(int i = startPage - 1 ; i <= endPage - 1; i++)
+	{
+		if(!e->print( &p , i , firstPrint, pageWidth, pageHeight,
+			leftMargin, rightMargin,
+			topMargin, bottomMargin))
+			break ;
+
+		printer->newPage();
 	}
-	p.end();				// send job to printer
-	statusBar()->message( "Printing completed", 2000 );
-    } else {
-	statusBar()->message( "Printing aborted", 2000 );
+
     }
-    */
+#endif
 }
 
 void ApplicationWindow::find()

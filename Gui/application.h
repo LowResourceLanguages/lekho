@@ -102,9 +102,11 @@ private slots:
 public slots:
     void statusBarMessage(const QString&) ;
 
-private:
+public:
     QPrinter *printer;
 
+
+private:
 //    QPopupMenu *copyMenu ;
 
     LekhoPrefs thePref ;

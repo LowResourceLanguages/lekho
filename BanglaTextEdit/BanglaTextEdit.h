@@ -202,7 +202,9 @@ public:
 	void del(int para1, int col1, int para2, int col2 );
 	void splitLine(int para, int col);
 
-
+	//print it !
+	bool print(QPainter *p, int page, bool &firstPrint, int pageWidth, int pageHeight,
+			int leftMargin, int rightMargin, int topMargin, int bottomMargin) ;
 
 
 public slots:

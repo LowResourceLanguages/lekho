@@ -150,7 +150,8 @@ public:
 	bool copy(int line1, int col1, int line2, int col2, BanglaLetterList &bll);
 
 	//used to paint on the screen. Grab this screenline
-	void copyScreenLine(int line, BanglaLetterList &bll);
+	//returns false if line out of range
+	bool copyScreenLine(int line, BanglaLetterList &bll);
 
 	//creates a new line after line with the letters from col onwards
 	bool splitLine(int line, int col);

@@ -855,7 +855,7 @@ bool BanglaDocument::del(int line1, int col1, int line2, int col2, BanglaLetterL
 			(*documentLineAt(line1)).del(col1,-1,bll) ;
 			joinLine(line1);
 		}
-		
+
 		(*documentLineAt(line1)).del(col1,-1,bll) ;
 		(*documentLineAt(line1+1)).del(0,col2,bll) ;
 		joinLine(line1);
@@ -944,7 +944,7 @@ bool BanglaDocument::copy(int line1, int col1, int line2, int col2, BanglaLetter
 
 //function::copyScreenLine
 //copy out the whole scren line
-void BanglaDocument::copyScreenLine(int line, BanglaLetterList &bll)
+bool BanglaDocument::copyScreenLine(int line, BanglaLetterList &bll)
 {
 /*
 	if(wordWrap)
@@ -969,6 +969,7 @@ void BanglaDocument::copyScreenLine(int line, BanglaLetterList &bll)
 			(*documentLineAt( (*screenMapLineAt( line )).para )).copy( (*screenMapLineAt( line )).startCol,
 							 (*screenMapLineAt( line )).endCol - (*screenMapLineAt( line )).startCol + 1,
 							 bll);
+			return true ;
 		}
 	}
 	else
@@ -977,9 +978,11 @@ void BanglaDocument::copyScreenLine(int line, BanglaLetterList &bll)
 		{
 			documentLineMemoryMoveTo( line ) ;
 			(*documentLineAt( line )).copy(0,-1, bll);
+			return true ;
 		}
 	}
 
+	return false ;
 }
 
 //function::splitLine
