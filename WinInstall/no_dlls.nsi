@@ -3,8 +3,8 @@
 ; This script is based on example1.nsi, but adds uninstall support
 ; and (optionally) start menu shortcuts.
 ;
-; This is the no dlls version, ie. tiny weeny
-; The biggest things it has are fonts
+; This is the barebones version, ie. tiny weeny
+; The biggest things it has are fonts. No source nothing
 ; 
 
 ; The name of the installer
@@ -18,11 +18,7 @@ CRCCheck on
 
 ;some information
 Function .onInit
-MessageBox MB_OK "Some hints on installing. \
-		After running the installer, goto settings->control panel->fonts \
-		and just load up the font list. \
-		This does a refresh of the available fonts and makes then ready for use. \
-		I don't know the logic behind this."
+MessageBox MB_OK "Please read the winreadme.txt file before installing"
 FunctionEnd
 
 
@@ -39,7 +35,7 @@ InstallDirRegKey HKLM SOFTWARE\Lekho_v1.05 "Install_Dir"
 
 ; The text to prompt the user to enter a directory
 ComponentText "This will install lekho on your computer. \ 
-		This is the small installer and does not supply any dlls. \
+		This is the small installer and does not supply any dlls, or source code. \
  		Click on any item to select/deselect it for installation."
 
 ; The text to prompt the user to enter a directory
@@ -54,6 +50,7 @@ Section "Lekho v1.05 (required)"
   File "lekho.exe"	;dada
 
   File "gnugpl.txt"	;choto bon
+  File "winreadme.txt"	;
   File "bugs"		;
   File "changes"	;
   File "readme"
@@ -75,9 +72,9 @@ SectionEnd
 ;fonts
 Section "Bangla fonts"
   ; Set output path to the windows fonts directory.
-  SetOutPath $WINDIR/fonts
+  SetOutPath $WINDIR
   ; Put file there
-  File /r "alipi_*.ttf"
+  File /r "fonts"
 SectionEnd
 
 
@@ -87,6 +84,17 @@ Section "example files"
   SetOutPath $INSTDIR
   ; Put file there
   File /r "examples"
+SectionEnd
+
+;associations
+Section "Associate .bng files with lekho"
+
+  WriteRegStr HKCR ".bng" "" "LekhoFile"
+  WriteRegStr HKCR "LekhoFile" "" "unicode bangla File"
+  WriteRegStr HKCR "LekhoFile\shell" "" "open"
+  WriteRegStr HKCR "LekhoFile\DefaultIcon" "" $INSTDIR\lekho.exe,0
+  WriteRegStr HKCR "LekhoFile\shell\open\command" "" '$INSTDIR\lekho.exe "%1"'
+
 SectionEnd
 
 ;shortcuts
@@ -105,17 +113,17 @@ Section "Uninstall"
   ; remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Lekho_v1.05"
   DeleteRegKey HKLM SOFTWARE\Lekho_v1.05
+  DeleteRegKey HKCR "LekhoFile"
+
   ; remove files
-;  Delete $INSTDIR\lekho.exe
-;  Delete $INSTDIR\*.dll
-  ; MUST REMOVE UNINSTALLER, too
-;  Delete $INSTDIR\uninstall.exe
-  Delete $INSTDIR\*.*
+  RMDir /r "$INSTDIR"
+
   ; remove shortcuts, if any.
-;  Delete "$SMPROGRAMS\Lekho\*.*"
+  Delete "$SMPROGRAMS\Lekho\*.*"
+
   ; remove directories used.
   RMDir "$SMPROGRAMS\Lekho"
-  RMDir /r "$INSTDIR"
+
 SectionEnd
 
 ; eof

@@ -2,8 +2,10 @@ All changes referenced to v1.0
 
 v1.1
 2002.11.09
-1. Fixed bug in multiline insert (BanglaDOcument::insert)
+1. Fixed bug in multiline insert (BanglaDocument::insert)
 2. Added screen font code for ra-hashanto
+3. Windows version of Lekho now has icon too
+4. added screen font code for ontosto jay-e reph
 
 2002.11.08
 1. Made icon and logo for lekho - pretty cool :) 

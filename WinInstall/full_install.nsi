@@ -4,7 +4,7 @@
 ; and (optionally) start menu shortcuts.
 ;
 ; This is the full install. It has EVERYTHING
-; The qt and mscvrt dll, the fonts, all you need is windows...
+; The qt and mscvrt dll, the fonts, and the source code, all you need is windows...
 ; 
 
 ; The name of the installer
@@ -16,13 +16,9 @@ OutFile "full_install.exe"
 ;check sum...
 CRCCheck on
 
-;absolutely first thing, some instructions...
+;before you start, take a look at the winreadme...
 Function .onInit
-MessageBox MB_OK "Some hints on installing. \
-		After running the installer, goto settings->control panel->fonts \
-		and just load up the font list. \
-		This does a refresh of the available fonts and makes then ready for use. \
-		I don't know the logic behind this."
+MessageBox MB_OK "Before installing please take a look at the winreadme.txt file."
 FunctionEnd
 
 
@@ -50,9 +46,10 @@ Section "Lekho v1.05 (required)"
   SetOutPath $INSTDIR
   ; Put files there
 
-  File "lekho.exe"	;dada
+  File "lekho.exe"	;dada  
 
   File "gnugpl.txt"	;choto bon
+  File "winreadme.txt"	;
   File "bugs"		;
   File "changes"	;
   File "readme"
@@ -79,21 +76,20 @@ Section "qt-dll"
   File "qt-mt230nc.dll"
 SectionEnd
 
-;decided all installations have this, regardless of whether they have msvc or not...
 ;dll
-;Section "microsoft-dll"
-;  ; Set output path to the installation directory.
-;  SetOutPath $INSTDIR
-;  ; Put file there
-;  File "msvcrtd.dll"
-;SectionEnd
+Section "microsoft-dll"
+  ; Set output path to the installation directory.
+  SetOutPath $INSTDIR
+  ; Put file there
+  File "msvcrtd.dll"
+SectionEnd
 
 ;fonts
 Section "Bangla fonts"
   ; Set output path to the windows fonts directory.
-  SetOutPath $WINDIR/fonts
+  SetOutPath $WINDIR
   ; Put file there
-  File /r "alipi_*.ttf"
+  File /r "fonts"
 SectionEnd
 
 
@@ -105,12 +101,38 @@ Section "example files"
   File /r "examples"
 SectionEnd
 
+;source code
+Section "source code (with vc6 workspace)"
+  ; Set output path to the installation directory.
+  SetOutPath $INSTDIR
+  ; Put file there
+  File /r "src"
+SectionEnd
+
+;associations
+Section "Associate .bng files with lekho"
+
+;  WriteRegStr HKCR ".txt" "" "LekhoFile"
+;  WriteRegStr HKCR "LekhoFile" "" "Plain text File"
+;  WriteRegStr HKCR "LekhoFile\shell" "" "open"
+;  WriteRegStr HKCR "LekhoFile\DefaultIcon" "" $INSTDIR\lekho.exe,0
+;  WriteRegStr HKCR "LekhoFile\shell\open\command" "" '$INSTDIR\lekho.exe "%1"'
+
+  WriteRegStr HKCR ".bng" "" "LekhoFile"
+  WriteRegStr HKCR "LekhoFile" "" "unicode bangla File"
+  WriteRegStr HKCR "LekhoFile\shell" "" "open"
+  WriteRegStr HKCR "LekhoFile\DefaultIcon" "" $INSTDIR\lekho.exe,0
+  WriteRegStr HKCR "LekhoFile\shell\open\command" "" '$INSTDIR\lekho.exe "%1"'
+
+SectionEnd
+
 ;shortcuts
 Section "Start Menu Shortcuts"
   CreateDirectory "$SMPROGRAMS\Lekho"
   CreateShortCut "$SMPROGRAMS\Lekho\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\Lekho\Lekho.lnk" "$INSTDIR\lekho.exe" "" "$INSTDIR\lekho.exe" 0
 SectionEnd
+
 
 ; uninstall stuff
 
@@ -121,18 +143,19 @@ Section "Uninstall"
   ; remove registry keys
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Lekho_v1.05"
   DeleteRegKey HKLM SOFTWARE\Lekho_v1.05
+  DeleteRegKey HKCR "LekhoFile"
 
-  ; remove files
-;  Delete $INSTDIR\lekho.exe
-  ; MUST REMOVE UNINSTALLER, too
-;  Delete $INSTDIR\uninstall.exe
+  ; remove files  
+  RmDir /r $INSTDIR
 
-  Delete $INSTDIR\*.*
   ; remove shortcuts, if any.
   Delete "$SMPROGRAMS\Lekho\*.*"
   ; remove directories used.
   RMDir "$SMPROGRAMS\Lekho"
-  RMDir "$INSTDIR"
+;  RMDir "$INSTDIR"
+
+
+
 SectionEnd
 
 ; eof
