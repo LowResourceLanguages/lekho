@@ -24,14 +24,14 @@
 BanglaLine::BanglaLine()
 {
 	lineWidth  = 0;
-	newLine = false ;
+	//newLine = false ;
 }
 
 BanglaLine::BanglaLine(const BanglaLine& bl)
 {
 	letter = bl.letter ;
 	lineWidth = bl.lineWidth ;
-	newLine = bl.newLine ;
+	//newLine = bl.newLine ;
 }
 
 BanglaLine::BanglaLine(const BanglaLetterList& bll)
@@ -40,19 +40,24 @@ BanglaLine::BanglaLine(const BanglaLetterList& bll)
 	lineWidth = 0;
 	for(int i = 0 ; i < (int)bll.count() ; i++)
 		lineWidth += bll[i].width ;
-	newLine = false ;
+	//newLine = false ;
 }
 
 bool BanglaLine::insert(int col, const BanglaLetter &bl)
 {
+	if(col > (int)letter.count()) return false;
+	if(col == (int)letter.count() && hasCR()) return false ;
+
 	letter.insert(letter.at(col),bl) ;
 	lineWidth += bl.width ;
-
 	return true ;
 }
 
 bool BanglaLine::insert(int col, const BanglaLetterList &bll)
 {
+	if(col > (int)letter.count()) return false;
+	if(col >= (int)letter.count() && hasCR()) return false ;
+
 	for(int i = (int)bll.count() -1 ; i >= 0 ; i--)
 	{
 		letter.insert(letter.at(col),bll[i]) ;
@@ -63,66 +68,137 @@ bool BanglaLine::insert(int col, const BanglaLetterList &bll)
 }
 
 //delete n bangla letters starting from column and return deleted letters
-bool BanglaLine::del(int col, int n, BanglaLetterList &bll)
+//return # of letters deleted or
+//return -1 if col was beyond range
+//if n = -1 del till end of line
+int BanglaLine::del(int col, int n, BanglaLetterList &bll)
 {
-	if(col < 0) return false ;
-	if(col >= (int)letter.count()) return false ;
-	if(col + n > (int)letter.count()) return false ;
+	int deletedLetters ;
 
-	for(int i = 0 ; i < n ; i++)
+	if(col < 0) return -1 ;
+	if(col >= (int)letter.count())
+	{
+		return -1 ;
+	}
+
+	if(n == -1) n = (int)letter.count() - col ;
+
+	if(col + n > (int)letter.count())
+	{
+		//return false ;
+		deletedLetters = (int)letter.count() - col ;
+	}
+	else
+	{
+		deletedLetters = n ;
+	}
+
+
+	for(int i = 0 ; i < deletedLetters ; i++)
 	{
 		bll += letter[col] ;
 		lineWidth -= letter[col].width ;
 		letter.remove(letter.at(col));
 	}
 
-	return true ;
+	return deletedLetters ;
+}
+
+//copy n bangla letters starting from column col
+//return # of letters copied or
+//return -1 if col was beyond range
+//if n = -1 copy till end of line
+int BanglaLine::copy(int col, int n, BanglaLetterList &bll)
+{
+	int copiedLetters ;
+
+	if(col < 0) return -1 ;
+	if(col >= (int)letter.count())
+	{
+		return -1 ;
+	}
+
+	if(n == -1) n = (int)letter.count() - col ;
+
+	if(col + n > (int)letter.count())
+	{
+		//return false ;
+		copiedLetters = (int)letter.count() - col ;
+	}
+	else
+	{
+		copiedLetters = n ;
+	}
+
+
+	for(int i = 0 ; i < copiedLetters ; i++)
+	{
+		bll += letter[col+i] ;
+	}
+
+	return copiedLetters ;
 }
 
 //add on the line in the argument to this line, forgetting the
 //present newline...
 bool BanglaLine::joinLine(const BanglaLine &bl)
 {
+	if(hasCR()) removeCR();
+
 	letter += bl.letter ;
 	lineWidth += bl.lineWidth ;
-	newLine = bl.newLine ;
+//	newLine = bl.newLine ;
 
 	return true;
 }
 
 bool BanglaLine::addCR()	//add a CR to this line
 {
-	if(newLine) return false;
+	if(hasCR()) return false;
 	else
 	{
-		newLine = true ;
+		letter += BanglaCR ;
 		return true ;
 	}
 }
 
 bool BanglaLine::removeCR()	//remove CR
 {
-	if(!newLine) return false;
+	if(!hasCR()) return false;
 	else
 	{
-		newLine = false ;
+		letter.remove(letter.end()) ;
 		return true ;
 	}
 }
 
 bool BanglaLine::hasCR()
 {
-	return newLine ;
+	if(letter.last().unicode == "\n")
+		return true ;
+	else
+		return false ;
+
+}
+
+int BanglaLine::letterCount()
+{
+	return letter.count();
 }
 
 ostream& operator << (ostream& pipe , BanglaLine& bl)
 {
-	for(int i = 0 ; i < (int)bl.letter.count() ; i++)
+	int p_end = (int)bl.letter.count();
+	if(bl.hasCR()) p_end--;
+
+	for(int i = 0 ; i < p_end ; i++)
 	{
-		pipe	<< bl.letter[i].unicode << "{" << bl.letter[i].screenFont << "}[" << bl.letter[i].width << "] " ;
+		//pipe	<< bl.letter[i].unicode << "{" << bl.letter[i].screenFont << "}[" << bl.letter[i].width << "] " ;
+		pipe	<< bl.letter[i]	;
 	}
 	pipe << " <" << bl.lineWidth << ">" ;
 	if(bl.hasCR())
-	 	pipe << "CR" << endl ;
+	 	pipe << "CR" ;
+	pipe << endl ;
 	return(pipe);
 }

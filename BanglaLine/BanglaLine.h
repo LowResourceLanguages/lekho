@@ -25,6 +25,8 @@
 #include <qstringlist.h>
 
 #include <BanglaLetter.h>
+#include <bangla.h>
+//#include <ScreenManager.h>
 
 /*
  * This is organized as the lines on screen are organized. The end of the line
@@ -33,10 +35,12 @@
  */
 class BanglaLine
 {
+
+
 private:
 	BanglaLetterList	letter ;
 	int			lineWidth ;
-	bool			newLine ;
+//	bool			newLine ;
 
 private:
 
@@ -45,16 +49,25 @@ public:
 	BanglaLine(const BanglaLine& );
 	BanglaLine(const BanglaLetterList& );
 
+	//return false if the col was beyond insert point
 	bool insert(int col, const BanglaLetter &bl);	//needed this one
 	bool insert(int col, const BanglaLetterList &bll);
-	bool del(int col, int n, BanglaLetterList &bll);
-	//delete n bangla letters starting from column and return deleted letters
 
-	bool joinLine(const BanglaLine& );
+	//return # of letters deleted or
+	//return -1 if col was beyond range
+	//if n=-1 do till end of line
+	int del(int col, int n, BanglaLetterList &bll);	//delete n bangla letters starting from column and return deleted letters
+	int copy(int col, int n, BanglaLetterList &bll);
 
-	bool addCR();	//add a CR to this line
+	//add the line bl ot this one, replacing this newline status with
+	//newline status of bl
+	bool joinLine(const BanglaLine& bl);
+
+	bool addCR();		//add a CR to this line
 	bool removeCR();	//remove CR from this line
 	bool hasCR();
+
+	int letterCount();	//how many letters in this line ?
 
 public:
 	friend ostream& operator << (ostream& pipe , BanglaLine& b);

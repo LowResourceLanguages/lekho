@@ -18,35 +18,13 @@
 *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
 */
 
-//BanglaLetter.h
+//bangla.h
 
-#ifndef BANGLALETTER_H
-#define BANGLALETTER_H
+#ifndef BANGLA_H
+#define BANGLA_H
 
-#include<qstring.h>
-#include<qvaluelist.h>
+#include<BanglaLetter.h>
 
-class BanglaLetter
-{
-public:
-	QString unicode,		//e.g. [0x0995, 0x09cc]
-		screenFont;		//the representation in say adarshalipi
-	int	width ;			//the width of the letter on screen
-	//add other attributes if needed
-public:
-	BanglaLetter();
-	BanglaLetter(const BanglaLetter& );
-	BanglaLetter(QString unicode, QString screenFont, int width);
-
-	void setLetter(QString unicode, QString screenFont, int width);
-
-public:
-	friend ostream& operator << (ostream& pipe , BanglaLetter& bl);
-
-};
-
-typedef QValueList<BanglaLetter> BanglaLetterList;
-
-//extern BanglaLetter BanglaCR("\n","\n",0);
+const BanglaLetter BanglaCR("\n","\n",0);
 
 #endif

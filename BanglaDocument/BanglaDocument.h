@@ -1,8 +1,8 @@
 /*
-*  Lekho v1.0 will be a simple editor for bangla in unicode that will export
-*  to bangtex
+
 *  Copyright (C) 2001,2002 Kaushik Ghose kghose@wam.umd.edu
-*
+*  Lekho is a simple editor for bangla in unicode that exports
+*  to bangtex and html
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
 *  the Free Software Foundation; either version 2 of the License, or
@@ -25,6 +25,7 @@
 #include <qvaluelist.h>
 
 #include <BanglaLine.h>
+//#include <ScreenManger.h>
 
 /*
  * Handles editing of the bangla document
@@ -32,34 +33,77 @@
 
 class BanglaDocument
 {
+
+//this was the cleanest way I could think of separating word wrapping and other
+//housekeeping procedures needed just for display purposes and not
+//suffer a lot of overhead in function calls
+//friend class ScreenManager ;
+
+
 protected:
 	QValueList<BanglaLine> documentLine;
-	
+
 public:
 
-	bool insert(int line, int col, QString unicode); // inserts only one letter
-	bool insert(int line, int col, QStringList unicode);
-	//inserts a lot of letters starting at a given line.
-	//Newlines are ignored.
-	//A preprocessor needs to be used that breaks up a given letter string
-	//with newlines into several lines which are then inserted in sequence
+	// constructors ///////////////////////////////////////////////////////
 
-	bool del(int line, int col); //delete one bangla letter
-	bool del(int line, int col, int n); //delete n bangla letters
-	bool splitLine(int line, int col);
+	BanglaDocument();
+	BanglaDocument(const BanglaDocument &bd);
+	BanglaDocument(const BanglaLetterList &bll);	//handles newlines
+
+	// initialisation /////////////////////////////////////////////////////
+
+	void setDocument(const BanglaDocument &bd);
+	void setDocument(const BanglaLetterList &bll);
+
+	// basic editing ops ///////////////////////////////////////////////////
+
+	//inserts letters starting at a given line. If the line is 1+ the last line
+	//a new line is added
+	bool insert(int line, int col, const BanglaLetterList& bll);
+
+	//delete a part of the document
+	bool del(int line1, int col1, int line2, int col2, BanglaLetterList &bll);
+
+	//copy a part of the document
+	bool copy(int line1, int col1, int line2, int col2, BanglaLetterList &bll);
+
 	//creates a new line after line with the letters from col onwards
+	bool splitLine(int line, int col);
+
+	//joins line with line+1 if possible
 	bool joinLine(int line);
-	//joins line with line-1 if possible
-	bool addLine(line); //adds a new line after line
-	QStringList letters(line);
-	//returns a QStringList corresponding to each letter on the line
-	QString utf8(); //returns the utf-8 coded version of the whole document
-	QString utf8(int line1, int col1, int line2, int col2);
+
+	bool addCR(int line);
+	bool removeCR(int line);
+	bool hasCR(int line);
+
+	// accessing large parts of the document /////////////////////////////////
+
 	//returns the utf-8 coded version of all letters contained within the
 	//limits, including newlines
-	QString unicode();
-	//returns the 16bit unicode version of the whole document
-	QString unicode(int line1, int col1, int line2, int col2)
+	void utf8(int line1, int col1, int line2, int col2, QString &u8);
+
 	//returns the 16 bit unicode version of the selection
+	void unicode(int line1, int col1, int line2, int col2, QString &uc);
+
+	//returns the screen font for the selection
+	void screenFont(int line1, int col1, int line2, int col2, QString &sF);
+
+
+	//document info
+
+	//returns total lines (not newlines, but screen lines) in document
+	int totalLines();
+
+	//returns the length (complete bangla letters) of a line
+	int lettersInLine(int line);
+
+	//returns a QValueList of int corresponding to the lengths of each line
+	void lettersInDocument(QValueList<int> &intl);
+
+public:
+	friend ostream& operator << (ostream& pipe , BanglaDocument& bd);
+
 };
 #endif

@@ -1,2 +1,3 @@
-TEMPLATE = subdirs 
-SUBDIRS = BanglaLetter BanglaLine
+SOURCES = BanglaLetter/BanglaLetter.cpp \
+	  BanglaLine/BanglaLine.cpp
+	  

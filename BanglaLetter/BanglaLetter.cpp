@@ -49,3 +49,16 @@ void BanglaLetter::setLetter(QString uc, QString sF, int w)
 	screenFont = sF ;
 	width = w ;
 }
+
+ostream& operator << (ostream& pipe , BanglaLetter& bl)
+{
+	pipe	<< bl.unicode << "{" << bl.screenFont << "}[" << bl.width << "] " ;
+	return(pipe);
+}
+
+ostream& operator << (ostream& pipe , BanglaLetterList &bll)
+{
+	for(int i = 0 ; i < (int)bll.count() ; i++)
+		pipe << bll[i] << " " ;
+	return(pipe);
+}
